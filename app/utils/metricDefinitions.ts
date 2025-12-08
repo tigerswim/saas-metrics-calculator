@@ -96,6 +96,11 @@ export const metricDefinitions: Record<string, MetricDefinition> = {
     description: 'Measures sales and marketing efficiency - revenue generated per dollar spent.',
     impact: '>0.75 is efficient; >1.0 is very efficient. <0.5 suggests overspending on growth.',
   },
+  'Magic #': {
+    formula: 'Net New ARR / Total S&M Spend',
+    description: 'Measures sales and marketing efficiency - revenue generated per dollar spent.',
+    impact: '>0.75 is efficient; >1.0 is very efficient. <0.5 suggests overspending on growth.',
+  },
   'Quick Ratio': {
     formula: '(New Bookings + Expansion ARR) / Churned ARR',
     description: 'Growth efficiency ratio comparing revenue gains to losses.',
