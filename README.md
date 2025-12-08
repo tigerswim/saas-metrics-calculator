@@ -1,14 +1,25 @@
 # SaaS Metrics Calculator
 
-An interactive web application for modeling SaaS business metrics. Built with Next.js, TypeScript, and Tailwind CSS.
+An executive intelligence tool for B2B SaaS metrics modeling. Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- **Real-time calculations**: All metrics update instantly as you change input values
-- **Key metrics summary**: Quick view of critical KPIs with target benchmarks
-- **Color-coded indicators**: Visual feedback on metric performance (good/warning/bad)
-- **Comprehensive metrics**: Track ARR growth, retention, pipeline, CAC, LTV, and more
-- **Responsive design**: Works seamlessly on desktop and mobile devices
+- **Executive Brief**: Auto-generated narrative summary with key insights
+- **Decision-Oriented Layout**: Sections organized around what C-suite needs to act on
+- **Real-time Calculations**: All 50+ metrics update instantly as inputs change
+- **Pipeline Funnel**: Visual funnel showing MQL → SQL → Opportunity → Deal progression
+- **Investment Signals**: Clear guidance on where to increase, maintain, or reduce spend
+- **Inline Benchmarks**: Industry targets shown alongside current values
+
+## Dashboard Sections
+
+1. **Executive Brief** - Narrative summary, key metrics, and primary insight
+2. **What Needs Attention** - Metrics below benchmark, ranked by severity
+3. **Where to Invest** - Budget allocation signals based on efficiency metrics
+4. **Pipeline Funnel** - Conversion rates and pipeline velocity
+5. **Growth Trajectory** - ARR movement, retention, and customer metrics
+6. **Unit Economics** - LTV, CAC, payback, and customer value metrics
+7. **Financial Position** - P&L summary, efficiency ratios, and OpEx allocation
 
 ## Getting Started
 
@@ -30,52 +41,38 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```bash
 npm run build
-npm start
 ```
 
 ## Deployment
 
-This application is optimized for deployment on Netlify, Vercel, or any platform that supports Next.js.
+Configured for static export on Netlify.
 
-### Netlify
+- Build command: `npm run build`
+- Publish directory: `out`
 
-1. Push your code to GitHub
-2. Connect your repository to Netlify
-3. Build command: `npm run build`
-4. Publish directory: `.next`
+## Key Metrics
 
-### Vercel
-
-```bash
-vercel deploy
-```
-
-## Key Metrics Tracked
-
-- **ARR Growth %**: Annual recurring revenue growth rate
-- **GRR/NRR**: Gross and Net Revenue Retention
-- **LTV:CAC Ratio**: Customer lifetime value to acquisition cost
-- **CAC Payback**: Time to recover customer acquisition costs
-- **Rule of 40**: Growth rate + EBITDA margin
-- **Magic Number**: Sales efficiency metric
-- **Logo Churn**: Customer churn rate
-- **Gross Margin**: Revenue minus COGS
-- **SaaS Quick Ratio**: Growth momentum indicator
+- **ARR & Growth**: Net New ARR, Growth Rate, MRR
+- **Retention**: GRR, NRR, Logo Churn (monthly and annualized)
+- **Unit Economics**: LTV, CAC, LTV:CAC Ratio, CAC Payback
+- **Pipeline**: Conversion rates, Pipeline Velocity, Win Rate
+- **Efficiency**: Magic Number, Quick Ratio, Burn Multiple
+- **Financial**: Gross Margin, EBITDA Margin, Rule of 40
 
 ## Technology Stack
 
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Deployment**: Netlify/Vercel ready
+- **Export**: Static site generation
 
-## Usage
+## Design Principles
 
-1. Adjust the input values in the left panel
-2. Watch metrics update in real-time on the right panel
-3. Check the Key Metrics Summary at the top for quick insights
-4. Use the "Reset to Defaults" button to restore sample values
+- Typography-driven hierarchy (no decorative cards)
+- Tabular data with inline benchmarks
+- Color used for signal, not decoration
+- Decision-oriented sections over metric categories
 
 ## License
 
-MIT# saas-metrics-calculator
+MIT

@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { Inputs, CalculatedMetrics } from '../types';
-import { calculateMetrics, getKeyMetrics } from '../utils/calculator';
+import { calculateMetrics } from '../utils/calculator';
 import { inputTooltips } from '../utils/inputTooltips';
 import InputPanel from './InputPanel';
-import MarketingScorecard from './MarketingScorecard';
-import FunnelMetrics from './FunnelMetrics';
-import UnitEconomics from './UnitEconomics';
-import GrowthHealth from './GrowthHealth';
-import FinancialHealth from './FinancialHealth';
+import ExecutiveBrief from './ExecutiveBrief';
+import WhatNeedsAttention from './WhatNeedsAttention';
+import WhereToInvest from './WhereToInvest';
+import PipelineFunnel from './PipelineFunnel';
+import GrowthTrajectory from './GrowthTrajectory';
+import UnitEconomicsTable from './UnitEconomicsTable';
+import FinancialPosition from './FinancialPosition';
 import {
-  ChartBarIcon,
   Cog6ToothIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
@@ -57,73 +58,51 @@ export default function Calculator() {
     setMetrics(calculateMetrics(defaultInputs));
   };
 
-  const keyMetrics = getKeyMetrics(metrics);
-
-  // Calculate overall health score (0-100)
-  const healthScore = Math.round(
-    (keyMetrics.filter(m => m.status === 'good').length / keyMetrics.length) * 100
-  );
-
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Top Navigation */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <ChartBarIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-slate-900">SaaS Metrics</h1>
-                <p className="text-xs text-slate-500">B2B Marketing Intelligence</p>
-              </div>
+    <div className="min-h-screen bg-white">
+      {/* Minimal Header */}
+      <header className="border-b border-slate-200 sticky top-0 z-40 bg-white">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-blue-600" />
+              <span className="text-sm font-medium text-slate-900">SaaS Metrics Model</span>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Health Score Badge */}
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
-                <div className={`w-2 h-2 rounded-full ${
-                  healthScore >= 70 ? 'bg-green-500' : healthScore >= 40 ? 'bg-yellow-500' : 'bg-red-500'
-                }`} />
-                <span className="text-sm font-medium text-slate-700">
-                  Health: {healthScore}%
-                </span>
-              </div>
-
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => setShowInputs(!showInputs)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                  showInputs
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
-                }`}
+                onClick={handleReset}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                title="Reset to defaults"
               >
-                <Cog6ToothIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">Configure</span>
+                <ArrowPathIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Reset</span>
               </button>
 
               <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
-                title="Reset to defaults"
+                onClick={() => setShowInputs(!showInputs)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors ${
+                  showInputs
+                    ? 'bg-slate-900 text-white'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
               >
-                <ArrowPathIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">Reset</span>
+                <Cog6ToothIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Configure</span>
               </button>
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Input Panel Overlay */}
       {showInputs && (
-        <div className="fixed inset-0 z-40 flex">
+        <div className="fixed inset-0 z-50 flex">
           <div
-            className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/10"
             onClick={() => setShowInputs(false)}
           />
-          <div className="relative ml-auto w-full max-w-md bg-white shadow-2xl overflow-y-auto">
+          <div className="relative ml-auto w-full max-w-sm bg-white border-l border-slate-200 shadow-xl overflow-y-auto">
             <InputPanel
               inputs={inputs}
               onChange={handleInputChange}
@@ -135,47 +114,35 @@ export default function Calculator() {
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Marketing Scorecard - Top Level Summary */}
-        <MarketingScorecard
-          metrics={metrics}
-          keyMetrics={keyMetrics}
-          healthScore={healthScore}
-        />
+      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
+        {/* Executive Brief */}
+        <ExecutiveBrief metrics={metrics} inputs={inputs} />
 
-        {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-          {/* Funnel Metrics */}
-          <FunnelMetrics
-            inputs={inputs}
-            metrics={metrics}
-          />
+        {/* Divider */}
+        <div className="border-t border-slate-200 my-8" />
 
-          {/* Unit Economics */}
-          <UnitEconomics
-            metrics={metrics}
-            inputs={inputs}
-          />
-        </div>
+        {/* What Needs Attention */}
+        <WhatNeedsAttention metrics={metrics} />
 
-        {/* Secondary Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Growth & Retention */}
-          <GrowthHealth
-            metrics={metrics}
-            inputs={inputs}
-          />
+        {/* Where to Invest */}
+        <WhereToInvest metrics={metrics} inputs={inputs} />
 
-          {/* Financial Health */}
-          <FinancialHealth
-            metrics={metrics}
-          />
-        </div>
+        {/* Pipeline Funnel */}
+        <PipelineFunnel metrics={metrics} inputs={inputs} />
+
+        {/* Growth Trajectory */}
+        <GrowthTrajectory metrics={metrics} inputs={inputs} />
+
+        {/* Unit Economics */}
+        <UnitEconomicsTable metrics={metrics} inputs={inputs} />
+
+        {/* Financial Position */}
+        <FinancialPosition metrics={metrics} inputs={inputs} />
 
         {/* Footer */}
-        <footer className="mt-12 pt-6 border-t border-slate-200">
-          <p className="text-center text-sm text-slate-500">
-            Built for B2B SaaS Marketing Teams • All calculations update in real-time
+        <footer className="mt-10 pt-4 border-t border-slate-200">
+          <p className="text-xs text-slate-400 text-center">
+            All calculations update in real-time. Configure inputs to model different scenarios.
           </p>
         </footer>
       </main>
