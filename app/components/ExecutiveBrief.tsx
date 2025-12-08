@@ -98,7 +98,7 @@ export default function ExecutiveBrief({ metrics, inputs }: ExecutiveBriefProps)
       <div className="flex items-baseline justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            SaaS Performance Brief
+            Performance Brief
           </h1>
           <p className="text-slate-500 mt-1">Monthly intelligence summary</p>
         </div>
