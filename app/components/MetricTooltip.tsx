@@ -9,31 +9,83 @@ interface MetricTooltipProps {
   impact?: string;
 }
 
+type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+
 export default function MetricTooltip({ formula, description, impact }: MetricTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [position, setPosition] = useState<'right' | 'top'>('right');
+  const [position, setPosition] = useState<TooltipPosition>('right');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isVisible && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const tooltipWidth = 320; // 80 * 4 (w-80)
+      const tooltipHeight = 280; // Estimated height with all sections
+      const margin = 16; // Safety margin
+
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
 
-      // Check if there's enough space on the right for the tooltip (need ~320px)
-      const spaceOnRight = viewportWidth - rect.right;
+      // Calculate available space in each direction
+      const spaceRight = viewportWidth - rect.right;
+      const spaceLeft = rect.left;
+      const spaceTop = rect.top;
+      const spaceBottom = viewportHeight - rect.bottom;
 
-      // Check if we're in the bottom half of the viewport
-      const isBottomHalf = rect.top > viewportHeight / 2;
+      // Determine best position based on available space
+      let bestPosition: TooltipPosition = 'top'; // Default to top as safest
 
-      // If not enough space on right or in bottom half, show tooltip on top
-      if (spaceOnRight < 350 || isBottomHalf) {
-        setPosition('top');
-      } else {
-        setPosition('right');
+      // Prefer right if there's enough space
+      if (spaceRight >= tooltipWidth + margin) {
+        bestPosition = 'right';
       }
+      // Otherwise prefer left if there's space
+      else if (spaceLeft >= tooltipWidth + margin) {
+        bestPosition = 'left';
+      }
+      // If neither horizontal direction works, use vertical
+      else if (spaceTop >= tooltipHeight + margin) {
+        bestPosition = 'top';
+      }
+      else if (spaceBottom >= tooltipHeight + margin) {
+        bestPosition = 'bottom';
+      }
+      // If still nothing works, force top (will show but may need scroll)
+      else {
+        bestPosition = 'top';
+      }
+
+      setPosition(bestPosition);
     }
   }, [isVisible]);
+
+  const getPositionClasses = () => {
+    switch (position) {
+      case 'top':
+        return 'bottom-full left-1/2 -translate-x-1/2 mb-2';
+      case 'bottom':
+        return 'top-full left-1/2 -translate-x-1/2 mt-2';
+      case 'left':
+        return 'right-full top-1/2 -translate-y-1/2 mr-2';
+      case 'right':
+      default:
+        return 'left-full top-1/2 -translate-y-1/2 ml-2';
+    }
+  };
+
+  const getArrowClasses = () => {
+    switch (position) {
+      case 'top':
+        return 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1.5 border-b border-r';
+      case 'bottom':
+        return 'top-0 left-1/2 -translate-x-1/2 -translate-y-1.5 border-t border-l';
+      case 'left':
+        return 'right-0 top-1/2 -translate-y-1/2 translate-x-1.5 border-t border-r';
+      case 'right':
+      default:
+        return 'left-0 top-1/2 -translate-y-1/2 -translate-x-1.5 border-l border-b';
+    }
+  };
 
   return (
     <div className="relative inline-block">
@@ -50,19 +102,12 @@ export default function MetricTooltip({ formula, description, impact }: MetricTo
 
       {isVisible && (
         <div
-          className={`absolute z-50 w-80 bg-slate-900 text-white rounded-xl shadow-2xl p-4 border border-slate-700 ${
-            position === 'top'
-              ? 'bottom-full left-1/2 -translate-x-1/2 mb-2'
-              : 'left-6 top-0 -translate-y-2'
-          }`}
+          className={`absolute z-50 w-80 bg-slate-900 text-white rounded-xl shadow-2xl p-4 border border-slate-700 ${getPositionClasses()}`}
+          style={{ maxHeight: '80vh', overflowY: 'auto' }}
         >
           {/* Arrow */}
           <div
-            className={`absolute w-3 h-3 bg-slate-900 border-slate-700 rotate-45 ${
-              position === 'top'
-                ? 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1.5 border-b border-r'
-                : 'left-0 top-3 -translate-x-1.5 border-l border-t'
-            }`}
+            className={`absolute w-3 h-3 bg-slate-900 border-slate-700 rotate-45 ${getArrowClasses()}`}
           />
 
           {/* Formula Section */}
