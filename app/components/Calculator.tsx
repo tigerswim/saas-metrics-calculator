@@ -23,7 +23,7 @@ const defaultInputs: Inputs = {
   newBookings: 2400,
   expansionARR: 1600,
   churnedARR: 650,
-  customersChurned: 4,
+  customersChurned: 20,
   newCustomersAdded: 14,
   mqlsGenerated: 155,
   mqlToSQLConversion: 42,

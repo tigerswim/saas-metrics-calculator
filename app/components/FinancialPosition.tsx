@@ -25,7 +25,7 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
     { label: 'Gross Profit', value: metrics.grossProfit, type: 'subtotal' },
     { label: 'Sales & Marketing', value: inputs.totalSalesMarketing, type: 'cost' },
     { label: 'R&D', value: inputs.rdSpend, type: 'cost' },
-    { label: 'G&A', value: inputs.gaSpend, type: 'cost' },
+    { label: 'General & Administrative', value: inputs.gaSpend, type: 'cost' },
     { label: 'Total OpEx', value: metrics.totalOpEx, type: 'subtotal' },
     { label: 'EBITDA', value: metrics.ebitda, type: 'total' },
   ];
@@ -66,9 +66,9 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
 
   // Spend breakdown
   const spendBreakdown = [
-    { label: 'S&M', value: inputs.totalSalesMarketing, percent: (inputs.totalSalesMarketing / metrics.totalOpEx * 100), color: 'bg-blue-500' },
+    { label: 'Sales & Marketing', value: inputs.totalSalesMarketing, percent: (inputs.totalSalesMarketing / metrics.totalOpEx * 100), color: 'bg-blue-500' },
     { label: 'R&D', value: inputs.rdSpend, percent: (inputs.rdSpend / metrics.totalOpEx * 100), color: 'bg-violet-500' },
-    { label: 'G&A', value: inputs.gaSpend, percent: (inputs.gaSpend / metrics.totalOpEx * 100), color: 'bg-slate-400' },
+    { label: 'General & Administrative', value: inputs.gaSpend, percent: (inputs.gaSpend / metrics.totalOpEx * 100), color: 'bg-slate-400' },
   ];
 
   return (
@@ -166,12 +166,9 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
             <div className="space-y-4">
               {spendBreakdown.map((item) => (
                 <div key={item.label}>
-                  <div className="flex justify-between items-center mb-1">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${item.color}`} />
-                      <span className="text-sm text-slate-700">{item.label}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-sm text-slate-700 leading-tight max-w-[140px]">{item.label}</span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="tabular-nums font-medium text-slate-900">
                         {formatCurrency(item.value)}
                       </span>
