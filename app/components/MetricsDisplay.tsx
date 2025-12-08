@@ -2,6 +2,8 @@
 
 import { CalculatedMetrics } from '../types';
 import FormulaExplainer from './FormulaExplainer';
+import MetricTooltip from './MetricTooltip';
+import { getMetricDefinition } from '../utils/metricDefinitions';
 
 interface MetricsDisplayProps {
   metrics: CalculatedMetrics;
@@ -114,26 +116,38 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
             <h3 className="text-lg font-semibold text-white">{section.title}</h3>
           </div>
           <div className="p-6 space-y-3">
-            {section.metrics.map((metric) => (
-              <div key={metric.label}>
-                <div className="flex justify-between items-start border-b border-slate-100 pb-2 last:border-0">
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-slate-700">{metric.label}</div>
-                    {metric.description && (
-                      <div className="text-xs text-slate-500 mt-0.5">{metric.description}</div>
-                    )}
+            {section.metrics.map((metric) => {
+              const definition = getMetricDefinition(metric.label);
+              return (
+                <div key={metric.label}>
+                  <div className="flex justify-between items-start border-b border-slate-100 pb-2 last:border-0">
+                    <div className="flex-1">
+                      <div className="flex items-center">
+                        <div className="text-sm font-medium text-slate-700">{metric.label}</div>
+                        {definition && (
+                          <MetricTooltip
+                            formula={definition.formula}
+                            description={definition.description}
+                            impact={definition.impact}
+                          />
+                        )}
+                      </div>
+                      {metric.description && (
+                        <div className="text-xs text-slate-500 mt-0.5">{metric.description}</div>
+                      )}
+                    </div>
+                    <div className="text-sm font-semibold text-slate-900 ml-4">{metric.value}</div>
                   </div>
-                  <div className="text-sm font-semibold text-slate-900 ml-4">{metric.value}</div>
+                  {metric.showFormula && inputs && (
+                    <FormulaExplainer
+                      metricName={metric.showFormula}
+                      inputs={inputs}
+                      result={metric.formulaValue || 0}
+                    />
+                  )}
                 </div>
-                {metric.showFormula && inputs && (
-                  <FormulaExplainer
-                    metricName={metric.showFormula}
-                    inputs={inputs}
-                    result={metric.formulaValue || 0}
-                  />
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}

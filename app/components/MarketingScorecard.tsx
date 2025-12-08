@@ -1,6 +1,8 @@
 'use client';
 
 import { CalculatedMetrics, KeyMetric } from '../types';
+import MetricTooltip from './MetricTooltip';
+import { getMetricDefinition } from '../utils/metricDefinitions';
 import {
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
@@ -143,25 +145,37 @@ export default function MarketingScorecard({ metrics, keyMetrics, healthScore }:
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-6">
-        {keyMetrics.map((metric) => (
-          <div
-            key={metric.name}
-            className={`metric-card rounded-xl p-4 border ${getStatusBg(metric.status)}`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                {metric.name}
-              </span>
-              {getStatusIcon(metric.status)}
+        {keyMetrics.map((metric) => {
+          const definition = getMetricDefinition(metric.name);
+          return (
+            <div
+              key={metric.name}
+              className={`metric-card rounded-xl p-4 border ${getStatusBg(metric.status)}`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center">
+                  <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    {metric.name}
+                  </span>
+                  {definition && (
+                    <MetricTooltip
+                      formula={definition.formula}
+                      description={definition.description}
+                      impact={definition.impact}
+                    />
+                  )}
+                </div>
+                {getStatusIcon(metric.status)}
+              </div>
+              <div className="text-2xl font-bold text-slate-900 mb-1">
+                {metric.value}
+              </div>
+              <div className="text-xs text-slate-500">
+                Target: {metric.target}
+              </div>
             </div>
-            <div className="text-2xl font-bold text-slate-900 mb-1">
-              {metric.value}
-            </div>
-            <div className="text-xs text-slate-500">
-              Target: {metric.target}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Quick Stats */}
