@@ -58,7 +58,7 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
         Growth Trajectory
       </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ARR Movement */}
         <div>
           <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
@@ -68,14 +68,14 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
             {arrMovement.map((item, index) => (
               <div
                 key={item.label}
-                className={`flex justify-between items-center px-4 py-3 ${
+                className={`flex justify-between items-center px-4 py-2 ${
                   index < arrMovement.length - 1 ? 'border-b border-slate-100' : ''
                 } ${item.type === 'total' ? 'bg-slate-50 font-medium' : ''}`}
               >
-                <span className={`${item.type === 'total' ? 'text-slate-900' : 'text-slate-700'}`}>
+                <span className={`text-sm ${item.type === 'total' ? 'text-slate-900' : 'text-slate-700'}`}>
                   {item.label}
                 </span>
-                <span className={`tabular-nums ${
+                <span className={`tabular-nums text-sm ${
                   item.type === 'add' ? 'text-emerald-600' :
                   item.type === 'subtract' ? 'text-rose-600' :
                   item.type === 'total' ? 'text-slate-900 font-semibold' :
@@ -87,17 +87,17 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <div className="text-center py-3 bg-blue-50 border border-blue-100">
-              <div className={`text-2xl font-semibold tabular-nums ${
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="text-center py-2 bg-blue-50 border border-blue-100">
+              <div className={`text-lg font-semibold tabular-nums ${
                 metrics.arrGrowthRateMonthly >= 0 ? 'text-blue-600' : 'text-rose-600'
               }`}>
                 {metrics.arrGrowthRateMonthly >= 0 ? '+' : ''}{metrics.arrGrowthRateMonthly.toFixed(2)}%
               </div>
-              <div className="text-xs text-slate-500">Monthly Growth</div>
+              <div className="text-xs text-slate-500">Monthly</div>
             </div>
-            <div className="text-center py-3 bg-blue-50 border border-blue-100">
-              <div className={`text-2xl font-semibold tabular-nums ${
+            <div className="text-center py-2 bg-blue-50 border border-blue-100">
+              <div className={`text-lg font-semibold tabular-nums ${
                 metrics.annualizedGrowthRate >= 20 ? 'text-blue-600' : 'text-slate-700'
               }`}>
                 {metrics.annualizedGrowthRate.toFixed(0)}%
@@ -107,14 +107,45 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
           </div>
         </div>
 
-        {/* Retention & Customers */}
+        {/* Customers */}
+        <div>
+          <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+            Customers
+          </h3>
+          <div className="border border-slate-200">
+            {customerMetrics.map((metric, index) => (
+              <div
+                key={metric.label}
+                className={`flex justify-between items-center px-4 py-2 ${
+                  index < customerMetrics.length - 1 ? 'border-b border-slate-100' : ''
+                }`}
+              >
+                <span className="text-sm text-slate-700">{metric.label}</span>
+                <div className="flex items-center gap-2">
+                  <span className={`tabular-nums text-sm font-medium ${
+                    metric.value.startsWith('+') ? 'text-emerald-600' :
+                    metric.value.startsWith('-') ? 'text-rose-600' :
+                    'text-slate-900'
+                  }`}>
+                    {metric.value}
+                  </span>
+                  {metric.benchmark && (
+                    <span className="text-xs text-slate-400">{metric.benchmark}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Retention */}
         <div>
           <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
             Retention
           </h3>
-          <div className="border border-slate-200 mb-6">
+          <div className="border border-slate-200">
             {/* Header */}
-            <div className="grid grid-cols-4 gap-2 px-4 py-2 bg-slate-50 border-b border-slate-200 text-xs font-medium text-slate-500">
+            <div className="grid grid-cols-4 gap-1 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs font-medium text-slate-500">
               <div className="col-span-1">Metric</div>
               <div className="text-right">Monthly</div>
               <div className="text-right">Annual</div>
@@ -125,7 +156,7 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
               return (
                 <div
                   key={metric.label}
-                  className={`relative grid grid-cols-4 gap-2 px-4 py-3 ${
+                  className={`relative grid grid-cols-4 gap-1 px-3 py-2 ${
                     index < retentionMetrics.length - 1 ? 'border-b border-slate-100' : ''
                   }`}
                 >
@@ -148,40 +179,12 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
                       </div>
                     )}
                   </div>
-                  <div className="text-right tabular-nums text-slate-600">{metric.monthly}</div>
-                  <div className="text-right tabular-nums font-medium text-slate-900">{metric.annual}</div>
-                  <div className="text-right tabular-nums text-slate-500">{metric.benchmark}</div>
+                  <div className="text-right tabular-nums text-sm text-slate-600">{metric.monthly}</div>
+                  <div className="text-right tabular-nums text-sm font-medium text-slate-900">{metric.annual}</div>
+                  <div className="text-right tabular-nums text-xs text-slate-500">{metric.benchmark}</div>
                 </div>
               );
             })}
-          </div>
-
-          <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
-            Customers
-          </h3>
-          <div className="border border-slate-200">
-            {customerMetrics.map((metric, index) => (
-              <div
-                key={metric.label}
-                className={`flex justify-between items-center px-4 py-2 ${
-                  index < customerMetrics.length - 1 ? 'border-b border-slate-100' : ''
-                }`}
-              >
-                <span className="text-sm text-slate-700">{metric.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className={`tabular-nums font-medium ${
-                    metric.value.startsWith('+') ? 'text-emerald-600' :
-                    metric.value.startsWith('-') ? 'text-rose-600' :
-                    'text-slate-900'
-                  }`}>
-                    {metric.value}
-                  </span>
-                  {metric.benchmark && (
-                    <span className="text-xs text-slate-400">{metric.benchmark}</span>
-                  )}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

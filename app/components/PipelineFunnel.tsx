@@ -15,7 +15,18 @@ interface FunnelStage {
 }
 
 export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps) {
+  // Calculate Lead to MQL conversion rate
+  const leadToMqlRate = inputs.leadsGenerated > 0
+    ? (inputs.mqlsGenerated / inputs.leadsGenerated) * 100
+    : 0;
+
   const stages: FunnelStage[] = [
+    {
+      label: 'Leads',
+      value: inputs.leadsGenerated,
+      conversionTo: leadToMqlRate,
+      conversionLabel: 'Lead→MQL'
+    },
     {
       label: 'MQLs',
       value: inputs.mqlsGenerated,
@@ -29,13 +40,13 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
       conversionLabel: 'SQL→Opp'
     },
     {
-      label: 'Opportunities',
+      label: 'Opps',
       value: metrics.opportunitiesCreated,
       conversionTo: inputs.winRate,
       conversionLabel: 'Win Rate'
     },
     {
-      label: 'Deals Won',
+      label: 'Won',
       value: metrics.dealsClosedWon,
     },
   ];
@@ -63,7 +74,10 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
         <div className="p-6">
           <div className="flex items-end justify-between gap-2">
             {stages.map((stage, index) => {
-              const heightPercent = Math.max(20, (stage.value / maxValue) * 100);
+              // Scale height properly: max 120px, min 8px for visibility
+              const maxHeight = 120;
+              const minHeight = 8;
+              const scaledHeight = Math.max(minHeight, (stage.value / maxValue) * maxHeight);
               const isLast = index === stages.length - 1;
 
               return (
@@ -81,11 +95,12 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
                     <div
                       className="transition-all duration-300"
                       style={{
-                        height: `${heightPercent}px`,
+                        height: `${scaledHeight}px`,
                         background: `linear-gradient(to bottom, ${
-                          index === 0 ? '#93c5fd, #3b82f6' :
-                          index === 1 ? '#60a5fa, #2563eb' :
-                          index === 2 ? '#3b82f6, #1d4ed8' :
+                          index === 0 ? '#c4b5fd, #8b5cf6' :
+                          index === 1 ? '#93c5fd, #3b82f6' :
+                          index === 2 ? '#60a5fa, #2563eb' :
+                          index === 3 ? '#3b82f6, #1d4ed8' :
                           '#22c55e, #16a34a'
                         })`
                       }}

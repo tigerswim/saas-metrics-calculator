@@ -70,6 +70,7 @@ const defaultInputs: Inputs = {
   churnedARR: 650,
   customersChurned: 20,
   newCustomersAdded: 14,
+  leadsGenerated: 620,
   mqlsGenerated: 155,
   mqlToSQLConversion: 42,
   sqlToOppConversion: 68,

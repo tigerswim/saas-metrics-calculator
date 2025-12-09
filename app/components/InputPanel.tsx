@@ -142,6 +142,11 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Funnel" defaultOpen={true}>
           <InputField
+            label="Leads Generated"
+            value={inputs.leadsGenerated}
+            onChange={(v) => onChange('leadsGenerated', v)}
+          />
+          <InputField
             label="MQLs Generated"
             value={inputs.mqlsGenerated}
             onChange={(v) => onChange('mqlsGenerated', v)}

@@ -7,6 +7,7 @@ export interface Inputs {
   churnedARR: number;
   customersChurned: number;
   newCustomersAdded: number;
+  leadsGenerated: number;
   mqlsGenerated: number;
   mqlToSQLConversion: number;
   sqlToOppConversion: number;

@@ -22,8 +22,11 @@ export const inputTooltips: Record<keyof Inputs, string> = {
   newCustomersAdded:
     'Number of new customer accounts acquired this month. Should align with your new bookings.',
 
+  leadsGenerated:
+    'Total leads captured this month (form fills, demo requests, content downloads, etc.). Raw leads before qualification.',
+
   mqlsGenerated:
-    'Marketing Qualified Leads generated this month. Leads that meet your criteria for sales follow-up.',
+    'Marketing Qualified Leads generated this month. Leads that meet your scoring criteria for sales follow-up.',
 
   mqlToSQLConversion:
     'Percentage of MQLs that become Sales Qualified Leads. Enter as whole number (e.g., 40 = 40%).',
