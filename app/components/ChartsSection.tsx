@@ -27,7 +27,7 @@ export default function ChartsSection({ inputs, metrics }: ChartsSectionProps) {
           growthRate={metrics.arrGrowthRateMonthly}
           beginningARR={inputs.beginningARR}
           endingARR={metrics.endingARR}
-          newBookings={inputs.newBookings}
+          newBookings={metrics.newBookings}
           expansion={inputs.expansionARR}
           churn={inputs.churnedARR}
         />

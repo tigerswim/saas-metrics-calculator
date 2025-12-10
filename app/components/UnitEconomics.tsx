@@ -63,8 +63,11 @@ export default function UnitEconomics({ metrics, inputs }: UnitEconomicsProps) {
   const cacPaybackStatus = metrics.cacPaybackPeriod <= 12 ? 'good' : metrics.cacPaybackPeriod <= 18 ? 'warning' : 'bad';
   const magicNumberStatus = metrics.magicNumber >= 1 ? 'good' : metrics.magicNumber >= 0.75 ? 'warning' : 'bad';
 
+  // Derive paid marketing spend from channels
+  const paidMarketingSpend = inputs.paidSearchSpend + inputs.paidSocialSpend;
+
   // Visualize CAC breakdown
-  const paidPercent = (inputs.paidMarketingSpend / inputs.totalSalesMarketing) * 100;
+  const paidPercent = (paidMarketingSpend / inputs.totalSalesMarketing) * 100;
   const nonPaidPercent = 100 - paidPercent;
 
   return (

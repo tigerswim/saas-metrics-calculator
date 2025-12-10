@@ -68,6 +68,10 @@ export default function UnitEconomicsTable({ metrics, inputs }: UnitEconomicsTab
     },
   ];
 
+  // Derive marketing totals from channels
+  const totalMarketingSpend = inputs.paidSearchSpend + inputs.paidSocialSpend + inputs.eventsSpend + inputs.contentSpend + inputs.partnershipsSpend;
+  const paidMarketingSpend = inputs.paidSearchSpend + inputs.paidSocialSpend;
+
   // Acquisition costs breakdown
   const acquisitionMetrics = [
     {
@@ -76,11 +80,11 @@ export default function UnitEconomicsTable({ metrics, inputs }: UnitEconomicsTab
     },
     {
       label: 'Marketing Spend',
-      value: formatCurrency(inputs.totalMarketingSpend * 1000),
+      value: formatCurrency(totalMarketingSpend * 1000),
     },
     {
       label: 'Paid Marketing Spend',
-      value: formatCurrency(inputs.paidMarketingSpend * 1000),
+      value: formatCurrency(paidMarketingSpend * 1000),
     },
     {
       label: 'CAC (Paid Only)',

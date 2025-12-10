@@ -7,8 +7,7 @@ export const inputTooltips: Record<keyof Inputs, string> = {
   totalCustomers:
     'The total number of customer accounts at the start of the month. Count paying customers only, not free users.',
 
-  newBookings:
-    'New ARR from customers acquired this month, in thousands (e.g., 3500 = $3.5M). Include only first-time customers.',
+  // newBookings is now calculated: newCustomersAdded × avgDealSize
 
   expansionARR:
     'Additional ARR from existing customers this month (upsells, cross-sells), in thousands (e.g., 1200 = $1.2M).',
@@ -43,11 +42,46 @@ export const inputTooltips: Record<keyof Inputs, string> = {
   salesCycle:
     'Average time from opportunity creation to close, in months (e.g., 4.5 = 4.5 months).',
 
-  totalMarketingSpend:
-    'Total marketing spend this month, in thousands (e.g., 2800 = $2.8M). Include all marketing costs.',
+  // Channel Mix
+  paidSearchSpend:
+    'Google/Bing ads spend this month, in thousands (e.g., 120 = $120K). High-intent search traffic.',
 
-  paidMarketingSpend:
-    'Paid advertising spend this month, in thousands (e.g., 1400 = $1.4M). Subset of total marketing.',
+  paidSearchLeads:
+    'Leads generated from paid search campaigns this month. Typically higher intent than social.',
+
+  paidSocialSpend:
+    'LinkedIn, Meta, Twitter ads spend this month, in thousands (e.g., 165 = $165K).',
+
+  paidSocialLeads:
+    'Leads generated from paid social campaigns this month. Good for awareness and targeting.',
+
+  eventsSpend:
+    'Events, webinars, trade shows spend this month, in thousands. Include sponsorships and hosting costs.',
+
+  eventsLeads:
+    'Leads captured from events and webinars this month. Often higher quality, lower volume.',
+
+  contentSpend:
+    'Content marketing and SEO spend this month, in thousands. Include content creation and distribution.',
+
+  contentLeads:
+    'Leads from organic content (blog, SEO, gated assets). Often lower cost, longer sales cycle.',
+
+  partnershipsSpend:
+    'Partner marketing, affiliate, and referral program spend this month, in thousands.',
+
+  partnershipsLeads:
+    'Leads from partnerships, referrals, and affiliates. Often highest quality, hardest to scale.',
+
+  // ABM metrics
+  targetAccounts:
+    'Total accounts in your ABM program. These are high-value accounts you are actively targeting.',
+
+  engagedAccounts:
+    'Target accounts showing meaningful activity (site visits, content downloads, ad clicks, email opens).',
+
+  abmSpend:
+    'Marketing spend allocated to ABM programs, in thousands. Includes ABM platforms, targeted ads, direct mail, events.',
 
   paidImpressions:
     'Total ad impressions from paid campaigns this month (e.g., 25000 = 25K impressions).',

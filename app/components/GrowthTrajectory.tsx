@@ -19,7 +19,7 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
   // ARR Movement data
   const arrMovement = [
     { label: 'Beginning ARR', value: inputs.beginningARR * 1000, type: 'base' },
-    { label: 'New Bookings', value: inputs.newBookings, type: 'add' },
+    { label: 'New Bookings', value: metrics.newBookings, type: 'add' },
     { label: 'Expansion', value: inputs.expansionARR, type: 'add' },
     { label: 'Churned', value: -inputs.churnedARR, type: 'subtract' },
     { label: 'Ending ARR', value: metrics.endingARR * 1000, type: 'total' },

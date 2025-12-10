@@ -54,13 +54,31 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
   // Calculate max for relative sizing
   const maxValue = Math.max(...stages.map(s => s.value));
 
+  // Derive total marketing spend from channels
+  const totalMarketingSpend = inputs.paidSearchSpend + inputs.paidSocialSpend + inputs.eventsSpend + inputs.contentSpend + inputs.partnershipsSpend;
+
   // Pipeline metrics
   const pipelineMetrics = [
-    { label: 'Pipeline Generated', value: `$${(metrics.pipelineGenerated / 1000).toFixed(0)}K` },
-    { label: 'Pipeline Velocity', value: `$${metrics.pipelineVelocity.toFixed(0)}/day` },
+    { label: 'Pipeline Generated', value: `$${(metrics.pipelineGenerated / 1000).toFixed(1)}M` },
+    { label: 'Pipeline Velocity', value: `$${(metrics.pipelineVelocity / 1000).toFixed(1)}K/day` },
     { label: 'Avg Deal Size', value: `$${inputs.avgDealSize}K` },
     { label: 'Sales Cycle', value: `${inputs.salesCycle} mo` },
     { label: 'Overall Conversion', value: `${metrics.pipelineConversion.toFixed(1)}%` },
+  ];
+
+  // Funnel economics - cost per stage
+  const costPerLead = inputs.leadsGenerated > 0 ? (totalMarketingSpend * 1000) / inputs.leadsGenerated : 0;
+  const costPerMQL = inputs.mqlsGenerated > 0 ? (totalMarketingSpend * 1000) / inputs.mqlsGenerated : 0;
+  const costPerSQL = metrics.sqlsGenerated > 0 ? (totalMarketingSpend * 1000) / metrics.sqlsGenerated : 0;
+  const costPerOpp = metrics.opportunitiesCreated > 0 ? (totalMarketingSpend * 1000) / metrics.opportunitiesCreated : 0;
+  const costPerWon = metrics.dealsClosedWon > 0 ? (totalMarketingSpend * 1000) / metrics.dealsClosedWon : 0;
+
+  const funnelEconomics = [
+    { label: 'Cost/Lead', value: `$${costPerLead.toFixed(0)}` },
+    { label: 'Cost/MQL', value: `$${costPerMQL.toFixed(0)}` },
+    { label: 'Cost/SQL', value: `$${costPerSQL.toFixed(0)}` },
+    { label: 'Cost/Opp', value: `$${costPerOpp.toLocaleString(undefined, {maximumFractionDigits: 0})}` },
+    { label: 'Cost/Won', value: `$${costPerWon.toLocaleString(undefined, {maximumFractionDigits: 0})}` },
   ];
 
   return (
@@ -81,9 +99,9 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
               const isLast = index === stages.length - 1;
 
               return (
-                <div key={stage.label} className="flex-1 flex items-end gap-2">
+                <div key={stage.label} className="flex items-end gap-2">
                   {/* Stage Bar */}
-                  <div className="flex-1">
+                  <div className="w-32">
                     <div className="text-center mb-2">
                       <div className="text-2xl font-semibold tabular-nums text-slate-900">
                         {stage.value.toLocaleString()}
@@ -132,6 +150,20 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
         {/* Pipeline Metrics Row */}
         <div className="grid grid-cols-5 border-t border-slate-200 bg-slate-50">
           {pipelineMetrics.map((metric) => (
+            <div key={metric.label} className="px-4 py-3 text-center border-r border-slate-200 last:border-r-0">
+              <div className="text-sm font-medium tabular-nums text-slate-900">
+                {metric.value}
+              </div>
+              <div className="text-xs text-slate-500">
+                {metric.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Funnel Economics Row */}
+        <div className="grid grid-cols-5 border-t border-slate-200">
+          {funnelEconomics.map((metric) => (
             <div key={metric.label} className="px-4 py-3 text-center border-r border-slate-200 last:border-r-0">
               <div className="text-sm font-medium tabular-nums text-slate-900">
                 {metric.value}

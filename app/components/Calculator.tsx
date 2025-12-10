@@ -12,6 +12,7 @@ import PipelineFunnel from './PipelineFunnel';
 import GrowthTrajectory from './GrowthTrajectory';
 import UnitEconomicsTable from './UnitEconomicsTable';
 import FinancialPosition from './FinancialPosition';
+import ChannelMix from './ChannelMix';
 // Methodology component available at ./Methodology.tsx - uncomment import to enable
 // import Methodology from './Methodology';
 import {
@@ -34,7 +35,7 @@ const personaConfigs: Record<Persona, PersonaConfig> = {
     label: 'All Metrics',
     shortLabel: 'All',
     description: 'Complete view of all SaaS metrics',
-    sections: ['brief', 'attention', 'invest', 'pipeline', 'growth', 'economics', 'financial'],
+    sections: ['brief', 'attention', 'invest', 'channels', 'pipeline', 'growth', 'economics', 'financial'],
   },
   ceo: {
     label: 'CEO / Board',
@@ -58,14 +59,13 @@ const personaConfigs: Record<Persona, PersonaConfig> = {
     label: 'CMO',
     shortLabel: 'Mktg',
     description: 'Marketing efficiency and funnel metrics',
-    sections: ['brief', 'attention', 'invest', 'pipeline', 'economics'],
+    sections: ['brief', 'attention', 'channels', 'invest', 'pipeline', 'economics'],
   },
 };
 
 const defaultInputs: Inputs = {
   beginningARR: 150,
   totalCustomers: 800,
-  newBookings: 2400,
   expansionARR: 1600,
   churnedARR: 650,
   customersChurned: 20,
@@ -77,8 +77,22 @@ const defaultInputs: Inputs = {
   winRate: 32,
   avgDealSize: 175,
   salesCycle: 4.2,
-  totalMarketingSpend: 565,
-  paidMarketingSpend: 283,
+  // Channel mix (spend in $K, leads as count)
+  paidSearchSpend: 120,
+  paidSearchLeads: 180,
+  paidSocialSpend: 165,
+  paidSocialLeads: 140,
+  eventsSpend: 80,
+  eventsLeads: 65,
+  contentSpend: 45,
+  contentLeads: 175,
+  partnershipsSpend: 15,
+  partnershipsLeads: 60,
+  // ABM metrics
+  targetAccounts: 250,
+  engagedAccounts: 85,
+  abmSpend: 140,
+  // Paid media detail
   paidImpressions: 28000,
   paidClicks: 3800,
   totalSalesMarketing: 1125,
@@ -204,6 +218,11 @@ export default function Calculator() {
         {/* Where to Invest */}
         {showSection('invest') && (
           <WhereToInvest metrics={metrics} inputs={inputs} />
+        )}
+
+        {/* Channel Mix */}
+        {showSection('channels') && (
+          <ChannelMix inputs={inputs} metrics={metrics} />
         )}
 
         {/* Pipeline Funnel */}

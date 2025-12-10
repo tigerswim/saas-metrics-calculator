@@ -53,7 +53,7 @@ export default function GrowthHealth({ metrics, inputs }: GrowthHealthProps) {
       <div className="p-6 border-b border-slate-200">
         <ARRWaterfall
           beginningARR={inputs.beginningARR}
-          newBookings={inputs.newBookings}
+          newBookings={metrics.newBookings}
           expansion={inputs.expansionARR}
           churn={inputs.churnedARR}
           endingARR={metrics.endingARR}

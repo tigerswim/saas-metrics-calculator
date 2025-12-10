@@ -111,12 +111,6 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Monthly Movement" defaultOpen={true}>
           <InputField
-            label="New Bookings"
-            value={inputs.newBookings}
-            onChange={(v) => onChange('newBookings', v)}
-            suffix="$K"
-          />
-          <InputField
             label="Expansion ARR"
             value={inputs.expansionARR}
             onChange={(v) => onChange('expansionARR', v)}
@@ -187,19 +181,120 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
           />
         </InputGroup>
 
-        <InputGroup title="Marketing Spend" defaultOpen={false}>
-          <InputField
-            label="Total Marketing"
-            value={inputs.totalMarketingSpend}
-            onChange={(v) => onChange('totalMarketingSpend', v)}
-            suffix="$K"
-          />
-          <InputField
-            label="Paid Marketing"
-            value={inputs.paidMarketingSpend}
-            onChange={(v) => onChange('paidMarketingSpend', v)}
-            suffix="$K"
-          />
+        <InputGroup title="Channel Mix" defaultOpen={false}>
+          <div className="text-xs text-slate-500 mb-3 -mt-1">Spend ($K) and leads by channel</div>
+
+          <div className="space-y-4">
+            <div className="border-b border-slate-100 pb-3">
+              <div className="text-xs font-medium text-slate-700 mb-2">Paid Search (SEM)</div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputField
+                  label="Spend"
+                  value={inputs.paidSearchSpend}
+                  onChange={(v) => onChange('paidSearchSpend', v)}
+                  suffix="$K"
+                />
+                <InputField
+                  label="Leads"
+                  value={inputs.paidSearchLeads}
+                  onChange={(v) => onChange('paidSearchLeads', v)}
+                />
+              </div>
+            </div>
+
+            <div className="border-b border-slate-100 pb-3">
+              <div className="text-xs font-medium text-slate-700 mb-2">Paid Social (LinkedIn, Meta)</div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputField
+                  label="Spend"
+                  value={inputs.paidSocialSpend}
+                  onChange={(v) => onChange('paidSocialSpend', v)}
+                  suffix="$K"
+                />
+                <InputField
+                  label="Leads"
+                  value={inputs.paidSocialLeads}
+                  onChange={(v) => onChange('paidSocialLeads', v)}
+                />
+              </div>
+            </div>
+
+            <div className="border-b border-slate-100 pb-3">
+              <div className="text-xs font-medium text-slate-700 mb-2">Events & Webinars</div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputField
+                  label="Spend"
+                  value={inputs.eventsSpend}
+                  onChange={(v) => onChange('eventsSpend', v)}
+                  suffix="$K"
+                />
+                <InputField
+                  label="Leads"
+                  value={inputs.eventsLeads}
+                  onChange={(v) => onChange('eventsLeads', v)}
+                />
+              </div>
+            </div>
+
+            <div className="border-b border-slate-100 pb-3">
+              <div className="text-xs font-medium text-slate-700 mb-2">Content & SEO</div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputField
+                  label="Spend"
+                  value={inputs.contentSpend}
+                  onChange={(v) => onChange('contentSpend', v)}
+                  suffix="$K"
+                />
+                <InputField
+                  label="Leads"
+                  value={inputs.contentLeads}
+                  onChange={(v) => onChange('contentLeads', v)}
+                />
+              </div>
+            </div>
+
+            <div className="border-b border-slate-100 pb-3">
+              <div className="text-xs font-medium text-slate-700 mb-2">Partnerships & Referrals</div>
+              <div className="grid grid-cols-2 gap-2">
+                <InputField
+                  label="Spend"
+                  value={inputs.partnershipsSpend}
+                  onChange={(v) => onChange('partnershipsSpend', v)}
+                  suffix="$K"
+                />
+                <InputField
+                  label="Leads"
+                  value={inputs.partnershipsLeads}
+                  onChange={(v) => onChange('partnershipsLeads', v)}
+                />
+              </div>
+            </div>
+
+            <div className="pb-1">
+              <div className="text-xs font-medium text-slate-700 mb-2">ABM Program</div>
+              <div className="grid grid-cols-3 gap-2">
+                <InputField
+                  label="Target Accts"
+                  value={inputs.targetAccounts}
+                  onChange={(v) => onChange('targetAccounts', v)}
+                />
+                <InputField
+                  label="Engaged"
+                  value={inputs.engagedAccounts}
+                  onChange={(v) => onChange('engagedAccounts', v)}
+                />
+                <InputField
+                  label="ABM Spend"
+                  value={inputs.abmSpend}
+                  onChange={(v) => onChange('abmSpend', v)}
+                  suffix="$K"
+                />
+              </div>
+            </div>
+          </div>
+        </InputGroup>
+
+        <InputGroup title="Paid Media Detail" defaultOpen={false}>
           <InputField
             label="Paid Impressions"
             value={inputs.paidImpressions}

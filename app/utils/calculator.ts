@@ -5,7 +5,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const {
     beginningARR,
     totalCustomers,
-    newBookings,
     expansionARR,
     churnedARR,
     customersChurned,
@@ -16,8 +15,12 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     winRate,
     avgDealSize,
     salesCycle,
-    totalMarketingSpend,
-    paidMarketingSpend,
+    // Channel mix inputs
+    paidSearchSpend,
+    paidSocialSpend,
+    eventsSpend,
+    contentSpend,
+    partnershipsSpend,
     paidImpressions,
     paidClicks,
     totalSalesMarketing,
@@ -26,6 +29,13 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     cogsPercent,
     avgCustomerLifetime,
   } = inputs;
+
+  // Derive totals from channel mix
+  const totalMarketingSpend = paidSearchSpend + paidSocialSpend + eventsSpend + contentSpend + partnershipsSpend;
+  const paidMarketingSpend = paidSearchSpend + paidSocialSpend;
+
+  // Calculate New Bookings from new customers and deal size
+  const newBookings = newCustomersAdded * avgDealSize;
 
   // ARR & Growth Metrics
   const netNewARR = newBookings + expansionARR - churnedARR;
@@ -50,7 +60,9 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const dealsClosedWon = Math.round(opportunitiesCreated * (winRate / 100));
   const pipelineGenerated = opportunitiesCreated * avgDealSize;
   const pipelineConversion = (dealsClosedWon / (mqlsGenerated || 1)) * 100;
-  const pipelineVelocity = pipelineGenerated / 30 / salesCycle; // $ per day
+  // Pipeline Velocity: (Opportunities × Deal Size × Win Rate) / Sales Cycle in days
+  // Measures: expected revenue throughput per day
+  const pipelineVelocity = (opportunitiesCreated * avgDealSize * 1000 * (winRate / 100)) / (salesCycle * 30);
 
   // Calculate ARPA
   const arpa = (beginningARR * 1000000) / totalCustomers / 12; // Monthly ARPA
@@ -79,9 +91,12 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const ebitdaMargin = (ebitda / monthlyRevenue) * 100;
   const ruleOf40 = (annualizedGrowthRate * 100) + ebitdaMargin;
   const saasQuickRatio = (newBookings + expansionARR) / (churnedARR || 1);
-  const burnMultiple = Math.abs(ebitda) / (netNewARR || 1);
+  // Burn Multiple only meaningful when EBITDA is negative (company is burning cash)
+  // When profitable (EBITDA >= 0), burn multiple is 0 (no burn)
+  const burnMultiple = ebitda < 0 ? Math.abs(ebitda) / (netNewARR || 1) : 0;
 
   return {
+    newBookings,
     netNewARR,
     endingARR: endingARR / 1000, // Convert back to $M
     mrr: mrr / 1000, // Convert to $M

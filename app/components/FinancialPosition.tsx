@@ -58,9 +58,9 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
     },
     {
       label: 'Burn Multiple',
-      value: `${metrics.burnMultiple.toFixed(1)}x`,
+      value: metrics.burnMultiple === 0 ? 'N/A (profitable)' : `${metrics.burnMultiple.toFixed(1)}x`,
       benchmark: '<1.5x',
-      status: metrics.burnMultiple <= 1.0 ? 'good' : metrics.burnMultiple <= 1.5 ? 'warning' : 'bad'
+      status: metrics.burnMultiple === 0 ? 'good' : metrics.burnMultiple <= 1.0 ? 'good' : metrics.burnMultiple <= 1.5 ? 'warning' : 'bad'
     },
   ];
 

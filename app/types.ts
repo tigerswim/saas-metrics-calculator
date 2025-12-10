@@ -2,7 +2,7 @@
 export interface Inputs {
   beginningARR: number;
   totalCustomers: number;
-  newBookings: number;
+  // newBookings is now calculated: newCustomersAdded × avgDealSize
   expansionARR: number;
   churnedARR: number;
   customersChurned: number;
@@ -14,8 +14,22 @@ export interface Inputs {
   winRate: number;
   avgDealSize: number;
   salesCycle: number;
-  totalMarketingSpend: number;
-  paidMarketingSpend: number;
+  // Channel Mix (spend in $K, leads as count)
+  paidSearchSpend: number;
+  paidSearchLeads: number;
+  paidSocialSpend: number;
+  paidSocialLeads: number;
+  eventsSpend: number;
+  eventsLeads: number;
+  contentSpend: number;
+  contentLeads: number;
+  partnershipsSpend: number;
+  partnershipsLeads: number;
+  // ABM metrics
+  targetAccounts: number;
+  engagedAccounts: number;
+  abmSpend: number;
+  // Paid media detail (for CPM/CPC/CTR)
   paidImpressions: number;
   paidClicks: number;
   totalSalesMarketing: number;
@@ -27,6 +41,7 @@ export interface Inputs {
 
 export interface CalculatedMetrics {
   // ARR & Growth
+  newBookings: number; // Calculated: newCustomersAdded × avgDealSize
   netNewARR: number;
   endingARR: number;
   mrr: number;
