@@ -13,11 +13,14 @@ import GrowthTrajectory from './GrowthTrajectory';
 import UnitEconomicsTable from './UnitEconomicsTable';
 import FinancialPosition from './FinancialPosition';
 import ChannelMix from './ChannelMix';
+import MetricsMap from './MetricsMap';
 // Methodology component available at ./Methodology.tsx - uncomment import to enable
 // import Methodology from './Methodology';
 import {
   Cog6ToothIcon,
   ArrowPathIcon,
+  Squares2X2Icon,
+  RectangleGroupIcon,
 } from '@heroicons/react/24/outline';
 
 // Persona types for different stakeholder views
@@ -102,11 +105,14 @@ const defaultInputs: Inputs = {
   avgCustomerLifetime: 18,
 };
 
+type ViewMode = 'sections' | 'map';
+
 export default function Calculator() {
   const [inputs, setInputs] = useState<Inputs>(defaultInputs);
   const [metrics, setMetrics] = useState<CalculatedMetrics>(calculateMetrics(defaultInputs));
   const [showInputs, setShowInputs] = useState(false);
   const [activePersona, setActivePersona] = useState<Persona>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('sections');
 
   const currentConfig = personaConfigs[activePersona];
   const showSection = (section: string) => currentConfig.sections.includes(section);
@@ -151,6 +157,35 @@ export default function Calculator() {
             {/* Description */}
             <div className="text-xs text-slate-400 hidden md:block flex-1 text-center">
               {currentConfig.description}
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <span className="text-xs text-slate-500 mr-2 hidden sm:inline">Layout:</span>
+              <button
+                onClick={() => setViewMode('sections')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                  viewMode === 'sections'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                }`}
+                title="Sections View"
+              >
+                <Squares2X2Icon className="w-4 h-4" />
+                <span className="hidden sm:inline">Sections</span>
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                  viewMode === 'map'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                }`}
+                title="Metrics Map View"
+              >
+                <RectangleGroupIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Map</span>
+              </button>
             </div>
 
             {/* Actions */}
@@ -206,43 +241,65 @@ export default function Calculator() {
         )}
 
         {/* Divider after brief */}
-        {showSection('brief') && (showSection('attention') || showSection('invest') || showSection('pipeline') || showSection('growth') || showSection('economics') || showSection('financial')) && (
+        {showSection('brief') && viewMode === 'sections' && (showSection('attention') || showSection('invest') || showSection('pipeline') || showSection('growth') || showSection('economics') || showSection('financial')) && (
           <div className="border-t border-slate-200 my-8" />
         )}
 
-        {/* What Needs Attention */}
-        {showSection('attention') && (
-          <WhatNeedsAttention metrics={metrics} />
-        )}
+        {/* Conditional rendering based on view mode */}
+        {viewMode === 'map' ? (
+          /* Metrics Map View */
+          <>
+            <MetricsMap metrics={metrics} inputs={inputs} />
+            {/* Keep detailed tables as expandable sections below map */}
+            {showSection('economics') && (
+              <div className="mt-8">
+                <UnitEconomicsTable metrics={metrics} inputs={inputs} />
+              </div>
+            )}
+            {showSection('financial') && (
+              <div className="mt-8">
+                <FinancialPosition metrics={metrics} inputs={inputs} />
+              </div>
+            )}
+          </>
+        ) : (
+          /* Sections View */
+          <>
+            {/* What Needs Attention */}
+            {showSection('attention') && (
+              <WhatNeedsAttention metrics={metrics} />
+            )}
 
-        {/* Where to Invest */}
-        {showSection('invest') && (
-          <WhereToInvest metrics={metrics} inputs={inputs} />
-        )}
+            {/* Where to Invest */}
+            {showSection('invest') && (
+              <WhereToInvest metrics={metrics} inputs={inputs} />
+            )}
 
-        {/* Channel Mix */}
-        {showSection('channels') && (
-          <ChannelMix inputs={inputs} metrics={metrics} />
-        )}
+            {/* Channel Mix */}
+            {showSection('channels') && (
+              <ChannelMix inputs={inputs} metrics={metrics} />
+            )}
 
-        {/* Pipeline Funnel */}
-        {showSection('pipeline') && (
-          <PipelineFunnel metrics={metrics} inputs={inputs} />
-        )}
+            {/* Pipeline Funnel */}
+            {showSection('pipeline') && (
+              <PipelineFunnel metrics={metrics} inputs={inputs} />
+            )}
 
-        {/* Growth Trajectory */}
-        {showSection('growth') && (
-          <GrowthTrajectory metrics={metrics} inputs={inputs} />
-        )}
+            {/* Growth Trajectory */}
+            {showSection('growth') && (
+              <GrowthTrajectory metrics={metrics} inputs={inputs} />
+            )}
 
-        {/* Unit Economics */}
-        {showSection('economics') && (
-          <UnitEconomicsTable metrics={metrics} inputs={inputs} />
-        )}
+            {/* Unit Economics */}
+            {showSection('economics') && (
+              <UnitEconomicsTable metrics={metrics} inputs={inputs} />
+            )}
 
-        {/* Financial Position */}
-        {showSection('financial') && (
-          <FinancialPosition metrics={metrics} inputs={inputs} />
+            {/* Financial Position */}
+            {showSection('financial') && (
+              <FinancialPosition metrics={metrics} inputs={inputs} />
+            )}
+          </>
         )}
 
         {/* Methodology & Sources - disabled for now, component available at ./Methodology.tsx */}
