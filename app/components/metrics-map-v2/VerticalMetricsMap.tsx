@@ -145,7 +145,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
   ];
 
   // Complete metrics for each layer
-  const layerMetrics: Record<string, Array<{
+  type MetricCard = {
     id: string;
     label: string;
     value: string;
@@ -163,7 +163,9 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
       value: string;
       status?: 'good' | 'warning' | 'bad' | 'neutral';
     }>;
-  }>> = {
+  };
+
+  const layerMetrics: Record<string, MetricCard[] | Record<string, MetricCard[]>> = {
     budget: [
       {
         id: 'sales-marketing-spend',
@@ -324,7 +326,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
     ],
     revenue: {
       // Left Column: New Customer Revenue
-      new: [
+      newRevenue: [
         {
           id: 'new-customers-added',
           label: 'New Customers',
@@ -735,7 +737,8 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
         <div className="flex flex-col gap-12">
           {layers.map((layer) => {
           const isExpanded = expandedLayers.has(layer.id);
-          const layerMetricsList = layerMetrics[layer.id] || [];
+          const layerData = layerMetrics[layer.id];
+          const layerMetricsList = Array.isArray(layerData) ? layerData : [];
 
           return (
             <div key={layer.id} className="mb-8 last:mb-0">
@@ -1011,7 +1014,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                         {/* Left Column: New Customer Revenue */}
                         <div className="space-y-3">
                           <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">New</div>
-                          {(layerMetrics[layer.id] as any).new.map((metric: any) => (
+                          {(layerMetrics[layer.id] as any).newRevenue.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
                               id={metric.id}
