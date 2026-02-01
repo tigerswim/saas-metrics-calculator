@@ -92,6 +92,9 @@ export const inputTooltips: Record<keyof Inputs, string> = {
   totalSalesMarketing:
     'Combined sales & marketing expenses this month, in thousands (e.g., 6500 = $6.5M). Used for CAC calculations.',
 
+  marketingSpend:
+    'Total marketing expenses (subset of S&M) this month, in thousands. Sum of all marketing channel spend.',
+
   rdSpend:
     'Research & Development spend this month, in thousands (e.g., 3200 = $3.2M).',
 

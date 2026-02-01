@@ -316,6 +316,12 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
             suffix="$K"
           />
           <InputField
+            label="Marketing Spend"
+            value={inputs.marketingSpend}
+            onChange={(v) => onChange('marketingSpend', v)}
+            suffix="$K"
+          />
+          <InputField
             label="R&D"
             value={inputs.rdSpend}
             onChange={(v) => onChange('rdSpend', v)}

@@ -13,7 +13,6 @@ import GrowthTrajectory from './GrowthTrajectory';
 import UnitEconomicsTable from './UnitEconomicsTable';
 import FinancialPosition from './FinancialPosition';
 import ChannelMix from './ChannelMix';
-import MetricsMap from './MetricsMap';
 import VerticalMetricsMap from './metrics-map-v2/VerticalMetricsMap';
 // Methodology component available at ./Methodology.tsx - uncomment import to enable
 // import Methodology from './Methodology';
@@ -100,6 +99,7 @@ const defaultInputs: Inputs = {
   paidImpressions: 28000,
   paidClicks: 3800,
   totalSalesMarketing: 1125,
+  marketingSpend: 565, // Sum of all marketing channels (120+165+80+45+15+140)
   rdSpend: 4500,
   gaSpend: 2600,
   cogsPercent: 15,
@@ -114,7 +114,6 @@ export default function Calculator() {
   const [showInputs, setShowInputs] = useState(false);
   const [activePersona, setActivePersona] = useState<Persona>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('sections');
-  const [useNewMetricsMap, setUseNewMetricsMap] = useState(true); // Feature toggle for new Metrics Map
 
   const currentConfig = personaConfigs[activePersona];
   const showSection = (section: string) => currentConfig.sections.includes(section);
@@ -192,18 +191,6 @@ export default function Calculator() {
 
             {/* Actions */}
             <div className="flex items-center gap-1 flex-shrink-0">
-              {/* New/Old Map Toggle - only show when in map view */}
-              {viewMode === 'map' && (
-                <button
-                  onClick={() => setUseNewMetricsMap(!useNewMetricsMap)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
-                  title={useNewMetricsMap ? 'Switch to classic map' : 'Try new interactive map'}
-                >
-                  <span className="hidden sm:inline">{useNewMetricsMap ? 'Classic' : 'New Beta'}</span>
-                  <span className="sm:hidden">V{useNewMetricsMap ? '1' : '2'}</span>
-                </button>
-              )}
-
               <button
                 onClick={handleReset}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
@@ -263,11 +250,7 @@ export default function Calculator() {
         {viewMode === 'map' ? (
           /* Metrics Map View */
           <>
-            {useNewMetricsMap ? (
-              <VerticalMetricsMap metrics={metrics} inputs={inputs} />
-            ) : (
-              <MetricsMap metrics={metrics} inputs={inputs} />
-            )}
+            <VerticalMetricsMap metrics={metrics} inputs={inputs} />
             {/* Keep detailed tables as expandable sections below map */}
             {showSection('economics') && (
               <div className="mt-8">

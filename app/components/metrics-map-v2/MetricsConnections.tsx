@@ -75,13 +75,90 @@ export default function MetricsConnections({ connections, focusState }: MetricsC
   }, [connections, focusState.selectedMetricId]);
 
   // Calculate smart Bezier curve path
-  const calculatePath = (from: CardPosition, to: CardPosition): string => {
+  const calculatePath = (from: CardPosition, to: CardPosition, fromId: string, toId: string): string => {
     // Determine the best connection points based on relative positions
     const deltaX = to.x - from.x;
     const deltaY = to.y - from.y;
 
     let startX, startY, endX, endY;
 
+    // Special handling for acquisition funnel horizontal flow
+    // These connections should exit left of source and enter left of target
+    const acquisitionFunnelPairs = [
+      ['impressions', 'ctr'],
+      ['ctr', 'clicks'],
+      ['clicks', 'click-to-lead-rate'],
+      ['click-to-lead-rate', 'leads'],
+      ['leads', 'lead-to-mql-rate'],
+      ['lead-to-mql-rate', 'mqls'],
+      ['mqls', 'mql-to-sql-rate'],
+      ['mql-to-sql-rate', 'sqls'],
+      ['sqls', 'sql-to-opp-rate'],
+      ['sql-to-opp-rate', 'opportunities'],
+      ['opportunities', 'win-rate'],
+      ['win-rate', 'deals-won'],
+    ];
+
+    const isAcquisitionFlow = acquisitionFunnelPairs.some(
+      ([f, t]) => f === fromId && t === toId
+    );
+
+    if (isAcquisitionFlow) {
+      // Exit from left side of source, enter left side of target
+      startX = from.x - from.width / 2;
+      startY = from.y;
+      endX = to.x - to.width / 2;
+      endY = to.y;
+
+      // Create a wide loop that goes far to the left before turning
+      const horizontalOffset = 80; // Loop far to the left
+      const cp1X = startX - horizontalOffset;
+      const cp1Y = startY + (deltaY * 0.2); // Start the vertical movement
+      const cp2X = endX - horizontalOffset;
+      const cp2Y = endY - (deltaY * 0.2); // Complete the approach
+
+      return `M ${startX},${startY} C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${endX},${endY}`;
+    }
+
+    // Special handling for Business Outcomes horizontal flow (KPI % → P&L → Efficiency)
+    // These connections should exit right and enter left for horizontal progression
+    const businessOutcomesPairs = [
+      // KPI % → P&L
+      ['gross-margin', 'gross-profit'],
+      ['ebitda-margin', 'ebitda'],
+      // P&L → Efficiency
+      ['gross-profit', 'ltv'],
+      ['total-opex', 'cac-blended'],
+      ['ebitda', 'burn-multiple'],
+      // Within Efficiency column (vertical)
+      ['ltv', 'ltv-cac-ratio'],
+      ['cac-blended', 'ltv-cac-ratio'],
+      ['ltv', 'cac-payback-period'],
+      ['cac-blended', 'cac-payback-period'],
+    ];
+
+    const isBusinessOutcomesFlow = businessOutcomesPairs.some(
+      ([f, t]) => f === fromId && t === toId
+    );
+
+    if (isBusinessOutcomesFlow) {
+      // Exit from right side of source, enter left side of target
+      startX = from.x + from.width / 2;
+      startY = from.y;
+      endX = to.x - to.width / 2;
+      endY = to.y;
+
+      // Simple smooth curve for horizontal progression
+      const controlPointOffset = Math.abs(deltaX) * 0.4;
+      const cp1X = startX + controlPointOffset;
+      const cp1Y = startY + (deltaY * 0.3);
+      const cp2X = endX - controlPointOffset;
+      const cp2Y = endY - (deltaY * 0.3);
+
+      return `M ${startX},${startY} C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${endX},${endY}`;
+    }
+
+    // Default behavior for other connections
     // If target is mostly to the right, connect horizontally
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       if (deltaX > 0) {
@@ -188,28 +265,28 @@ export default function MetricsConnections({ connections, focusState }: MetricsC
       }}
     >
       <defs>
-        {/* Arrow markers */}
+        {/* Arrow markers - smaller size */}
         <marker
           id="arrowhead-orange"
-          markerWidth="10"
-          markerHeight="10"
-          refX="9"
-          refY="3"
+          markerWidth="6"
+          markerHeight="6"
+          refX="5"
+          refY="2"
           orient="auto"
           markerUnits="strokeWidth"
         >
-          <path d="M0,0 L0,6 L9,3 z" fill="#f97316" />
+          <path d="M0,0 L0,4 L5,2 z" fill="#f97316" />
         </marker>
         <marker
           id="arrowhead-blue"
-          markerWidth="10"
-          markerHeight="10"
-          refX="9"
-          refY="3"
+          markerWidth="6"
+          markerHeight="6"
+          refX="5"
+          refY="2"
           orient="auto"
           markerUnits="strokeWidth"
         >
-          <path d="M0,0 L0,6 L9,3 z" fill="#3b82f6" />
+          <path d="M0,0 L0,4 L5,2 z" fill="#3b82f6" />
         </marker>
       </defs>
 
@@ -222,7 +299,7 @@ export default function MetricsConnections({ connections, focusState }: MetricsC
         const opacity = getConnectionOpacity(from, to);
         const strokeWidth = getStrokeWidth(from, to);
         const animated = shouldAnimate(from, to);
-        const path = calculatePath(fromPos, toPos);
+        const path = calculatePath(fromPos, toPos, from, to);
         const color = getConnectionColor(from, to);
 
         // Determine arrow marker based on color

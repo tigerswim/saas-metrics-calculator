@@ -16,6 +16,17 @@ interface MetricCardV2Props {
   onClick?: () => void;
   className?: string;
   tooltip?: string;
+  isPrimary?: boolean; // For larger, more prominent cards
+  efficiencyMetric?: {
+    label: string;
+    value: string;
+    status?: 'good' | 'warning' | 'bad' | 'neutral';
+  };
+  efficiencyMetrics?: Array<{
+    label: string;
+    value: string;
+    status?: 'good' | 'warning' | 'bad' | 'neutral';
+  }>;
 }
 
 export default function MetricCardV2({
@@ -31,12 +42,45 @@ export default function MetricCardV2({
   onClick,
   className = '',
   tooltip,
+  isPrimary = false,
+  efficiencyMetric,
+  efficiencyMetrics,
 }: MetricCardV2Props) {
+  // Use efficiencyMetrics if provided, otherwise wrap single efficiencyMetric
+  const metricsToDisplay = efficiencyMetrics || (efficiencyMetric ? [efficiencyMetric] : []);
   const statusColors = {
     good: 'border-emerald-500',
     warning: 'border-amber-500',
-    bad: 'border-rose-500',
+    bad: 'border-rose-500 shadow-[0_0_0_1px_rgba(244,63,94,0.15)] ring-1 ring-rose-100',
     neutral: 'border-slate-300',
+  };
+
+  const statusBgColors = {
+    good: 'bg-emerald-50/30',
+    warning: 'bg-amber-50/40',
+    bad: 'bg-rose-50/40',
+    neutral: 'bg-white',
+  };
+
+  const statusDotColors = {
+    good: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    bad: 'bg-rose-500',
+    neutral: 'bg-slate-400',
+  };
+
+  const statusBadgeColors = {
+    good: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    warning: 'bg-amber-100 text-amber-700 border-amber-200',
+    bad: 'bg-rose-100 text-rose-700 border-rose-200',
+    neutral: 'bg-slate-100 text-slate-600 border-slate-200',
+  };
+
+  const statusLabels = {
+    good: 'Good',
+    warning: 'At Risk',
+    bad: 'Poor',
+    neutral: '',
   };
 
   const statusBorderColor = statusColors[status];
@@ -74,9 +118,10 @@ export default function MetricCardV2({
     <motion.div
       id={id}
       className={`
-        relative bg-white rounded-lg shadow-sm border-l-4 z-10
-        max-w-[200px]
+        relative rounded-lg shadow-sm border-l-[6px] z-10
+        w-full max-w-[180px] h-[88px]
         ${statusBorderColor}
+        ${statusBgColors[status]}
         ${isSelected ? 'ring-2 ring-offset-2 ring-blue-500' : ''}
         ${onClick ? 'cursor-pointer' : ''}
         transition-all duration-200
@@ -97,72 +142,82 @@ export default function MetricCardV2({
       }}
       onClick={onClick}
     >
-      <div className="p-4">
-        {/* Header - Label and Info Icon */}
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex items-center gap-1 flex-1">
-            <h4 className="text-sm font-medium text-slate-700 leading-tight">
-              {label}
-            </h4>
-            {tooltip && (
-              <div className="group relative">
-                <InformationCircleIcon className="w-4 h-4 text-slate-400 hover:text-slate-600 cursor-help" />
-                <div className="absolute left-0 top-6 hidden group-hover:block z-50 w-48 p-2 bg-slate-900 text-white text-xs rounded shadow-lg">
-                  {tooltip}
-                </div>
+      <div className="p-2 flex flex-col h-full">
+        {/* Header - Label - Fixed height */}
+        <div className="h-6 flex items-start justify-between mb-1">
+          <h4 className="text-[11px] font-semibold text-slate-700 leading-tight">
+            {label}
+          </h4>
+          {tooltip && (
+            <div className="group relative flex-shrink-0">
+              <InformationCircleIcon className="w-3 h-3 text-slate-400 hover:text-blue-600 cursor-help transition-colors" />
+              <div className="absolute left-0 top-4 hidden group-hover:block z-50 w-48 p-2 bg-slate-900 text-white text-xs rounded shadow-xl">
+                <div className="font-medium mb-0.5">{label}</div>
+                <div className="text-slate-300 text-[11px] leading-snug">{tooltip}</div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
-        {/* Value Display */}
-        <div className="mb-2">
-          <div className="text-2xl font-semibold text-slate-900 tabular-nums">
+        {/* Value Display - Fixed height */}
+        <div className="h-6 flex items-center mb-1">
+          <div className="text-lg font-bold text-slate-900 tabular-nums leading-none">
             {value}
           </div>
         </div>
 
-        {/* Bottom Section - Sparkline and Change */}
-        {(sparklineData || changePercent !== undefined) && (
-          <div className="flex items-end justify-between gap-2 mt-2 pt-2 border-t border-slate-100">
-            {/* Sparkline */}
-            {sparklineData && sparklineData.length > 0 && (
-              <div className="flex-shrink-0">
-                <svg
-                  width="40"
-                  height="20"
-                  className="text-slate-400"
-                  style={{ overflow: 'visible' }}
-                >
-                  <path
-                    d={generateSparklinePath(sparklineData)}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            )}
-
-            {/* Change Percent Badge */}
-            {changePercent !== undefined && (
-              <div
-                className={`
-                  text-xs font-medium px-2 py-0.5 rounded
-                  ${changeColor}
-                  ${changePercent > 0 ? 'bg-emerald-50' : ''}
-                  ${changePercent < 0 ? 'bg-rose-50' : ''}
-                  ${changePercent === 0 ? 'bg-slate-50' : ''}
-                `}
+        {/* Sparkline and Change Percent - Fixed height - ALWAYS RENDERED */}
+        <div className="h-4 flex items-center justify-between gap-1 mb-1">
+          {/* Sparkline - or empty space if no data */}
+          <div className="flex-shrink-0">
+            {sparklineData && sparklineData.length > 0 ? (
+              <svg
+                width="28"
+                height="12"
+                className="text-slate-400"
+                style={{ overflow: 'visible' }}
               >
-                {changePercent > 0 ? '+' : ''}
-                {changePercent.toFixed(1)}%
-              </div>
+                <path
+                  d={generateSparklinePath(sparklineData)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              <div className="w-7 h-3"></div>
             )}
           </div>
-        )}
+
+          {/* Change Percent Badge - or empty space if no data */}
+          {changePercent !== undefined ? (
+            <div
+              className={`
+                text-[9px] font-semibold px-1 py-0.5 rounded
+                ${changeColor}
+                ${changePercent > 0 ? 'bg-emerald-50' : ''}
+                ${changePercent < 0 ? 'bg-rose-50' : ''}
+                ${changePercent === 0 ? 'bg-slate-50' : ''}
+              `}
+            >
+              {changePercent > 0 ? '+' : ''}
+              {changePercent.toFixed(1)}%
+            </div>
+          ) : (
+            <div className="w-12 h-4"></div>
+          )}
+        </div>
+
+        {/* Status Badge - Always at bottom */}
+        <div className="mt-auto pt-1 flex justify-end">
+          {status !== 'neutral' && statusLabels[status] && (
+            <div className={`px-1 py-0.5 rounded text-[8px] font-bold border ${statusBadgeColors[status]}`}>
+              {statusLabels[status]}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Selected indicator - just enhance the existing ring */}

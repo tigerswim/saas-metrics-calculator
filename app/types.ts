@@ -33,6 +33,7 @@ export interface Inputs {
   paidImpressions: number;
   paidClicks: number;
   totalSalesMarketing: number;
+  marketingSpend: number;
   rdSpend: number;
   gaSpend: number;
   cogsPercent: number;
@@ -71,11 +72,16 @@ export interface CalculatedMetrics {
   ltv: number;
   ltvCacRatio: number;
   cacPaybackPeriod: number;
+  costPerLead: number;
   costPerMQL: number;
   costPerSQL: number;
   cpm: number;
   cpc: number;
   ctr: number;
+
+  // Conversion rates (for left-side positioning in metrics map)
+  clickToLeadRate: number; // (leads / clicks) * 100
+  leadToMQLRate: number; // (mqls / leads) * 100
 
   // Sales Efficiency
   magicNumber: number;

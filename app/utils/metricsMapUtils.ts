@@ -197,6 +197,10 @@ export function formatMetricValue(
     case 'newBookings':
     case 'expansionARR':
     case 'churnedARR':
+      // Convert to M if > 1000K
+      if (value > 1000) {
+        return `$${(value / 1000).toFixed(1)}M`;
+      }
       return `$${Math.round(value).toLocaleString()}K`;
     case 'monthlyRevenue':
     case 'grossProfit':
@@ -205,19 +209,20 @@ export function formatMetricValue(
       return `$${value.toFixed(0)}K`;
     case 'cacBlended':
     case 'cacPaidOnly':
+      return `$${Math.round(value * 1000).toLocaleString()}`;
+    case 'costPerLead':
     case 'costPerMQL':
     case 'costPerSQL':
-      return `$${(value * 1000).toLocaleString()}`;
+    case 'cpc':
+      return `$${Math.round(value).toLocaleString()}`;
     case 'ltv':
-      return `$${value.toFixed(0)}`;
+      return `$${Math.round(value).toLocaleString()}`;
     case 'cpm':
       return `$${value.toFixed(2)}`;
-    case 'cpc':
-      return `$${(value * 1000).toFixed(2)}`;
     case 'pipelineGenerated':
       return `$${(value / 1000).toFixed(1)}M`;
     case 'pipelineVelocity':
-      return `$${(value / 1000).toFixed(1)}K/day`;
+      return `$${Math.round(value / 1000).toLocaleString()}K/day`;
     case 'annualizedGrowthRate':
     case 'arrGrowthRateMonthly':
     case 'annualizedGRR':

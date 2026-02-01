@@ -24,14 +24,15 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     paidImpressions,
     paidClicks,
     totalSalesMarketing,
+    marketingSpend,
     rdSpend,
     gaSpend,
     cogsPercent,
     avgCustomerLifetime,
   } = inputs;
 
-  // Derive totals from channel mix
-  const totalMarketingSpend = paidSearchSpend + paidSocialSpend + eventsSpend + contentSpend + partnershipsSpend;
+  // Use the configured marketing spend
+  const totalMarketingSpend = marketingSpend;
   const paidMarketingSpend = paidSearchSpend + paidSocialSpend;
 
   // Calculate New Bookings from new customers and deal size
@@ -74,11 +75,16 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const ltvCacRatio = ltv / (cacBlended * 1000); // Convert CAC from $K to $
   const grossMargin = 100 - cogsPercent;
   const cacPaybackPeriod = (cacBlended * 1000) / (arpa * (grossMargin / 100)); // Convert CAC from $K to $
-  const costPerMQL = totalMarketingSpend / (mqlsGenerated || 1);
-  const costPerSQL = totalMarketingSpend / (sqlsGenerated || 1);
+  const costPerLead = (totalMarketingSpend * 1000) / (inputs.leadsGenerated || 1); // Convert from $K to $
+  const costPerMQL = (totalMarketingSpend * 1000) / (mqlsGenerated || 1); // Convert from $K to $
+  const costPerSQL = (totalMarketingSpend * 1000) / (sqlsGenerated || 1); // Convert from $K to $
   const cpm = (paidMarketingSpend / (paidImpressions || 1)) * 1000;
-  const cpc = paidMarketingSpend / (paidClicks || 1);
+  const cpc = (paidMarketingSpend * 1000) / (paidClicks || 1); // Convert from $K to $
   const ctr = (paidClicks / (paidImpressions || 1)) * 100;
+
+  // Conversion rates for acquisition funnel
+  const clickToLeadRate = paidClicks > 0 ? (inputs.leadsGenerated / paidClicks) * 100 : 0;
+  const leadToMQLRate = inputs.leadsGenerated > 0 ? (mqlsGenerated / inputs.leadsGenerated) * 100 : 0;
 
   // Sales Efficiency Metrics
   const magicNumber = netNewARR / totalSalesMarketing;
@@ -120,11 +126,14 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     ltv,
     ltvCacRatio,
     cacPaybackPeriod,
+    costPerLead,
     costPerMQL,
     costPerSQL,
     cpm,
     cpc,
     ctr,
+    clickToLeadRate,
+    leadToMQLRate,
     magicNumber,
     paybackPeriodSM,
     grossProfit,

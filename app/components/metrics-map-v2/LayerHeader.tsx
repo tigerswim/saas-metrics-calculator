@@ -8,10 +8,12 @@ import {
   PresentationChartLineIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  BanknotesIcon,
+  MegaphoneIcon,
 } from '@heroicons/react/24/outline';
 
 interface LayerHeaderProps {
-  layer: 'activities' | 'acquisition' | 'revenue' | 'outcomes';
+  layer: 'budget' | 'activities' | 'acquisition' | 'revenue' | 'outcomes';
   title: string;
   description: string;
   gradientClass: string;
@@ -22,7 +24,8 @@ interface LayerHeaderProps {
 }
 
 const layerIcons = {
-  activities: CurrencyDollarIcon,
+  budget: BanknotesIcon,
+  activities: MegaphoneIcon,
   acquisition: FunnelIcon,
   revenue: ChartBarIcon,
   outcomes: PresentationChartLineIcon,
@@ -83,12 +86,12 @@ export default function LayerHeader({
 
   // Desktop: Visual separator
   return (
-    <div className={`${gradientClass} rounded-lg px-6 py-4 mb-6 shadow-sm`}>
+    <div className={`${gradientClass} rounded-lg px-6 py-3 mb-4 shadow-sm`}>
       <div className="flex items-center gap-3">
-        <Icon className="w-6 h-6 text-white" />
+        <Icon className="w-5 h-5 text-white" />
         <div>
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
-          <p className="text-sm text-white/90">{description}</p>
+          <h3 className="text-base font-semibold text-white">{title}</h3>
+          <p className="text-xs text-white/90">{description}</p>
         </div>
       </div>
     </div>

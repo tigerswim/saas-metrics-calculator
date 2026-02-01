@@ -13,18 +13,71 @@ export type MetricsGraph = Record<string, MetricRelationship>;
  */
 export const metricsRelationships: MetricsGraph = {
   // ============================================================
-  // ACTIVITIES LAYER - Top level inputs
+  // BUDGET LAYER - Top level organizational spend
   // ============================================================
-
-  'marketing-spend': {
-    inputs: [],
-    outputs: ['impressions', 'leads', 'cac-blended', 'cac-paid-only', 'cost-per-mql', 'cost-per-sql']
-  },
 
   'sales-marketing-spend': {
     inputs: [],
-    outputs: ['cac-blended', 'magic-number', 'payback-period-sm']
+    outputs: ['marketing-spend', 'sales-spend', 'cac-blended', 'magic-number'],
   },
+
+  'marketing-spend': {
+    inputs: ['sales-marketing-spend'],
+    outputs: ['paid-search', 'paid-social', 'events', 'content', 'partnerships', 'abm', 'cost-per-lead', 'cost-per-mql', 'cost-per-sql'],
+  },
+
+  'sales-spend': {
+    inputs: ['sales-marketing-spend'],
+    outputs: [],
+  },
+
+  'rd-spend': {
+    inputs: [],
+    outputs: ['total-opex'],
+  },
+
+  'ga-spend': {
+    inputs: [],
+    outputs: ['total-opex'],
+  },
+
+  // ============================================================
+  // ACTIVITIES LAYER - Marketing channel components
+  // ============================================================
+
+  'paid-search': {
+    inputs: ['marketing-spend'],
+    outputs: ['impressions'],
+  },
+
+  'paid-social': {
+    inputs: ['marketing-spend'],
+    outputs: ['impressions'],
+  },
+
+  'events': {
+    inputs: ['marketing-spend'],
+    outputs: ['leads'],
+  },
+
+  'content': {
+    inputs: ['marketing-spend'],
+    outputs: ['leads'],
+  },
+
+  'partnerships': {
+    inputs: ['marketing-spend'],
+    outputs: ['leads'],
+  },
+
+  'abm': {
+    inputs: ['marketing-spend'],
+    outputs: ['leads'],
+  },
+
+  // ============================================================
+  // ACQUISITION LAYER - Funnel metrics
+  // ============================================================
 
   // ============================================================
   // ACQUISITION LAYER - Funnel metrics

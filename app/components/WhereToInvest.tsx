@@ -31,7 +31,7 @@ function getInvestmentSignals(metrics: CalculatedMetrics, inputs: Inputs): Inves
     metrics: [
       { label: 'Magic Number', value: `${metrics.magicNumber.toFixed(2)}x`, benchmark: '>0.75x' },
       { label: 'CAC Payback', value: `${metrics.cacPaybackPeriod.toFixed(0)} mo`, benchmark: '<18 mo' },
-      { label: 'CAC Blended', value: `$${(metrics.cacBlended * 1000).toLocaleString()}`, benchmark: 'varies' },
+      { label: 'CAC Blended', value: `$${Math.round(metrics.cacBlended * 1000).toLocaleString()}`, benchmark: 'varies' },
     ]
   };
   signals.push(smSignal);
@@ -48,8 +48,8 @@ function getInvestmentSignals(metrics: CalculatedMetrics, inputs: Inputs): Inves
         : 'Low engagement or high CAC requires channel review',
     metrics: [
       { label: 'CTR', value: `${metrics.ctr.toFixed(2)}%`, benchmark: '>2%' },
-      { label: 'CPC', value: `$${(metrics.cpc * 1000).toFixed(2)}`, benchmark: 'varies' },
-      { label: 'CAC (Paid)', value: `$${(metrics.cacPaidOnly * 1000).toLocaleString()}`, benchmark: 'varies' },
+      { label: 'CPC', value: `$${Math.round(metrics.cpc).toLocaleString()}`, benchmark: 'varies' },
+      { label: 'CAC (Paid)', value: `$${Math.round(metrics.cacPaidOnly * 1000).toLocaleString()}`, benchmark: 'varies' },
     ]
   };
   signals.push(paidSignal);
@@ -84,7 +84,7 @@ function getInvestmentSignals(metrics: CalculatedMetrics, inputs: Inputs): Inves
     metrics: [
       { label: 'Expansion ARR', value: `$${inputs.expansionARR.toLocaleString()}K`, benchmark: 'varies' },
       { label: 'Expansion Rate', value: `${expansionRatio.toFixed(1)}%`, benchmark: '>1%/mo' },
-      { label: 'ARPA', value: `$${metrics.arpa.toFixed(0)}`, benchmark: 'varies' },
+      { label: 'ARPA', value: `$${Math.round(metrics.arpa).toLocaleString()}`, benchmark: 'varies' },
     ]
   };
   signals.push(expansionSignal);

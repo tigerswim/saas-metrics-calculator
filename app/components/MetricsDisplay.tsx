@@ -19,6 +19,7 @@ interface MetricItem {
 }
 
 export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps) {
+  // Format currency values with proper thousand separators
   const formatCurrency = (value: number, decimals = 0) => {
     return `$${value.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   };
@@ -36,10 +37,10 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       title: 'ARR & Growth Metrics',
       gradient: 'bg-gradient-arr',
       metrics: [
-        { label: 'Net New ARR', value: formatCurrency(metrics.netNewARR, 0), description: 'New + Expansion - Churn' },
+        { label: 'Net New ARR', value: formatCurrency(metrics.netNewARR * 1000, 0), description: 'New + Expansion - Churn' },
         { label: 'Ending ARR ($M)', value: formatCurrency(metrics.endingARR, 1) },
         { label: 'MRR ($M)', value: formatCurrency(metrics.mrr, 1) },
-        { label: 'Monthly Revenue', value: formatCurrency(metrics.monthlyRevenue, 0) },
+        { label: 'Monthly Revenue', value: formatCurrency(metrics.monthlyRevenue * 1000, 0) },
         { label: 'ARR Growth Rate (Monthly)', value: formatPercent(metrics.arrGrowthRateMonthly) },
         { label: 'Annualized Growth Rate', value: formatPercent(metrics.annualizedGrowthRate) },
       ],
@@ -63,7 +64,7 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
         { label: 'SQLs Generated', value: formatNumber(metrics.sqlsGenerated) },
         { label: 'Opportunities Created', value: formatNumber(metrics.opportunitiesCreated) },
         { label: 'Deals Closed Won', value: formatNumber(metrics.dealsClosedWon) },
-        { label: 'Pipeline Generated', value: formatCurrency(metrics.pipelineGenerated, 0) },
+        { label: 'Pipeline Generated', value: formatCurrency(metrics.pipelineGenerated * 1000, 0) },
         { label: 'Pipeline Conversion (MQL→Won)', value: formatPercent(metrics.pipelineConversion) },
         { label: 'Pipeline Velocity ($/day)', value: formatCurrency(metrics.pipelineVelocity, 0) },
       ],
@@ -72,8 +73,8 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       title: 'Marketing Efficiency',
       gradient: 'bg-gradient-marketing',
       metrics: [
-        { label: 'CAC - Blended', value: formatCurrency(metrics.cacBlended, 0), description: 'Total S&M / New Customers' },
-        { label: 'CAC - Paid Only', value: formatCurrency(metrics.cacPaidOnly, 0), description: 'Paid Marketing / New Customers' },
+        { label: 'CAC - Blended', value: formatCurrency(metrics.cacBlended * 1000, 0), description: 'Total S&M / New Customers' },
+        { label: 'CAC - Paid Only', value: formatCurrency(metrics.cacPaidOnly * 1000, 0), description: 'Paid Marketing / New Customers' },
         { label: 'LTV', value: formatCurrency(metrics.ltv, 0), description: 'ARPA × Lifetime (months)' },
         { label: 'LTV:CAC Ratio', value: `${metrics.ltvCacRatio.toFixed(1)}x` },
         { label: 'CAC Payback Period', value: `${metrics.cacPaybackPeriod.toFixed(1)} months`, description: 'CAC / (ARPA × Gross Margin)' },
@@ -96,10 +97,10 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       title: 'Financial Performance',
       gradient: 'bg-gradient-financial',
       metrics: [
-        { label: 'Gross Profit', value: formatCurrency(metrics.grossProfit, 0) },
+        { label: 'Gross Profit', value: formatCurrency(metrics.grossProfit * 1000, 0) },
         { label: 'Gross Margin', value: formatPercent(metrics.grossMargin) },
-        { label: 'Total OpEx', value: formatCurrency(metrics.totalOpEx, 0) },
-        { label: 'EBITDA', value: formatCurrency(metrics.ebitda, 0) },
+        { label: 'Total OpEx', value: formatCurrency(metrics.totalOpEx * 1000, 0) },
+        { label: 'EBITDA', value: formatCurrency(metrics.ebitda * 1000, 0) },
         { label: 'EBITDA Margin', value: formatPercent(metrics.ebitdaMargin) },
         { label: 'Rule of 40', value: formatPercent(metrics.ruleOf40), description: 'Growth Rate + EBITDA Margin' },
         { label: 'SaaS Quick Ratio', value: `${metrics.saasQuickRatio.toFixed(1)}x`, description: '(New + Expansion) / Churn' },
