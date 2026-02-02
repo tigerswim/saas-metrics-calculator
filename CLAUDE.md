@@ -45,8 +45,8 @@ npx tsc --noEmit
    - Manages all state with React hooks
    - Contains `defaultInputs` object (initial/reset values)
    - Calls `calculateMetrics()` on every input change
-   - Supports two view modes: Sections view and Metrics Map view
-   - Removed legacy Classic metrics map - now uses unified VerticalMetricsMap
+   - Supports three view modes: Sections view, Metrics Map v2, and Metrics Map v3 (React Flow)
+   - Toggle between v2 (vertical layout) and v3 (interactive graph) via UI switch
 3. **Calculation Engine**: `app/utils/calculator.ts`
    - Pure functions: `calculateMetrics()` and `getKeyMetrics()`
    - All business logic and formulas are here
@@ -55,12 +55,19 @@ npx tsc --noEmit
    - **Sections View**:
      - `InputPanel.tsx`: Collapsible input groups organized by category
      - `MetricsDisplay.tsx`: Traditional grid layout of calculated metrics
-   - **Metrics Map View** (v2):
-     - `VerticalMetricsMap.tsx`: Interactive visualization showing metric relationships
+   - **Metrics Map v2** (Vertical Layout):
+     - `VerticalMetricsMap.tsx`: Multi-column vertical layout with sections
      - `MetricCardV2.tsx`: Individual metric cards with status, sparklines, and efficiency metrics
      - `RelationshipPanel.tsx`: Slideout panel showing metric connections and formulas
+   - **Metrics Map v3** (React Flow Graph):
+     - `ReactFlowMetricsMap.tsx`: Interactive node-link diagram with Dagre layout
+     - `StandardNode.tsx`: Uniform metric cards (160-200px width)
+     - `useMetricsGraph.ts`: Generates nodes/edges from metrics data
+     - `useLayout.ts`: Dagre hierarchical layout (150px tier spacing, 20px node spacing)
+     - `graphUtils.ts`: Visibility filtering, highlighting, and path tracing
+     - `ControlsBar.tsx`: Search, view mode toggle, layer filters
 5. **Utility Modules**:
-   - `metricsGraph.ts`: Defines metric relationships and connections
+   - `metricsGraph.ts`: Defines metric relationships and connections (used by both v2 and v3)
    - `metricFormulas.ts`: Stores calculation formulas and descriptions
    - `metricTargets.ts`: Defines performance targets and status evaluation
    - `metricsMapUtils.ts`: Formatting and display utilities
@@ -76,10 +83,10 @@ All types defined in `app/types.ts`:
   - Operating expenses (Total S&M, Marketing Spend, R&D, G&A)
   - Conversion rates and sales cycle data
 - **CalculatedMetrics**: 50+ calculated metrics across categories:
-  - ARR & Growth
+  - ARR & Growth (no separate monthlyRevenue - use MRR instead)
   - Retention (GRR, NRR, Churn)
   - Pipeline (SQLs, Opportunities, Deals Won)
-  - Marketing Efficiency (CAC, Cost/Lead, Cost/MQL, Cost/SQL, CPM, CPC, CTR)
+  - Marketing Efficiency (CAC, Cost/Lead, Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won, CPM, CPC, CTR)
   - Sales Efficiency (Magic Number, Payback Period)
   - Financial Performance (Margins, EBITDA, Rule of 40, Quick Ratio)
 - **KeyMetric**: For the top 10 metrics with targets and status colors
@@ -110,9 +117,12 @@ All calculations are client-side and synchronous - no API calls or async operati
 
 ## Metrics Map System
 
-The calculator features an interactive **Metrics Map** (v2) that visualizes metric relationships:
+The calculator features two interactive **Metrics Map** views:
 
-### Metric Cards
+### Metrics Map v2 (Vertical Layout)
+Multi-column vertical layout with sections for different metric categories.
+
+#### Metric Cards
 - **Primary Cards**: Larger cards with embedded efficiency/effectiveness metrics
   - Display main metric value with sparkline trends
   - Show week-over-week change percentages
@@ -121,6 +131,21 @@ The calculator features an interactive **Metrics Map** (v2) that visualizes metr
 - **Standard Cards**: Regular metrics without efficiency sub-metrics
 - **Card Alignment**: Fixed-height sections ensure values align horizontally across rows
 - **Status Badges**: Positioned at bottom-right of cards
+
+### Metrics Map v3 (React Flow Graph)
+Interactive node-link diagram showing metric relationships and flow using @xyflow/react and Dagre layout.
+
+#### Features
+- **Hierarchical Layout**: 5 tiers (Budget → Activities → Acquisition → Revenue → Outcomes)
+- **Uniform Node Sizing**: All nodes 160-200px wide for consistency
+- **Compact Spacing**: 150px between tiers, 20px between nodes (optimized for less scrolling)
+- **Interactive**: Click nodes to highlight connections, search functionality
+- **View Modes**:
+  - Executive mode: Shows ~15 key metrics (Outcomes + key efficiency)
+  - Builder mode: All layers with toggle controls
+- **Layer Filtering**: Show/hide entire metric layers (Budget, Activities, Acquisition, Revenue, Outcomes)
+- **Color-Coded Tiers**: Gradient bars indicate metric tier (slate=Budget, blue=Activities, teal=Acquisition, green=Revenue, purple=Outcomes)
+- **Status Indicators**: Border color shows metric status (emerald=good, amber=warning, rose=bad, slate=neutral)
 
 ### Efficiency Metrics Display
 - Embedded as oval-shaped status indicators within parent metric cards
@@ -245,7 +270,7 @@ Shows channel-level spend and lead generation (Paid Search, Paid Social, Events,
 
 Edit `defaultInputs` object in `app/components/Calculator.tsx`.
 
-### Adding Metric to Metrics Map
+### Adding Metric to Metrics Map v2 (Vertical Layout)
 
 1. Add the metric card to the appropriate section in `app/components/metrics-map-v2/VerticalMetricsMap.tsx`:
    ```typescript
@@ -278,6 +303,24 @@ Edit `defaultInputs` object in `app/components/Calculator.tsx`.
    - Add formula to `app/utils/metricFormulas.ts`
    - Add label mapping to `RelationshipPanel.tsx` if needed
 
+### Adding Metric to Metrics Map v3 (React Flow Graph)
+
+1. Add to `app/utils/metricsGraph.ts` if not already present:
+   ```typescript
+   'metric-id': {
+     inputs: ['upstream-metric-id'],
+     outputs: ['downstream-metric-id']
+   }
+   ```
+
+2. Add tier classification in `useMetricsGraph.ts` `getMetricTier()` function
+3. Add value formatting in `useMetricsGraph.ts` `getMetricValue()` valueMap
+4. Add label in `useMetricsGraph.ts` `getMetricLabel()` labelMap
+5. Add status thresholds in `metricTargets.ts` and add to `metricValueMap`
+6. Add formula to `metricFormulas.ts` for RelationshipPanel display
+
+**Note**: Metrics Map v3 automatically includes all metrics defined in `metricsGraph.ts`. No need to manually add cards - just ensure the metric has relationships, formatting, and tier classification.
+
 ### Modifying Status Thresholds
 
 Update thresholds in `app/utils/metricTargets.ts`:
@@ -293,19 +336,29 @@ Update thresholds in `app/utils/metricTargets.ts`:
 
 ### Number Handling
 
+**CRITICAL**: Pay careful attention to unit conversions - this is a common source of bugs.
+
 - **Beginning ARR** is in millions ($M) - multiply by 1000 for calculations
 - **Marketing/S&M Spend** inputs are in thousands ($K)
+- **MRR**: There is NO separate `monthlyRevenue` field - use `mrr` for all monthly revenue calculations
 - **Cost-per metrics** are calculated and returned in actual dollars from calculator.ts:
-  - Cost/Lead, Cost/MQL, Cost/SQL: `(marketingSpend * 1000) / count`
+  - Cost/Lead, Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won: `(marketingSpend * 1000) / count`
   - CPC: `(paidMarketingSpend * 1000) / clicks`
   - CPM: `(paidMarketingSpend / impressions) * 1000`
   - **Display**: Use directly without conversion: `Math.round(value).toLocaleString()`
 - **CAC metrics** (cacBlended, cacPaidOnly) are returned in $K from calculator.ts:
   - **Display**: Convert to dollars with `Math.round(value * 1000).toLocaleString()`
+- **LTV** is returned in actual dollars from calculator.ts:
+  - **Display**: Use directly without conversion: `Math.round(value).toLocaleString()`
+  - **NEVER multiply LTV by 1000** - it's already in dollars!
 - **Financial metrics** (grossProfit, totalOpEx, ebitda) are returned in $K from calculator.ts:
   - **Display**: Convert to dollars with `Math.round(value * 1000).toLocaleString()`
-- **ARR metrics** (netNewARR, monthlyRevenue, pipelineGenerated) are returned in $K from calculator.ts:
+- **ARR metrics** (netNewARR, pipelineGenerated) are returned in $K from calculator.ts:
   - **Display**: Convert to dollars with `value * 1000` in display components
+- **Ending ARR and MRR** are SPECIAL - returned in $M from calculator.ts:
+  - endingARR: `endingARR / 1000` (converted from $K to $M)
+  - mrr: `mrr / 1000` (converted from $K to $M)
+  - **Display**: Use `metrics.endingARR.toFixed(1)` directly (no further conversion)
 - **Percentages** are stored as whole numbers (e.g., 25 = 25%)
 - **Counts**: Use `Math.round()` for customers, deals, leads, etc.
 - **Display formatting**:
@@ -352,11 +405,14 @@ Update thresholds in `app/utils/metricTargets.ts`:
 - `costPerLead = (marketingSpend * 1000) / leadsGenerated`
 - `costPerMQL = (marketingSpend * 1000) / mqlsGenerated`
 - `costPerSQL = (marketingSpend * 1000) / sqlsGenerated`
+- `costPerOpp = (marketingSpend * 1000) / opportunitiesCreated`
+- `costPerWon = (marketingSpend * 1000) / dealsClosedWon`
 - `cpc = (paidMarketingSpend * 1000) / paidClicks`
 
-**Display Formatting** (see `metricsMapUtils.ts`):
+**Display Formatting** (see `useMetricsGraph.ts`):
 - Cost-per metrics: `Math.round(value).toLocaleString()` (already in $)
 - CAC metrics: `Math.round(value * 1000).toLocaleString()` (convert from $K)
+- LTV: `Math.round(value).toLocaleString()` (already in $, DO NOT multiply by 1000)
 
 ### Fix Styling Issue
 
@@ -400,9 +456,17 @@ app/
 │   ├── InputPanel.tsx              # Collapsible input groups by category
 │   ├── MetricsDisplay.tsx          # Traditional sections view
 │   ├── metrics-map-v2/
-│   │   ├── VerticalMetricsMap.tsx  # Interactive metrics visualization
+│   │   ├── VerticalMetricsMap.tsx  # Vertical layout metrics visualization
 │   │   ├── MetricCardV2.tsx        # Individual metric cards with status
 │   │   └── RelationshipPanel.tsx   # Slideout panel for metric details
+│   ├── metrics-map-v3/
+│   │   ├── ReactFlowMetricsMap.tsx # React Flow graph visualization
+│   │   ├── nodes/
+│   │   │   └── StandardNode.tsx    # Uniform metric node (160-200px)
+│   │   ├── ControlsBar.tsx         # Search, filters, view mode toggle
+│   │   ├── useMetricsGraph.ts      # Generate nodes/edges from metrics
+│   │   ├── useLayout.ts            # Dagre hierarchical layout
+│   │   └── graphUtils.ts           # Visibility, highlighting, path tracing
 │   └── [legacy components]         # MetricsMap.tsx, PipelineFunnel.tsx, etc.
 ├── utils/
 │   ├── calculator.ts               # Core calculation engine
@@ -416,6 +480,36 @@ app/
 └── globals.css                     # Tailwind base styles
 ```
 
+## Recent Updates (February 2026)
+
+### Enhanced "Why This Matters" Descriptions (Feb 2, 2026)
+- **Updated all 60+ metric descriptions** in `metricFormulas.ts` from brief 1-sentence explanations to detailed 2-3 sentence business-context descriptions
+- **Expanded all acronyms** (18 total: ARR, MRR, CAC, LTV, GRR, NRR, ARPA, MQL, SQL, EBITDA, CPM, CPC, CTR, ABM, R&D, G&A, S&M, COGS) on first mention in every description
+- **Added benchmark targets** to each metric (e.g., "Target >3:1 for LTV:CAC ratio", "Target >90% monthly GRR")
+- **Included business decision impact** explaining what each metric signals and when to act
+- **Pattern**: Define metric + Benchmark/Target + Business Impact in 50-120 words
+- **Improves user education** in both MetricPopover (desktop) and RelationshipPanel (mobile) when clicking metric cards
+- **File changed**: `app/utils/metricFormulas.ts` (lines 9-324)
+
+### Metrics Map v3 Implementation
+- Built React Flow-based interactive graph visualization
+- Hierarchical 5-tier layout using Dagre algorithm
+- Executive and Builder view modes with layer filtering
+- Uniform node sizing (160-200px) for visual consistency
+- Compact spacing (150px tier separation, 20px node separation)
+
+### Bug Fixes
+1. **Removed monthlyRevenue redundancy**: Consolidated to use `mrr` throughout codebase
+2. **Fixed LTV display**: Corrected $281M bug - LTV is now properly displayed (~$375K)
+3. **Standardized node sizes**: All Metrics Map v3 nodes are uniform size
+4. **Optimized spacing**: Reduced scrolling by 40% with tighter layout
+5. **Fixed React Flow error**: Changed `reactFlowInstance.project()` to `reactFlowInstance.flowToScreenPosition()` for @xyflow/react v12 compatibility
+
+### Added Metrics
+- Cost per Opportunity: `(marketingSpend * 1000) / opportunitiesCreated`
+- Cost per Won: `(marketingSpend * 1000) / dealsClosedWon`
+- Full formulas and status thresholds added to metricFormulas.ts and metricTargets.ts
+
 ## Notes
 
 - No backend or API - entirely client-side
@@ -423,3 +517,4 @@ app/
 - No authentication or user accounts
 - Responsive design works on mobile/tablet/desktop
 - All calculations update instantly (no debouncing/throttling)
+- **Dependencies**: @xyflow/react (React Flow), dagre (graph layout), framer-motion (animations)
