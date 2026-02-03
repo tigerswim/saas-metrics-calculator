@@ -42,7 +42,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const netNewARR = newBookings + expansionARR - churnedARR;
   const endingARR = beginningARR * 1000 + netNewARR; // beginningARR is in $M
   const mrr = endingARR / 12;
-  const monthlyRevenue = mrr;
   const arrGrowthRateMonthly = (netNewARR / (beginningARR * 1000)) * 100;
   const annualizedGrowthRate = Math.pow(1 + arrGrowthRateMonthly / 100, 12) - 1;
 
@@ -78,6 +77,8 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const costPerLead = (totalMarketingSpend * 1000) / (inputs.leadsGenerated || 1); // Convert from $K to $
   const costPerMQL = (totalMarketingSpend * 1000) / (mqlsGenerated || 1); // Convert from $K to $
   const costPerSQL = (totalMarketingSpend * 1000) / (sqlsGenerated || 1); // Convert from $K to $
+  const costPerOpp = (totalMarketingSpend * 1000) / (opportunitiesCreated || 1); // Convert from $K to $
+  const costPerWon = (totalMarketingSpend * 1000) / (dealsClosedWon || 1); // Convert from $K to $
   const cpm = (paidMarketingSpend / (paidImpressions || 1)) * 1000;
   const cpc = (paidMarketingSpend * 1000) / (paidClicks || 1); // Convert from $K to $
   const ctr = (paidClicks / (paidImpressions || 1)) * 100;
@@ -91,10 +92,10 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const paybackPeriodSM = cacBlended / (netNewARR / (newCustomersAdded || 1));
 
   // Financial Performance Metrics
-  const grossProfit = monthlyRevenue * (grossMargin / 100);
+  const grossProfit = mrr * (grossMargin / 100);
   const totalOpEx = totalSalesMarketing + rdSpend + gaSpend;
   const ebitda = grossProfit - totalOpEx;
-  const ebitdaMargin = (ebitda / monthlyRevenue) * 100;
+  const ebitdaMargin = (ebitda / mrr) * 100;
   const ruleOf40 = (annualizedGrowthRate * 100) + ebitdaMargin;
   const saasQuickRatio = (newBookings + expansionARR) / (churnedARR || 1);
   // Burn Multiple only meaningful when EBITDA is negative (company is burning cash)
@@ -106,7 +107,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     netNewARR,
     endingARR: endingARR / 1000, // Convert back to $M
     mrr: mrr / 1000, // Convert to $M
-    monthlyRevenue,
     arrGrowthRateMonthly,
     annualizedGrowthRate: annualizedGrowthRate * 100,
     grr,
@@ -129,6 +129,8 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     costPerLead,
     costPerMQL,
     costPerSQL,
+    costPerOpp,
+    costPerWon,
     cpm,
     cpc,
     ctr,

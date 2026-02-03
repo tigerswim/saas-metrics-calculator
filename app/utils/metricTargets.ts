@@ -29,6 +29,16 @@ const metricTargets: Record<string, MetricTarget> = {
     warning: (v) => v >= 200 && v < 400,
     targetLabel: '< $200',
   },
+  'cost-per-opp': {
+    good: (v) => v < 500,
+    warning: (v) => v >= 500 && v < 1000,
+    targetLabel: '< $500',
+  },
+  'cost-per-won': {
+    good: (v) => v < 2000,
+    warning: (v) => v >= 2000 && v < 5000,
+    targetLabel: '< $2,000',
+  },
   'cac-blended': {
     good: (v) => v < 5000,
     warning: (v) => v >= 5000 && v < 10000,
@@ -108,9 +118,9 @@ const metricTargets: Record<string, MetricTarget> = {
 
   // Growth Rate - Higher is better
   'arr-growth-rate': {
-    good: (v) => v > 100,
-    warning: (v) => v >= 50 && v <= 100,
-    targetLabel: '> 100%',
+    good: (v) => v > 40,
+    warning: (v) => v >= 20 && v <= 40,
+    targetLabel: '> 40%',
   },
 
   // Margins - Higher is better
@@ -194,6 +204,8 @@ export function getCalculatedMetricStatus(
     'cost-per-lead': metrics.costPerLead,
     'cost-per-mql': metrics.costPerMQL,
     'cost-per-sql': metrics.costPerSQL,
+    'cost-per-opp': metrics.costPerOpp,
+    'cost-per-won': metrics.costPerWon,
     'cac-blended': metrics.cacBlended,
     'cac-paid-only': metrics.cacPaidOnly,
     'cac-payback-period': metrics.cacPaybackPeriod,

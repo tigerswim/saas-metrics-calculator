@@ -20,8 +20,8 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
 
   // P&L Summary
   const pnlItems = [
-    { label: 'Monthly Revenue', value: metrics.monthlyRevenue, type: 'revenue' },
-    { label: 'COGS', value: metrics.monthlyRevenue * (inputs.cogsPercent / 100), type: 'cost' },
+    { label: 'MRR', value: metrics.mrr, type: 'revenue' },
+    { label: 'COGS', value: metrics.mrr * (inputs.cogsPercent / 100), type: 'cost' },
     { label: 'Gross Profit', value: metrics.grossProfit, type: 'subtotal' },
     { label: 'Sales & Marketing', value: inputs.totalSalesMarketing, type: 'cost' },
     { label: 'R&D', value: inputs.rdSpend, type: 'cost' },
@@ -195,7 +195,7 @@ export default function FinancialPosition({ metrics, inputs }: FinancialPosition
                 </span>
               </div>
               <div className="text-xs text-slate-500 mt-1">
-                {((metrics.totalOpEx / metrics.monthlyRevenue) * 100).toFixed(0)}% of revenue
+                {((metrics.totalOpEx / metrics.mrr) * 100).toFixed(0)}% of revenue
               </div>
             </div>
           </div>

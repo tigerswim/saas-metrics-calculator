@@ -14,6 +14,7 @@ import UnitEconomicsTable from './UnitEconomicsTable';
 import FinancialPosition from './FinancialPosition';
 import ChannelMix from './ChannelMix';
 import VerticalMetricsMap from './metrics-map-v2/VerticalMetricsMap';
+import ReactFlowMetricsMap from './metrics-map-v3/ReactFlowMetricsMap';
 // Methodology component available at ./Methodology.tsx - uncomment import to enable
 // import Methodology from './Methodology';
 import {
@@ -114,6 +115,7 @@ export default function Calculator() {
   const [showInputs, setShowInputs] = useState(false);
   const [activePersona, setActivePersona] = useState<Persona>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('sections');
+  const [mapVersion, setMapVersion] = useState<'v2' | 'v3'>('v3'); // Default to v3 (React Flow)
 
   const currentConfig = personaConfigs[activePersona];
   const showSection = (section: string) => currentConfig.sections.includes(section);
@@ -250,7 +252,38 @@ export default function Calculator() {
         {viewMode === 'map' ? (
           /* Metrics Map View */
           <>
-            <VerticalMetricsMap metrics={metrics} inputs={inputs} />
+            {/* Map Version Toggle */}
+            <div className="mb-4 flex items-center justify-end gap-2">
+              <span className="text-xs text-slate-500">Map Version:</span>
+              <button
+                onClick={() => setMapVersion('v2')}
+                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                  mapVersion === 'v2'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                Vertical (v2)
+              </button>
+              <button
+                onClick={() => setMapVersion('v3')}
+                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                  mapVersion === 'v3'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                Flow Graph (v3)
+              </button>
+            </div>
+
+            {/* Render selected map version */}
+            {mapVersion === 'v2' ? (
+              <VerticalMetricsMap metrics={metrics} inputs={inputs} />
+            ) : (
+              <ReactFlowMetricsMap metrics={metrics} inputs={inputs} />
+            )}
+
             {/* Keep detailed tables as expandable sections below map */}
             {showSection('economics') && (
               <div className="mt-8">

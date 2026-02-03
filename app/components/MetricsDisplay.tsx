@@ -40,7 +40,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
         { label: 'Net New ARR', value: formatCurrency(metrics.netNewARR * 1000, 0), description: 'New + Expansion - Churn' },
         { label: 'Ending ARR ($M)', value: formatCurrency(metrics.endingARR, 1) },
         { label: 'MRR ($M)', value: formatCurrency(metrics.mrr, 1) },
-        { label: 'Monthly Revenue', value: formatCurrency(metrics.monthlyRevenue * 1000, 0) },
         { label: 'ARR Growth Rate (Monthly)', value: formatPercent(metrics.arrGrowthRateMonthly) },
         { label: 'Annualized Growth Rate', value: formatPercent(metrics.annualizedGrowthRate) },
       ],

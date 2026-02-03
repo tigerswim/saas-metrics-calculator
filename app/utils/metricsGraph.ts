@@ -189,16 +189,11 @@ export const metricsRelationships: MetricsGraph = {
 
   'ending-arr': {
     inputs: ['net-new-arr'],
-    outputs: ['mrr', 'monthly-revenue', 'arr-growth-rate', 'rule-of-40']
+    outputs: ['mrr', 'arr-growth-rate', 'rule-of-40']
   },
 
   'mrr': {
     inputs: ['ending-arr'],
-    outputs: ['monthly-revenue']
-  },
-
-  'monthly-revenue': {
-    inputs: ['mrr'],
     outputs: ['gross-profit']
   },
 
@@ -290,7 +285,7 @@ export const metricsRelationships: MetricsGraph = {
 
   // Financial Performance
   'gross-profit': {
-    inputs: ['monthly-revenue'],
+    inputs: ['mrr'],
     outputs: ['gross-margin', 'ebitda']
   },
 
@@ -452,7 +447,7 @@ export function getMetricLayer(metricId: string): 'activities' | 'acquisition' |
   // Revenue layer
   if ([
     'new-bookings', 'new-customers-added', 'expansion-arr', 'churned-arr', 'net-new-arr',
-    'ending-arr', 'mrr', 'monthly-revenue', 'grr', 'nrr', 'annualized-grr', 'annualized-nrr',
+    'ending-arr', 'mrr', 'grr', 'nrr', 'annualized-grr', 'annualized-nrr',
     'logo-churn-rate', 'ending-customer-count', 'arr-growth-rate'
   ].includes(metricId)) {
     return 'revenue';

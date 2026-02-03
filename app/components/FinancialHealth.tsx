@@ -136,9 +136,9 @@ export default function FinancialHealth({ metrics }: FinancialHealthProps) {
           <h4 className="text-sm font-semibold text-slate-700 mb-3">Monthly P&L Summary</h4>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Monthly Revenue</span>
+              <span className="text-slate-600">MRR</span>
               <span className="font-semibold text-slate-900">
-                ${Math.round(metrics.monthlyRevenue).toLocaleString()}K
+                ${Math.round(metrics.mrr * 1000).toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between text-sm">

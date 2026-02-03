@@ -37,7 +37,7 @@ export default function RetentionComparison({ grr, nrr, annualizedGRR, annualize
             domain={[0, Math.max(120, Math.ceil(Math.max(nrr, annualizedNRR) / 10) * 10)]}
           />
           <Tooltip
-            formatter={(value: number) => `${value.toFixed(1)}%`}
+            formatter={(value: number | undefined) => value !== undefined ? `${value.toFixed(1)}%` : ''}
             contentStyle={{
               backgroundColor: '#1e293b',
               border: 'none',

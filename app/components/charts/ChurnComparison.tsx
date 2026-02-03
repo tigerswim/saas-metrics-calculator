@@ -66,7 +66,7 @@ export default function ChurnComparison({
             width={100}
           />
           <Tooltip
-            formatter={(value: number) => `${value.toFixed(2)}%`}
+            formatter={(value: number | undefined) => value !== undefined ? `${value.toFixed(2)}%` : ''}
             contentStyle={{
               backgroundColor: '#1e293b',
               border: 'none',

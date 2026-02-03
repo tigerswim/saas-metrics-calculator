@@ -42,7 +42,7 @@ export default function ARRWaterfall({ beginningARR, newBookings, expansion, chu
             tickFormatter={(value) => `$${(value / 1000).toFixed(0)}M`}
           />
           <Tooltip
-            formatter={(value: number) => formatValue(Math.abs(value))}
+            formatter={(value: number | undefined) => value !== undefined ? formatValue(Math.abs(value)) : ''}
             contentStyle={{
               backgroundColor: '#1e293b',
               border: 'none',

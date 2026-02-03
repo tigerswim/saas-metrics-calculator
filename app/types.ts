@@ -46,7 +46,6 @@ export interface CalculatedMetrics {
   netNewARR: number;
   endingARR: number;
   mrr: number;
-  monthlyRevenue: number;
   arrGrowthRateMonthly: number;
   annualizedGrowthRate: number;
 
@@ -75,6 +74,8 @@ export interface CalculatedMetrics {
   costPerLead: number;
   costPerMQL: number;
   costPerSQL: number;
+  costPerOpp: number;
+  costPerWon: number;
   cpm: number;
   cpc: number;
   ctr: number;
