@@ -87,11 +87,6 @@ export default function UnitEconomicsTable({ metrics, inputs }: UnitEconomicsTab
       value: formatCurrency(paidMarketingSpend * 1000),
     },
     {
-      label: 'CAC (Paid Only)',
-      value: formatCurrency(metrics.cacPaidOnly * 1000),
-      benchmark: 'varies',
-    },
-    {
       label: 'New Customers Added',
       value: inputs.newCustomersAdded.toString(),
     },
@@ -198,12 +193,7 @@ export default function UnitEconomicsTable({ metrics, inputs }: UnitEconomicsTab
                 }`}
               >
                 <span className="text-sm text-slate-700">{metric.label}</span>
-                <div className="text-right">
-                  <span className="font-medium tabular-nums text-slate-900">{metric.value}</span>
-                  {metric.benchmark && (
-                    <span className="text-xs text-slate-400 ml-2">{metric.benchmark}</span>
-                  )}
-                </div>
+                <span className="font-medium tabular-nums text-slate-900">{metric.value}</span>
               </div>
             ))}
           </div>

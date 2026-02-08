@@ -163,8 +163,8 @@ export function applyVisibility(
     'magic-number',
     'cac-blended',
     'ltv',
-    'nrr',
-    'grr',
+    'annualized-nrr',
+    'annualized-grr',
 
     // Key drivers
     'net-new-arr',

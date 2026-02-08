@@ -39,9 +39,9 @@ function getInvestmentSignals(metrics: CalculatedMetrics, inputs: Inputs): Inves
   // Paid Marketing Signal
   const paidSignal: InvestmentSignal = {
     area: 'Paid Acquisition',
-    signal: metrics.ctr > 2 && metrics.cacPaidOnly * 1000 < metrics.ltv / 3 ? 'increase' :
-            metrics.ctr > 1 && metrics.cacPaidOnly * 1000 < metrics.ltv / 2 ? 'maintain' : 'reduce',
-    rationale: metrics.ctr > 2 && metrics.cacPaidOnly * 1000 < metrics.ltv / 3
+    signal: metrics.ctr > 2 && metrics.cacBlended * 1000 < metrics.ltv / 3 ? 'increase' :
+            metrics.ctr > 1 && metrics.cacBlended * 1000 < metrics.ltv / 2 ? 'maintain' : 'reduce',
+    rationale: metrics.ctr > 2 && metrics.cacBlended * 1000 < metrics.ltv / 3
       ? 'Strong engagement and unit economics support scaling'
       : metrics.ctr > 1
         ? 'Acceptable performance—optimize before scaling'
@@ -49,7 +49,7 @@ function getInvestmentSignals(metrics: CalculatedMetrics, inputs: Inputs): Inves
     metrics: [
       { label: 'CTR', value: `${metrics.ctr.toFixed(2)}%`, benchmark: '>2%' },
       { label: 'CPC', value: `$${Math.round(metrics.cpc).toLocaleString()}`, benchmark: 'varies' },
-      { label: 'CAC (Paid)', value: `$${Math.round(metrics.cacPaidOnly * 1000).toLocaleString()}`, benchmark: 'varies' },
+      { label: 'CAC (Blended)', value: `$${Math.round(metrics.cacBlended * 1000).toLocaleString()}`, benchmark: 'varies' },
     ]
   };
   signals.push(paidSignal);

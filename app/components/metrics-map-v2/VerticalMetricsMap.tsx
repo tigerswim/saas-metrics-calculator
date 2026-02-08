@@ -264,12 +264,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
         value: inputs.leadsGenerated.toLocaleString(),
         sparklineData: timeSeriesData.leadsGenerated,
         changePercent: calculateWoWChange(timeSeriesData.leadsGenerated) ?? undefined,
-        isPrimary: true,
-        efficiencyMetric: {
-          label: 'Cost/Lead',
-          value: `$${metrics.costPerLead.toFixed(0)}`,
-          status: getCalculatedMetricStatus('cost-per-lead', metrics, inputs),
-        },
       },
       {
         id: 'mqls',
@@ -317,11 +311,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
         id: 'pipeline-velocity',
         label: 'Pipeline Velocity',
         value: `$${Math.round(metrics.pipelineVelocity).toLocaleString()}/day`,
-      },
-      {
-        id: 'pipeline-conversion',
-        label: 'Pipeline Conv.',
-        value: `${metrics.pipelineConversion.toFixed(1)}%`,
       },
     ],
     revenue: {
@@ -389,22 +378,10 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
           changePercent: calculateWoWChange(timeSeriesData.churnedARR) ?? undefined,
         },
         {
-          id: 'grr',
-          label: 'GRR (Monthly)',
-          value: `${metrics.grr.toFixed(1)}%`,
-          status: getCalculatedMetricStatus('grr', metrics, inputs),
-        },
-        {
           id: 'annualized-grr',
           label: 'GRR (Annual)',
           value: `${metrics.annualizedGRR.toFixed(0)}%`,
           status: getCalculatedMetricStatus('annualized-grr', metrics, inputs),
-        },
-        {
-          id: 'nrr',
-          label: 'NRR (Monthly)',
-          value: `${metrics.nrr.toFixed(1)}%`,
-          status: getCalculatedMetricStatus('nrr', metrics, inputs),
         },
         {
           id: 'annualized-nrr',
@@ -487,12 +464,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
           status: getCalculatedMetricStatus('cac-blended', metrics, inputs),
         },
         {
-          id: 'cac-paid-only',
-          label: 'CAC (Paid Only)',
-          value: formatMetricValue('cacPaidOnly', metrics.cacPaidOnly, metrics, inputs),
-          status: getCalculatedMetricStatus('cac-paid-only', metrics, inputs),
-        },
-        {
           id: 'ltv',
           label: 'LTV',
           value: formatMetricValue('ltv', metrics.ltv, metrics, inputs),
@@ -535,11 +506,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
           label: 'CAC Payback',
           value: `${metrics.cacPaybackPeriod.toFixed(1)} mo`,
           status: getCalculatedMetricStatus('cac-payback-period', metrics, inputs),
-        },
-        {
-          id: 'payback-period-sm',
-          label: 'S&M Payback',
-          value: `${metrics.paybackPeriodSM.toFixed(1)} mo`,
         },
       ],
     },
@@ -629,7 +595,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
     // Efficiency metric connections (right column)
     { from: 'impressions', to: 'cpm' },
     { from: 'clicks', to: 'cpc' },
-    { from: 'leads', to: 'cost-per-lead' },
     { from: 'mqls', to: 'cost-per-mql' },
     { from: 'sqls', to: 'cost-per-sql' },
 
@@ -638,10 +603,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
     { from: 'opportunities', to: 'pipeline-generated' },
     // pipelineVelocity = (opportunities × avgDealSize × winRate) / salesCycle
     { from: 'opportunities', to: 'pipeline-velocity' },
-    // pipelineConversion = dealsClosedWon / mqlsGenerated
-    { from: 'deals-won', to: 'pipeline-conversion' },
-    { from: 'mqls', to: 'pipeline-conversion' },
-
     // Acquisition → Revenue
     { from: 'deals-won', to: 'new-customers-added' },
     // newBookings = newCustomersAdded × avgDealSize
@@ -662,17 +623,15 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
     { from: 'beginning-arr', to: 'arr-growth-rate' },
 
     // Existing customer performance connections
-    // nrr = (beginningARR - churnedARR + expansionARR) / beginningARR
-    { from: 'beginning-arr', to: 'nrr' },
-    { from: 'expansion-arr', to: 'nrr' },
-    { from: 'churned-arr', to: 'nrr' },
-    // grr = (beginningARR - churnedARR) / beginningARR
-    { from: 'beginning-arr', to: 'grr' },
-    { from: 'churned-arr', to: 'grr' },
+    // annualizedGRR derived from churned-arr and beginning-arr
+    { from: 'churned-arr', to: 'annualized-grr' },
+    // annualizedNRR derived from expansion-arr, churned-arr, and beginning-arr
+    { from: 'expansion-arr', to: 'annualized-nrr' },
+    { from: 'churned-arr', to: 'annualized-nrr' },
     // logoChurnRate = customersChurned / totalCustomers (inputs only)
 
-    // arpa = (beginningARR / totalCustomers) / 12 (monthly)
-    { from: 'beginning-arr', to: 'arpa' },
+    // arpa = (endingARR / totalCustomers) / 12 (monthly)
+    { from: 'ending-arr', to: 'arpa' },
 
     // Revenue → Business Outcomes (KPI % column)
     // ruleOf40 = arrGrowthRate + ebitdaMargin
@@ -844,17 +803,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                           isSelected={focusState.selectedMetricId === 'leads'}
                           opacity={getMetricOpacity('leads', focusState)}
                         />
-                        <MetricCardV2
-                          id="cost-per-lead"
-                          label="Cost/Lead"
-                          value={`$${Math.round(metrics.costPerLead).toLocaleString()}`}
-                          status={getCalculatedMetricStatus('cost-per-lead', metrics, inputs)}
-                          className="md:justify-self-start"
-                          onClick={() => handleMetricClick('cost-per-lead')}
-                          isSelected={focusState.selectedMetricId === 'cost-per-lead'}
-                          opacity={getMetricOpacity('cost-per-lead', focusState)}
-                        />
-
                         {/* Row 4: MQLs */}
                         <MetricCardV2
                           id="lead-to-mql-rate"
@@ -993,15 +941,6 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                           onClick={() => handleMetricClick('pipeline-velocity')}
                           isSelected={focusState.selectedMetricId === 'pipeline-velocity'}
                           opacity={getMetricOpacity('pipeline-velocity', focusState)}
-                        />
-                        <MetricCardV2
-                          id="pipeline-conversion"
-                          label="Pipeline Conv."
-                          value={`${metrics.pipelineConversion.toFixed(1)}%`}
-                          status={getCalculatedMetricStatus('pipeline-conversion', metrics, inputs)}
-                          onClick={() => handleMetricClick('pipeline-conversion')}
-                          isSelected={focusState.selectedMetricId === 'pipeline-conversion'}
-                          opacity={getMetricOpacity('pipeline-conversion', focusState)}
                         />
                       </div>
                     </div>

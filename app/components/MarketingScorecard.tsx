@@ -187,16 +187,16 @@ export default function MarketingScorecard({ metrics, keyMetrics, healthScore }:
           </div>
         </div>
         <div className="bg-white p-4 text-center">
-          <div className="text-sm text-slate-500 mb-1">Monthly Growth</div>
+          <div className="text-sm text-slate-500 mb-1">Annualized Growth</div>
           <div className={`text-xl font-bold flex items-center justify-center gap-1 ${
-            metrics.arrGrowthRateMonthly >= 0 ? 'text-green-600' : 'text-red-600'
+            metrics.annualizedGrowthRate >= 0 ? 'text-green-600' : 'text-red-600'
           }`}>
-            {metrics.arrGrowthRateMonthly >= 0 ? (
+            {metrics.annualizedGrowthRate >= 0 ? (
               <ArrowTrendingUpIcon className="w-5 h-5" />
             ) : (
               <ArrowTrendingDownIcon className="w-5 h-5" />
             )}
-            {metrics.arrGrowthRateMonthly.toFixed(2)}%
+            {metrics.annualizedGrowthRate.toFixed(0)}%
           </div>
         </div>
         <div className="bg-white p-4 text-center">

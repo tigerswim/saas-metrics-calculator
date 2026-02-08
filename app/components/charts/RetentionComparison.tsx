@@ -3,19 +3,12 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 interface RetentionComparisonProps {
-  grr: number;
-  nrr: number;
   annualizedGRR: number;
   annualizedNRR: number;
 }
 
-export default function RetentionComparison({ grr, nrr, annualizedGRR, annualizedNRR }: RetentionComparisonProps) {
+export default function RetentionComparison({ annualizedGRR, annualizedNRR }: RetentionComparisonProps) {
   const data = [
-    {
-      name: 'Monthly',
-      GRR: grr,
-      NRR: nrr,
-    },
     {
       name: 'Annualized',
       GRR: annualizedGRR,
@@ -34,7 +27,7 @@ export default function RetentionComparison({ grr, nrr, annualizedGRR, annualize
           <YAxis
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => `${value}%`}
-            domain={[0, Math.max(120, Math.ceil(Math.max(nrr, annualizedNRR) / 10) * 10)]}
+            domain={[0, Math.max(120, Math.ceil(Math.max(annualizedNRR) / 10) * 10)]}
           />
           <Tooltip
             formatter={(value: number | undefined) => value !== undefined ? `${value.toFixed(1)}%` : ''}

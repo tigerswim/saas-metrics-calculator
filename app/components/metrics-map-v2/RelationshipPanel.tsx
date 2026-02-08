@@ -77,7 +77,6 @@ export default function RelationshipPanel({
       'net-new-arr': 'Net New ARR',
       'ending-arr': 'Ending ARR',
       'cac-blended': 'CAC (Blended)',
-      'cac-paid-only': 'CAC (Paid Only)',
       'ltv': 'LTV',
       'ltv-cac-ratio': 'LTV:CAC Ratio',
       'cac-payback-period': 'CAC Payback',
@@ -85,8 +84,6 @@ export default function RelationshipPanel({
       'quick-ratio': 'Quick Ratio',
       'rule-of-40': 'Rule of 40',
       'arr-growth-rate': 'ARR Growth Rate',
-      'grr': 'GRR',
-      'nrr': 'NRR',
       'ebitda-margin': 'EBITDA Margin',
       // Add more as needed
     };

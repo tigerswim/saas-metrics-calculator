@@ -14,11 +14,6 @@ interface MetricTarget {
 // Define targets for key metrics
 const metricTargets: Record<string, MetricTarget> = {
   // Efficiency Metrics - Lower is better
-  'cost-per-lead': {
-    good: (v) => v < 50,
-    warning: (v) => v >= 50 && v < 100,
-    targetLabel: '< $50',
-  },
   'cost-per-mql': {
     good: (v) => v < 100,
     warning: (v) => v >= 100 && v < 200,
@@ -43,11 +38,6 @@ const metricTargets: Record<string, MetricTarget> = {
     good: (v) => v < 5000,
     warning: (v) => v >= 5000 && v < 10000,
     targetLabel: '< $5,000',
-  },
-  'cac-paid-only': {
-    good: (v) => v < 7500,
-    warning: (v) => v >= 7500 && v < 15000,
-    targetLabel: '< $7,500',
   },
   'cac-payback-period': {
     good: (v) => v < 12,
@@ -90,16 +80,6 @@ const metricTargets: Record<string, MetricTarget> = {
   },
 
   // Retention - Higher is better
-  'grr': {
-    good: (v) => v > 95,
-    warning: (v) => v >= 90 && v <= 95,
-    targetLabel: '> 95%',
-  },
-  'nrr': {
-    good: (v) => v > 110,
-    warning: (v) => v >= 100 && v <= 110,
-    targetLabel: '> 110%',
-  },
   'annualized-grr': {
     good: (v) => v > 95,
     warning: (v) => v >= 85 && v <= 95,
@@ -201,13 +181,11 @@ export function getCalculatedMetricStatus(
   inputs?: Inputs
 ): MetricStatus {
   const metricValueMap: Record<string, number> = {
-    'cost-per-lead': metrics.costPerLead,
     'cost-per-mql': metrics.costPerMQL,
     'cost-per-sql': metrics.costPerSQL,
     'cost-per-opp': metrics.costPerOpp,
     'cost-per-won': metrics.costPerWon,
     'cac-blended': metrics.cacBlended,
-    'cac-paid-only': metrics.cacPaidOnly,
     'cac-payback-period': metrics.cacPaybackPeriod,
     'burn-multiple': metrics.burnMultiple,
     'ltv-cac-ratio': metrics.ltvCacRatio,
@@ -215,8 +193,6 @@ export function getCalculatedMetricStatus(
     'magic-number': metrics.magicNumber,
     'quick-ratio': metrics.saasQuickRatio,
     'rule-of-40': metrics.ruleOf40,
-    'grr': metrics.grr,
-    'nrr': metrics.nrr,
     'annualized-grr': metrics.annualizedGRR,
     'annualized-nrr': metrics.annualizedNRR,
     'logo-churn-rate': metrics.logoChurnRate,

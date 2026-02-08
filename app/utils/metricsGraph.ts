@@ -23,7 +23,7 @@ export const metricsRelationships: MetricsGraph = {
 
   'marketing-spend': {
     inputs: ['sales-marketing-spend'],
-    outputs: ['paid-search', 'paid-social', 'events', 'content', 'partnerships', 'abm', 'cost-per-lead', 'cost-per-mql', 'cost-per-sql'],
+    outputs: ['paid-search', 'paid-social', 'events', 'content', 'partnerships', 'abm', 'cost-per-mql', 'cost-per-sql'],
   },
 
   'sales-spend': {
@@ -110,7 +110,7 @@ export const metricsRelationships: MetricsGraph = {
 
   'leads': {
     inputs: ['clicks', 'marketing-spend'],
-    outputs: ['mqls', 'cost-per-lead']
+    outputs: ['mqls']
   },
 
   'mqls': {
@@ -131,11 +131,6 @@ export const metricsRelationships: MetricsGraph = {
   'deals-won': {
     inputs: ['opportunities'],
     outputs: ['new-bookings', 'new-customers-added', 'cost-per-won']
-  },
-
-  'cost-per-lead': {
-    inputs: ['marketing-spend', 'leads'],
-    outputs: []
   },
 
   'cost-per-mql': {
@@ -169,17 +164,17 @@ export const metricsRelationships: MetricsGraph = {
 
   'new-customers-added': {
     inputs: ['deals-won'],
-    outputs: ['new-bookings', 'ending-customer-count', 'cac-blended', 'cac-paid-only']
+    outputs: ['new-bookings', 'ending-customer-count', 'cac-blended']
   },
 
   'expansion-arr': {
     inputs: [],
-    outputs: ['net-new-arr', 'nrr', 'quick-ratio']
+    outputs: ['net-new-arr', 'annualized-nrr', 'quick-ratio']
   },
 
   'churned-arr': {
     inputs: [],
-    outputs: ['net-new-arr', 'grr', 'nrr', 'quick-ratio']
+    outputs: ['net-new-arr', 'annualized-grr', 'annualized-nrr', 'quick-ratio']
   },
 
   'net-new-arr': {
@@ -189,7 +184,7 @@ export const metricsRelationships: MetricsGraph = {
 
   'ending-arr': {
     inputs: ['net-new-arr'],
-    outputs: ['mrr', 'arr-growth-rate', 'rule-of-40']
+    outputs: ['mrr', 'arr-growth-rate', 'rule-of-40', 'arpa']
   },
 
   'mrr': {
@@ -197,23 +192,13 @@ export const metricsRelationships: MetricsGraph = {
     outputs: ['gross-profit']
   },
 
-  'grr': {
-    inputs: ['churned-arr'],
-    outputs: ['annualized-grr']
-  },
-
-  'nrr': {
-    inputs: ['expansion-arr', 'churned-arr'],
-    outputs: ['annualized-nrr']
-  },
-
   'annualized-grr': {
-    inputs: ['grr'],
+    inputs: ['churned-arr'],
     outputs: []
   },
 
   'annualized-nrr': {
-    inputs: ['nrr'],
+    inputs: ['expansion-arr', 'churned-arr'],
     outputs: []
   },
 
@@ -247,11 +232,6 @@ export const metricsRelationships: MetricsGraph = {
     outputs: ['ltv-cac-ratio', 'cac-payback-period']
   },
 
-  'cac-paid-only': {
-    inputs: ['marketing-spend', 'new-customers-added'],
-    outputs: []
-  },
-
   'ltv': {
     inputs: ['arpa'],
     outputs: ['ltv-cac-ratio']
@@ -270,11 +250,6 @@ export const metricsRelationships: MetricsGraph = {
   // Sales Efficiency
   'magic-number': {
     inputs: ['net-new-arr', 'sales-marketing-spend'],
-    outputs: []
-  },
-
-  'payback-period-sm': {
-    inputs: ['sales-marketing-spend'],
     outputs: []
   },
 
@@ -439,7 +414,7 @@ export function getMetricLayer(metricId: string): 'activities' | 'acquisition' |
   // Acquisition layer
   if ([
     'impressions', 'clicks', 'leads', 'mqls', 'sqls', 'opportunities', 'deals-won',
-    'cpm', 'cpc', 'ctr', 'cost-per-lead', 'cost-per-mql', 'cost-per-sql', 'cost-per-opp', 'cost-per-won'
+    'cpm', 'cpc', 'ctr', 'cost-per-mql', 'cost-per-sql', 'cost-per-opp', 'cost-per-won'
   ].includes(metricId)) {
     return 'acquisition';
   }
@@ -447,7 +422,7 @@ export function getMetricLayer(metricId: string): 'activities' | 'acquisition' |
   // Revenue layer
   if ([
     'new-bookings', 'new-customers-added', 'expansion-arr', 'churned-arr', 'net-new-arr',
-    'ending-arr', 'mrr', 'grr', 'nrr', 'annualized-grr', 'annualized-nrr',
+    'ending-arr', 'mrr', 'annualized-grr', 'annualized-nrr',
     'logo-churn-rate', 'ending-customer-count', 'arr-growth-rate'
   ].includes(metricId)) {
     return 'revenue';

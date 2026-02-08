@@ -53,8 +53,6 @@ export function getMetricStatus(
       return value >= 4 ? 'good' : value >= 2 ? 'warning' : 'bad';
     case 'ctr':
       return value >= 2 ? 'good' : value >= 1 ? 'warning' : 'bad';
-    case 'pipelineConversion':
-      return value >= 5 ? 'good' : value >= 2 ? 'warning' : 'bad';
     default:
       return 'good';
   }
@@ -171,11 +169,6 @@ export function getConversionRate(
   if (fromMetric === 'paidImpressions' && toMetric === 'paidClicks') {
     return metrics.ctr;
   }
-  // Overall pipeline conversion
-  if (fromMetric === 'mqlsGenerated' && toMetric === 'dealsClosedWon') {
-    return metrics.pipelineConversion;
-  }
-
   return null;
 }
 
@@ -208,9 +201,7 @@ export function formatMetricValue(
     case 'ebitda':
       return `$${value.toFixed(0)}K`;
     case 'cacBlended':
-    case 'cacPaidOnly':
       return `$${Math.round(value * 1000).toLocaleString()}`;
-    case 'costPerLead':
     case 'costPerMQL':
     case 'costPerSQL':
     case 'cpc':
@@ -224,24 +215,19 @@ export function formatMetricValue(
     case 'pipelineVelocity':
       return `$${Math.round(value / 1000).toLocaleString()}K/day`;
     case 'annualizedGrowthRate':
-    case 'arrGrowthRateMonthly':
     case 'annualizedGRR':
     case 'annualizedNRR':
-    case 'grr':
-    case 'nrr':
     case 'logoChurnRate':
     case 'grossMargin':
     case 'ebitdaMargin':
     case 'ruleOf40':
     case 'ctr':
-    case 'pipelineConversion':
       return `${value.toFixed(1)}%`;
     case 'ltvCacRatio':
     case 'magicNumber':
     case 'saasQuickRatio':
       return `${value.toFixed(1)}x`;
     case 'cacPaybackPeriod':
-    case 'paybackPeriodSM':
     case 'salesCycle':
       return `${value.toFixed(1)} mo`;
     case 'avgDealSize':
@@ -275,11 +261,8 @@ export function getMetricLabel(metricKey: string): string {
     annualizedGrowthRate: 'ARR Growth',
     annualizedGRR: 'GRR',
     annualizedNRR: 'NRR',
-    grr: 'GRR (Monthly)',
-    nrr: 'NRR (Monthly)',
     logoChurnRate: 'Logo Churn',
     cacBlended: 'CAC (Blended)',
-    cacPaidOnly: 'CAC (Paid)',
     ltv: 'LTV',
     ltvCacRatio: 'LTV:CAC',
     cacPaybackPeriod: 'CAC Payback',
@@ -289,7 +272,6 @@ export function getMetricLabel(metricKey: string): string {
     cpc: 'CPC',
     ctr: 'CTR',
     magicNumber: 'Magic Number',
-    paybackPeriodSM: 'S&M Payback',
     grossProfit: 'Gross Profit',
     grossMargin: 'Gross Margin',
     totalOpEx: 'Total OpEx',
@@ -300,7 +282,6 @@ export function getMetricLabel(metricKey: string): string {
     burnMultiple: 'Burn Multiple',
     pipelineGenerated: 'Pipeline',
     pipelineVelocity: 'Pipeline Velocity',
-    pipelineConversion: 'Pipeline Conv.',
     arpa: 'ARPA',
     avgDealSize: 'Avg Deal Size',
     salesCycle: 'Sales Cycle',

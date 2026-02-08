@@ -83,8 +83,6 @@ export function MetricPopover({
       'ending-arr': 'Ending ARR',
       'mrr': 'MRR',
       'arr-growth-rate': 'ARR Growth',
-      'grr': 'GRR',
-      'nrr': 'NRR',
       'annualized-grr': 'GRR (Annual)',
       'annualized-nrr': 'NRR (Annual)',
       'logo-churn-rate': 'Logo Churn',
@@ -93,7 +91,6 @@ export function MetricPopover({
       'arpa': 'ARPA',
       // Outcomes
       'cac-blended': 'CAC (Blended)',
-      'cac-paid-only': 'CAC (Paid)',
       'ltv': 'LTV',
       'ltv-cac-ratio': 'LTV:CAC Ratio',
       'cac-payback-period': 'CAC Payback',

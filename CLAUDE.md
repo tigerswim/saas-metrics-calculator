@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **SaaS Metrics Calculator** - an interactive web application for modeling SaaS business metrics. Users input their business parameters and see 50+ calculated metrics update in real-time, including ARR growth, retention rates, CAC/LTV ratios, and other critical KPIs.
+This is a **SaaS Metrics Calculator** - an interactive web application for modeling SaaS business metrics. Users input their business parameters and see ~50 calculated metrics update in real-time, including ARR growth, retention rates, CAC/LTV ratios, and other critical KPIs.
 
 ## Tech Stack
 
@@ -82,11 +82,11 @@ All types defined in `app/types.ts`:
   - Paid media metrics (impressions, clicks)
   - Operating expenses (Total S&M, Marketing Spend, R&D, G&A)
   - Conversion rates and sales cycle data
-- **CalculatedMetrics**: 50+ calculated metrics across categories:
+- **CalculatedMetrics**: ~50 calculated metrics across categories:
   - ARR & Growth (no separate monthlyRevenue - use MRR instead)
   - Retention (GRR, NRR, Churn)
   - Pipeline (SQLs, Opportunities, Deals Won)
-  - Marketing Efficiency (CAC, Cost/Lead, Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won, CPM, CPC, CTR)
+  - Marketing Efficiency (CAC, Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won, CPM, CPC, CTR)
   - Sales Efficiency (Magic Number, Payback Period)
   - Financial Performance (Margins, EBITDA, Rule of 40, Quick Ratio)
 - **KeyMetric**: For the top 10 metrics with targets and status colors
@@ -153,7 +153,7 @@ Interactive node-link diagram showing metric relationships and flow using @xyflo
 - Examples:
   - **Impressions card**: Shows CPM efficiency
   - **Clicks card**: Shows CPC and CTR effectiveness
-  - **Leads card**: Shows Cost/Lead efficiency
+  - **Leads card**: Standard metric card
   - **MQLs card**: Shows Cost/MQL efficiency
   - **SQLs card**: Shows Cost/SQL efficiency
 
@@ -171,11 +171,11 @@ Interactive node-link diagram showing metric relationships and flow using @xyflo
 ### Status Evaluation
 Centralized in `app/utils/metricTargets.ts`:
 - Defines thresholds for each metric (good/warning/bad ranges)
-- Target labels displayed in UI (e.g., "< $50" for Cost/Lead)
+- Target labels displayed in UI (e.g., ">3.0x" for LTV:CAC)
 - `getMetricStatus()`: Evaluates metric against thresholds
 - `getCalculatedMetricStatus()`: Wrapper for calculated metrics
 - Examples:
-  - **Cost/Lead**: Good < $50, Warning $50-$100, Bad > $100
+  - **Cost/MQL**: Good < $100, Warning $100-$200, Bad > $200
   - **LTV:CAC Ratio**: Good > 3, Warning 2-3, Bad < 2
   - **CAC Payback**: Good < 12mo, Warning 12-18mo, Bad > 18mo
 
@@ -190,13 +190,13 @@ Shows channel-level spend and lead generation (Paid Search, Paid Social, Events,
 **Main Funnel Flow** (in order):
 1. Impressions (with CPM efficiency)
 2. Clicks (with CPC and CTR effectiveness)
-3. Leads (with Cost/Lead efficiency)
+3. Leads
 4. MQLs (with Cost/MQL efficiency)
 5. SQLs (with Cost/SQL efficiency)
 6. Opportunities
 7. Deals Won
 
-**Pipeline Metrics**: Pipeline Value, Pipeline Velocity, Pipeline Conversion
+**Pipeline Metrics**: Pipeline Value, Pipeline Velocity
 
 **Layout**: Responsive grid (5 columns on xl, 6 on 2xl) with 8-unit gap for visual clarity.
 
@@ -220,9 +220,7 @@ Shows channel-level spend and lead generation (Paid Search, Paid Social, Events,
 **Right Column - Existing Customer Performance**:
 - Expansion ARR
 - Churned ARR
-- GRR (Monthly)
 - GRR (Annual)
-- NRR (Monthly)
 - NRR (Annual)
 - Logo Churn Rate
 - Customers Churned
@@ -243,9 +241,9 @@ Shows channel-level spend and lead generation (Paid Search, Paid Social, Events,
 - EBITDA (absolute $)
 
 **Right Column - Efficiency Metrics**:
-- Unit Economics: CAC Blended, CAC Paid Only, LTV
+- Unit Economics: CAC Blended, LTV
 - Efficiency Ratios: LTV:CAC Ratio, Magic Number, Quick Ratio, Burn Multiple
-- Time-based: CAC Payback Period, S&M Payback Period
+- Time-based: CAC Payback Period
 
 **Connection Lines**: Show relationships between columns (e.g., Gross Margin → Gross Profit, LTV + CAC → LTV:CAC Ratio)
 
@@ -342,11 +340,11 @@ Update thresholds in `app/utils/metricTargets.ts`:
 - **Marketing/S&M Spend** inputs are in thousands ($K)
 - **MRR**: There is NO separate `monthlyRevenue` field - use `mrr` for all monthly revenue calculations
 - **Cost-per metrics** are calculated and returned in actual dollars from calculator.ts:
-  - Cost/Lead, Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won: `(marketingSpend * 1000) / count`
+  - Cost/MQL, Cost/SQL, Cost/Opp, Cost/Won: `(marketingSpend * 1000) / count`
   - CPC: `(paidMarketingSpend * 1000) / clicks`
   - CPM: `(paidMarketingSpend / impressions) * 1000`
   - **Display**: Use directly without conversion: `Math.round(value).toLocaleString()`
-- **CAC metrics** (cacBlended, cacPaidOnly) are returned in $K from calculator.ts:
+- **CAC metrics** (cacBlended) are returned in $K from calculator.ts:
   - **Display**: Convert to dollars with `Math.round(value * 1000).toLocaleString()`
 - **LTV** is returned in actual dollars from calculator.ts:
   - **Display**: Use directly without conversion: `Math.round(value).toLocaleString()`
@@ -398,11 +396,10 @@ Update thresholds in `app/utils/metricTargets.ts`:
 
 **Marketing Spend**:
 - `marketingSpend` input (in $K) is user-configurable in Operating Expenses
-- Used for Cost/Lead, Cost/MQL, Cost/SQL calculations
+- Used for Cost/MQL, Cost/SQL calculations
 - Formula: `(marketingSpend * 1000) / count` to get cost in actual dollars
 
 **Cost Metrics** (all in actual dollars):
-- `costPerLead = (marketingSpend * 1000) / leadsGenerated`
 - `costPerMQL = (marketingSpend * 1000) / mqlsGenerated`
 - `costPerSQL = (marketingSpend * 1000) / sqlsGenerated`
 - `costPerOpp = (marketingSpend * 1000) / opportunitiesCreated`
@@ -481,6 +478,13 @@ app/
 ```
 
 ## Recent Updates (February 2026)
+
+### Removed 7 Superfluous Metrics (Feb 7, 2026)
+- **Removed**: Monthly GRR, Monthly NRR, Monthly ARR Growth Rate, CAC Paid Only, S&M Payback Period, Pipeline Conversion, Cost per Lead
+- **Rationale**: Redundant with annualized counterparts (GRR/NRR/Growth Rate), overlapping (CAC Paid Only, S&M Payback), or superseded by more meaningful metrics (Cost/MQL and Cost/SQL replace Cost/Lead)
+- **Note**: Monthly GRR, NRR, and ARR Growth Rate remain as local variables in `calculator.ts` since they feed annualized calculations
+- **Graph rewiring**: `churned-arr` and `expansion-arr` now connect directly to `annualized-grr`/`annualized-nrr` (bypassing removed monthly intermediaries)
+- **Files changed**: `types.ts`, `calculator.ts`, `metricTargets.ts`, `metricFormulas.ts`, `metricsGraph.ts`, `metricsMapUtils.ts`, `VerticalMetricsMap.tsx`, `useMetricsGraph.ts`, `graphUtils.ts`, `MetricPopover.tsx`, `RelationshipPanel.tsx`, `MetricsDisplay.tsx`, `GrowthTrajectory.tsx`, `ChartsSection.tsx`, `MarketingScorecard.tsx`, `PipelineFunnel.tsx`, `UnitEconomicsTable.tsx`, `UnitEconomics.tsx`, `WhereToInvest.tsx`, `FormulaExplainer.tsx`, `RetentionComparison.tsx`, `MetricsMap.tsx`
 
 ### Enhanced "Why This Matters" Descriptions (Feb 2, 2026)
 - **Updated all 60+ metric descriptions** in `metricFormulas.ts` from brief 1-sentence explanations to detailed 2-3 sentence business-context descriptions

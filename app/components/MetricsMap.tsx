@@ -31,7 +31,6 @@ export default function MetricsMap({ metrics, inputs }: MetricsMapProps) {
   const leadToMqlRate = inputs.leadsGenerated > 0 
     ? (inputs.mqlsGenerated / inputs.leadsGenerated) * 100 
     : 0;
-  const costPerLead = inputs.leadsGenerated > 0 ? (totalMarketingSpend * 1000) / inputs.leadsGenerated : 0;
   const costPerMQL = inputs.mqlsGenerated > 0 ? (totalMarketingSpend * 1000) / inputs.mqlsGenerated : 0;
   const costPerSQL = metrics.sqlsGenerated > 0 ? (totalMarketingSpend * 1000) / metrics.sqlsGenerated : 0;
   const costPerOpp = metrics.opportunitiesCreated > 0 ? (totalMarketingSpend * 1000) / metrics.opportunitiesCreated : 0;
@@ -177,11 +176,7 @@ export default function MetricsMap({ metrics, inputs }: MetricsMapProps) {
 
           {/* Cost metrics row below acquisition flow */}
           <div className="mt-4 pt-4 border-t border-slate-200">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-xs">
-              <div className="text-center">
-                <div className="text-slate-500 mb-1">Cost/Lead</div>
-                <div className="font-medium text-slate-900">${costPerLead.toFixed(0)}</div>
-              </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
               <div className="text-center">
                 <div className="text-slate-500 mb-1">Cost/MQL</div>
                 <div className="font-medium text-slate-900">${costPerMQL.toFixed(0)}</div>

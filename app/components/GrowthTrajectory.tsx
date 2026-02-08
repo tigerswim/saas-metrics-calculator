@@ -29,14 +29,12 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
   const retentionMetrics = [
     {
       label: 'Gross Revenue Retention',
-      monthly: `${metrics.grr.toFixed(1)}%`,
       annual: `${metrics.annualizedGRR.toFixed(0)}%`,
       benchmark: '>90%',
       status: metrics.annualizedGRR >= 90 ? 'good' : metrics.annualizedGRR >= 80 ? 'warning' : 'bad'
     },
     {
       label: 'Net Revenue Retention',
-      monthly: `${metrics.nrr.toFixed(1)}%`,
       annual: `${metrics.annualizedNRR.toFixed(0)}%`,
       benchmark: '>110%',
       status: metrics.annualizedNRR >= 110 ? 'good' : metrics.annualizedNRR >= 100 ? 'warning' : 'bad'
@@ -87,15 +85,7 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="text-center py-2 bg-blue-50 border border-blue-100">
-              <div className={`text-lg font-semibold tabular-nums ${
-                metrics.arrGrowthRateMonthly >= 0 ? 'text-blue-600' : 'text-rose-600'
-              }`}>
-                {metrics.arrGrowthRateMonthly >= 0 ? '+' : ''}{metrics.arrGrowthRateMonthly.toFixed(2)}%
-              </div>
-              <div className="text-xs text-slate-500">Monthly</div>
-            </div>
+          <div className="mt-4">
             <div className="text-center py-2 bg-blue-50 border border-blue-100">
               <div className={`text-lg font-semibold tabular-nums ${
                 metrics.annualizedGrowthRate >= 20 ? 'text-blue-600' : 'text-slate-700'
@@ -145,9 +135,8 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
           </h3>
           <div className="border border-slate-200">
             {/* Header */}
-            <div className="grid grid-cols-4 gap-1 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs font-medium text-slate-500">
+            <div className="grid grid-cols-3 gap-1 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs font-medium text-slate-500">
               <div className="col-span-1">Metric</div>
-              <div className="text-right">Monthly</div>
               <div className="text-right">Annual</div>
               <div className="text-right">Target</div>
             </div>
@@ -156,7 +145,7 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
               return (
                 <div
                   key={metric.label}
-                  className={`relative grid grid-cols-4 gap-1 px-3 py-2 ${
+                  className={`relative grid grid-cols-3 gap-1 px-3 py-2 ${
                     index < retentionMetrics.length - 1 ? 'border-b border-slate-100' : ''
                   }`}
                 >
@@ -179,7 +168,6 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
                       </div>
                     )}
                   </div>
-                  <div className="text-right tabular-nums text-sm text-slate-600">{metric.monthly}</div>
                   <div className="text-right tabular-nums text-sm font-medium text-slate-900">{metric.annual}</div>
                   <div className="text-right tabular-nums text-xs text-slate-500">{metric.benchmark}</div>
                 </div>

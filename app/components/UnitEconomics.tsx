@@ -143,12 +143,6 @@ export default function UnitEconomics({ metrics, inputs }: UnitEconomicsProps) {
                   ${Math.round(metrics.cacBlended).toLocaleString()}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Paid CAC</span>
-                <span className="font-semibold text-slate-900">
-                  ${Math.round(metrics.cacPaidOnly).toLocaleString()}
-                </span>
-              </div>
               <div className="h-px bg-slate-200" />
               <div className="text-xs text-slate-500">
                 S&M Split

@@ -63,7 +63,6 @@ export default function PipelineFunnel({ metrics, inputs }: PipelineFunnelProps)
     { label: 'Pipeline Velocity', value: `$${(metrics.pipelineVelocity / 1000).toFixed(1)}K/day` },
     { label: 'Avg Deal Size', value: `$${inputs.avgDealSize}K` },
     { label: 'Sales Cycle', value: `${inputs.salesCycle} mo` },
-    { label: 'Overall Conversion', value: `${metrics.pipelineConversion.toFixed(1)}%` },
   ];
 
   // Funnel economics - cost per stage

@@ -14,7 +14,7 @@ interface MetricItem {
   label: string;
   value: string;
   description?: string;
-  showFormula?: 'grr' | 'nrr' | 'logoChurn';
+  showFormula?: 'logoChurn';
   formulaValue?: number;
 }
 
@@ -40,7 +40,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
         { label: 'Net New ARR', value: formatCurrency(metrics.netNewARR * 1000, 0), description: 'New + Expansion - Churn' },
         { label: 'Ending ARR ($M)', value: formatCurrency(metrics.endingARR, 1) },
         { label: 'MRR ($M)', value: formatCurrency(metrics.mrr, 1) },
-        { label: 'ARR Growth Rate (Monthly)', value: formatPercent(metrics.arrGrowthRateMonthly) },
         { label: 'Annualized Growth Rate', value: formatPercent(metrics.annualizedGrowthRate) },
       ],
     },
@@ -48,8 +47,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       title: 'Retention Metrics',
       gradient: 'bg-gradient-retention',
       metrics: [
-        { label: 'Gross Revenue Retention (GRR)', value: formatPercent(metrics.grr), description: 'Monthly GRR', showFormula: 'grr', formulaValue: metrics.grr },
-        { label: 'Net Revenue Retention (NRR)', value: formatPercent(metrics.nrr), description: 'Monthly NRR', showFormula: 'nrr', formulaValue: metrics.nrr },
         { label: 'Annualized GRR', value: formatPercent(metrics.annualizedGRR) },
         { label: 'Annualized NRR', value: formatPercent(metrics.annualizedNRR) },
         { label: 'Logo Churn Rate', value: formatPercent(metrics.logoChurnRate), showFormula: 'logoChurn', formulaValue: metrics.logoChurnRate },
@@ -64,7 +61,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
         { label: 'Opportunities Created', value: formatNumber(metrics.opportunitiesCreated) },
         { label: 'Deals Closed Won', value: formatNumber(metrics.dealsClosedWon) },
         { label: 'Pipeline Generated', value: formatCurrency(metrics.pipelineGenerated * 1000, 0) },
-        { label: 'Pipeline Conversion (MQL→Won)', value: formatPercent(metrics.pipelineConversion) },
         { label: 'Pipeline Velocity ($/day)', value: formatCurrency(metrics.pipelineVelocity, 0) },
       ],
     },
@@ -73,7 +69,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       gradient: 'bg-gradient-marketing',
       metrics: [
         { label: 'CAC - Blended', value: formatCurrency(metrics.cacBlended * 1000, 0), description: 'Total S&M / New Customers' },
-        { label: 'CAC - Paid Only', value: formatCurrency(metrics.cacPaidOnly * 1000, 0), description: 'Paid Marketing / New Customers' },
         { label: 'LTV', value: formatCurrency(metrics.ltv, 0), description: 'ARPA × Lifetime (months)' },
         { label: 'LTV:CAC Ratio', value: `${metrics.ltvCacRatio.toFixed(1)}x` },
         { label: 'CAC Payback Period', value: `${metrics.cacPaybackPeriod.toFixed(1)} months`, description: 'CAC / (ARPA × Gross Margin)' },
@@ -89,7 +84,6 @@ export default function MetricsDisplay({ metrics, inputs }: MetricsDisplayProps)
       gradient: 'bg-gradient-sales',
       metrics: [
         { label: 'Magic Number', value: `${metrics.magicNumber.toFixed(2)}x`, description: 'Net New ARR / S&M Spend' },
-        { label: 'Payback Period on S&M', value: `${metrics.paybackPeriodSM.toFixed(1)} months` },
       ],
     },
     {

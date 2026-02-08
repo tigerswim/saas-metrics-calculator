@@ -113,25 +113,15 @@ export const metricFormulas: Record<string, MetricFormula> = {
   },
 
   // Retention Metrics
-  'grr': {
-    formula: '((Beginning ARR - Churned ARR) ÷ Beginning ARR) × 100',
-    description: 'Gross Revenue Retention (GRR) measures how well you retain revenue from existing customers, excluding any expansion or upsells. Target >90% monthly (>95% annualized) indicates strong product-market fit and customer satisfaction, as it shows customers continue paying without upselling. Below 90% monthly signals potential product issues, poor onboarding, or service quality concerns that need immediate attention.',
+  'annualized-grr': {
+    formula: '((Beginning ARR - Churned ARR) ÷ Beginning ARR) ^ 12 × 100',
+    description: 'Annualized Gross Revenue Retention (GRR) measures how well you retain revenue from existing customers over a full year, excluding any expansion or upsells. Target >95% annualized shows sustainable retention and strong product-market fit. Below 85% annualized signals product issues, poor onboarding, or service quality concerns that need immediate attention.',
     components: ['beginning-arr', 'churned-arr'],
   },
-  'nrr': {
-    formula: '((Beginning ARR + Expansion ARR - Churned ARR) ÷ Beginning ARR) × 100',
-    description: 'Net Revenue Retention (NRR) measures revenue retained plus expansion from existing customers, excluding new bookings. Target >100% monthly (meaning expansion exceeds churn) shows strong land-and-expand motion, while >110% is exceptional. NRR is the most important indicator of product stickiness and growth efficiency—it shows if you can grow purely from your existing base.',
-    components: ['beginning-arr', 'expansion-arr', 'churned-arr'],
-  },
-  'annualized-grr': {
-    formula: 'Monthly GRR ^ 12',
-    description: 'Annualized Gross Revenue Retention (GRR) compounds your monthly GRR over 12 months to project annual retention rates. Target >95% annualized shows sustainable retention over the long term, as monthly retention compounds (e.g., 95% monthly = 54% annualized, so you need very high monthly rates). This metric helps investors and executives understand multi-year revenue stability from your existing customer base.',
-    components: ['grr'],
-  },
   'annualized-nrr': {
-    formula: 'Monthly NRR ^ 12',
-    description: 'Annualized Net Revenue Retention (NRR) compounds your monthly NRR over 12 months to project annual retention including expansion. Target >120% annualized shows exceptional land-and-expand motion with strong product stickiness. This metric helps investors and executives understand multi-year revenue expansion potential from your existing customer base without adding new logos.',
-    components: ['nrr'],
+    formula: '((Beginning ARR + Expansion ARR - Churned ARR) ÷ Beginning ARR) ^ 12 × 100',
+    description: 'Annualized Net Revenue Retention (NRR) measures revenue retained plus expansion from existing customers over a full year. Target >120% annualized shows exceptional land-and-expand motion with strong product stickiness. NRR is the most important indicator of growth efficiency—it shows if you can grow purely from your existing customer base without adding new logos.',
+    components: ['beginning-arr', 'expansion-arr', 'churned-arr'],
   },
   'logo-churn-rate': {
     formula: '(Customers Churned ÷ Beginning Customers) × 100',
@@ -165,11 +155,6 @@ export const metricFormulas: Record<string, MetricFormula> = {
     description: 'Pipeline Generated measures the total dollar value of sales opportunities created in this period, showing forward-looking revenue potential. Target pipeline coverage of 3-5x your revenue goal, meaning if you need $1M in bookings, generate $3-5M in pipeline. This metric helps forecast future revenue and evaluate whether you\'re creating enough pipeline to hit targets.',
     components: ['opportunities', 'avg-deal-size'],
   },
-  'pipeline-conversion': {
-    formula: '(Deals Won ÷ MQLs) × 100',
-    description: 'Pipeline Conversion measures the end-to-end conversion rate from Marketing Qualified Lead (MQL) to closed won deal, showing overall funnel efficiency. Target >5-10% conversion for B2B SaaS, though this varies significantly by average deal size and sales cycle. This metric reveals whether you have a narrow funnel problem (one stage) or a systematic efficiency issue across multiple stages.',
-    components: ['deals-won', 'mqls'],
-  },
   'pipeline-velocity': {
     formula: '(Opportunities × Avg Deal Size × Win Rate) ÷ Sales Cycle Days',
     description: 'Pipeline Velocity measures the dollar value of revenue your sales pipeline generates per day, combining pipeline volume, deal size, win rate, and sales cycle length. Increasing velocity requires either creating more opportunities, closing bigger deals, improving win rates, or shortening sales cycles—each lever impacts growth differently. Track velocity trends to identify whether your sales motion is becoming more or less efficient over time.',
@@ -181,11 +166,6 @@ export const metricFormulas: Record<string, MetricFormula> = {
     formula: 'Total S&M Spend ÷ New Customers Added',
     description: 'Customer Acquisition Cost (CAC) - Blended measures the total Sales & Marketing spend required to acquire one new customer, including all channels (paid, organic, sales). Target CAC varies by ARPA—aim for CAC < 1/3 of LTV or < 33% of first-year contract value. Blended CAC provides the most accurate view of true customer acquisition economics, though CAC Paid Only helps isolate marketing efficiency.',
     components: ['sales-marketing-spend', 'new-customers-added'],
-  },
-  'cac-paid-only': {
-    formula: 'Paid Marketing Spend ÷ New Customers Added',
-    description: 'Customer Acquisition Cost (CAC) - Paid Only isolates the acquisition cost from paid marketing channels (search, social, display), excluding organic and sales costs. Target Paid CAC at 50-70% of Blended CAC, indicating healthy organic/referral contribution. This metric helps marketing teams optimize paid channel mix and evaluate ROI on advertising spend independently from sales investment.',
-    components: ['paid-marketing-spend', 'new-customers-added'],
   },
   'ltv': {
     formula: 'ARPA × Average Customer Lifetime (months)',
@@ -201,11 +181,6 @@ export const metricFormulas: Record<string, MetricFormula> = {
     formula: 'CAC ÷ (ARPA × Gross Margin %)',
     description: 'Customer Acquisition Cost (CAC) Payback Period measures how many months of gross profit it takes to recover your customer acquisition investment. Target <12 months for efficient SaaS businesses, though 12-18 months is acceptable for high-ARPA enterprise companies with strong retention. Longer payback periods strain cash flow and mean you need more capital to fuel growth, making this a critical metric for capital efficiency.',
     components: ['cac-blended', 'arpa', 'gross-margin'],
-  },
-  'cost-per-lead': {
-    formula: 'Total Marketing Spend ÷ Leads Generated',
-    description: 'Cost Per Lead measures marketing spend divided by total leads generated across all channels (paid, organic, events, content, etc.). Target varies by industry and average deal size—B2B SaaS typically aims for $50-$200 per lead. This is the first efficiency checkpoint in your acquisition funnel, indicating whether your top-of-funnel marketing investment is cost-effective.',
-    components: ['marketing-spend', 'leads'],
   },
   'cost-per-mql': {
     formula: 'Total Marketing Spend ÷ MQLs Generated',
@@ -273,11 +248,6 @@ export const metricFormulas: Record<string, MetricFormula> = {
     formula: 'Net New ARR ÷ S&M Spend',
     description: 'The Magic Number measures sales and marketing efficiency by showing how much ARR you generate per dollar of Sales & Marketing (S&M) spend. Target >0.75 for healthy growth and >1.0 for excellent efficiency, indicating each dollar spent generates at least that much in new ARR. Below 0.5 signals inefficient go-to-market motion requiring strategic changes to sales process, pricing, or market fit.',
     components: ['net-new-arr', 'sales-marketing-spend'],
-  },
-  'payback-period-sm': {
-    formula: 'S&M Spend ÷ Net New ARR × 12',
-    description: 'Sales & Marketing (S&M) Payback Period measures how many months of revenue it takes to recover your S&M investment in acquiring and expanding customers. Target <12 months for efficient SaaS businesses, though 12-18 months is acceptable for high-LTV enterprise deals. Longer payback periods strain cash flow and require more capital to fuel growth.',
-    components: ['sales-marketing-spend', 'net-new-arr'],
   },
   'quick-ratio': {
     formula: '(New Bookings + Expansion ARR) ÷ Churned ARR',

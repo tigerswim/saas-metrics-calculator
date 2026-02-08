@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Inputs } from '../types';
 
 interface FormulaExplainerProps {
-  metricName: 'grr' | 'nrr' | 'logoChurn';
+  metricName: 'logoChurn';
   inputs: Inputs;
   result: number;
 }
@@ -14,33 +14,6 @@ export default function FormulaExplainer({ metricName, inputs, result }: Formula
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formulas = {
-    grr: {
-      name: 'Gross Revenue Retention (GRR)',
-      formula: '(Starting ARR - Churned ARR) / Starting ARR × 100',
-      explanation: 'Measures the percentage of revenue retained from existing customers, excluding expansion revenue.',
-      calculation: [
-        `Starting ARR: $${inputs.beginningARR}M = $${inputs.beginningARR * 1000}K`,
-        `Churned ARR: $${inputs.churnedARR}K`,
-        `GRR = ($${inputs.beginningARR * 1000}K - $${inputs.churnedARR}K) / $${inputs.beginningARR * 1000}K × 100`,
-        `GRR = $${(inputs.beginningARR * 1000 - inputs.churnedARR).toFixed(0)}K / $${inputs.beginningARR * 1000}K × 100`,
-        `GRR = ${result.toFixed(2)}%`,
-      ],
-      interpretation: 'Target >90% annually. Shows how well you retain existing revenue without considering upsells.',
-    },
-    nrr: {
-      name: 'Net Revenue Retention (NRR)',
-      formula: '(Starting ARR - Churned ARR + Expansion ARR) / Starting ARR × 100',
-      explanation: 'Measures revenue retention plus expansion from existing customers.',
-      calculation: [
-        `Starting ARR: $${inputs.beginningARR}M = $${inputs.beginningARR * 1000}K`,
-        `Churned ARR: $${inputs.churnedARR}K`,
-        `Expansion ARR: $${inputs.expansionARR}K`,
-        `NRR = ($${inputs.beginningARR * 1000}K - $${inputs.churnedARR}K + $${inputs.expansionARR}K) / $${inputs.beginningARR * 1000}K × 100`,
-        `NRR = $${(inputs.beginningARR * 1000 - inputs.churnedARR + inputs.expansionARR).toFixed(0)}K / $${inputs.beginningARR * 1000}K × 100`,
-        `NRR = ${result.toFixed(2)}%`,
-      ],
-      interpretation: 'Target >110% annually. A value >100% means you\'re growing within your existing customer base.',
-    },
     logoChurn: {
       name: 'Logo Churn Rate',
       formula: 'Customers Churned / Total Customers × 100',

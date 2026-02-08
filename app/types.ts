@@ -46,12 +46,9 @@ export interface CalculatedMetrics {
   netNewARR: number;
   endingARR: number;
   mrr: number;
-  arrGrowthRateMonthly: number;
   annualizedGrowthRate: number;
 
   // Retention
-  grr: number;
-  nrr: number;
   annualizedGRR: number;
   annualizedNRR: number;
   logoChurnRate: number;
@@ -62,16 +59,13 @@ export interface CalculatedMetrics {
   opportunitiesCreated: number;
   dealsClosedWon: number;
   pipelineGenerated: number;
-  pipelineConversion: number;
   pipelineVelocity: number;
 
   // Marketing Efficiency
   cacBlended: number;
-  cacPaidOnly: number;
   ltv: number;
   ltvCacRatio: number;
   cacPaybackPeriod: number;
-  costPerLead: number;
   costPerMQL: number;
   costPerSQL: number;
   costPerOpp: number;
@@ -86,7 +80,6 @@ export interface CalculatedMetrics {
 
   // Sales Efficiency
   magicNumber: number;
-  paybackPeriodSM: number;
 
   // Financial Performance
   grossProfit: number;

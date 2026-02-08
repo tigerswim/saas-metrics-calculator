@@ -24,7 +24,7 @@ export default function ChartsSection({ inputs, metrics }: ChartsSectionProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <GrowthMetricsDashboard
           netNewARR={metrics.netNewARR}
-          growthRate={metrics.arrGrowthRateMonthly}
+          growthRate={metrics.annualizedGrowthRate}
           beginningARR={inputs.beginningARR}
           endingARR={metrics.endingARR}
           newBookings={metrics.newBookings}

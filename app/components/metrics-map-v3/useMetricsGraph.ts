@@ -58,7 +58,6 @@ function getMetricTier(metricId: string): MetricNodeData['tier'] {
     'cpm',
     'cpc',
     'ctr',
-    'cost-per-lead',
     'cost-per-mql',
     'cost-per-sql',
     'click-to-lead-rate',
@@ -68,7 +67,6 @@ function getMetricTier(metricId: string): MetricNodeData['tier'] {
     'win-rate',
     'pipeline-generated',
     'pipeline-velocity',
-    'pipeline-conversion',
   ].includes(metricId)) {
     return 'acquisition';
   }
@@ -84,8 +82,6 @@ function getMetricTier(metricId: string): MetricNodeData['tier'] {
     'ending-arr',
     'mrr',
     'arr-growth-rate',
-    'grr',
-    'nrr',
     'annualized-grr',
     'annualized-nrr',
     'logo-churn-rate',
@@ -133,7 +129,6 @@ function getMetricValue(metricId: string, metrics: CalculatedMetrics, inputs: In
     'cpm': `$${metrics.cpm.toFixed(2)}`,
     'cpc': `$${metrics.cpc.toFixed(2)}`,
     'ctr': `${metrics.ctr.toFixed(2)}%`,
-    'cost-per-lead': `$${Math.round(metrics.costPerLead).toLocaleString()}`,
     'cost-per-mql': `$${Math.round(metrics.costPerMQL).toLocaleString()}`,
     'cost-per-sql': `$${Math.round(metrics.costPerSQL).toLocaleString()}`,
     'cost-per-opp': `$${Math.round(metrics.costPerOpp).toLocaleString()}`,
@@ -149,8 +144,6 @@ function getMetricValue(metricId: string, metrics: CalculatedMetrics, inputs: In
     // Acquisition - Pipeline
     'pipeline-generated': `$${(metrics.pipelineGenerated / 1000).toFixed(1)}M`,
     'pipeline-velocity': `$${Math.round(metrics.pipelineVelocity).toLocaleString()}/day`,
-    'pipeline-conversion': `${metrics.pipelineConversion.toFixed(1)}%`,
-
     // Revenue
     'new-customers-added': inputs.newCustomersAdded.toLocaleString(),
     'new-bookings': `$${(metrics.newBookings / 1000).toFixed(1)}M`,
@@ -161,8 +154,6 @@ function getMetricValue(metricId: string, metrics: CalculatedMetrics, inputs: In
     'ending-arr': `$${metrics.endingARR.toFixed(1)}M`, // endingARR is already in $M from calculator
     'mrr': `$${Math.round(metrics.mrr * 1000).toLocaleString()}`, // mrr is in $M, multiply by 1000 to get $K, then display
     'arr-growth-rate': `${metrics.annualizedGrowthRate.toFixed(1)}%`,
-    'grr': `${metrics.grr.toFixed(1)}%`,
-    'nrr': `${metrics.nrr.toFixed(1)}%`,
     'annualized-grr': `${metrics.annualizedGRR.toFixed(0)}%`,
     'annualized-nrr': `${metrics.annualizedNRR.toFixed(0)}%`,
     'logo-churn-rate': `${metrics.logoChurnRate.toFixed(1)}%`,
@@ -178,14 +169,12 @@ function getMetricValue(metricId: string, metrics: CalculatedMetrics, inputs: In
     'total-opex': `$${Math.round(metrics.totalOpEx * 1000).toLocaleString()}`,
     'ebitda': `$${Math.round(metrics.ebitda * 1000).toLocaleString()}`,
     'cac-blended': `$${Math.round(metrics.cacBlended * 1000).toLocaleString()}`,
-    'cac-paid-only': `$${Math.round(metrics.cacPaidOnly * 1000).toLocaleString()}`,
     'ltv': `$${Math.round(metrics.ltv).toLocaleString()}`,
     'ltv-cac-ratio': `${metrics.ltvCacRatio.toFixed(1)}x`,
     'magic-number': `${metrics.magicNumber.toFixed(2)}x`,
     'quick-ratio': `${metrics.saasQuickRatio.toFixed(1)}x`,
     'burn-multiple': `${metrics.burnMultiple.toFixed(1)}x`,
     'cac-payback-period': `${metrics.cacPaybackPeriod.toFixed(1)} mo`,
-    'payback-period-sm': `${metrics.paybackPeriodSM.toFixed(1)} mo`,
   };
 
   return valueMap[metricId] || '-';
@@ -222,7 +211,6 @@ function getMetricLabel(metricId: string): string {
     'cpm': 'CPM',
     'cpc': 'CPC',
     'ctr': 'CTR',
-    'cost-per-lead': 'Cost/Lead',
     'cost-per-mql': 'Cost/MQL',
     'cost-per-sql': 'Cost/SQL',
     'cost-per-opp': 'Cost/Opp',
@@ -234,8 +222,6 @@ function getMetricLabel(metricId: string): string {
     'win-rate': 'Win Rate',
     'pipeline-generated': 'Pipeline Value',
     'pipeline-velocity': 'Pipeline Velocity',
-    'pipeline-conversion': 'Pipeline Conv.',
-
     // Revenue
     'new-customers-added': 'New Customers',
     'new-bookings': 'New Bookings',
@@ -246,8 +232,6 @@ function getMetricLabel(metricId: string): string {
     'ending-arr': 'Ending ARR',
     'mrr': 'MRR',
     'arr-growth-rate': 'ARR Growth',
-    'grr': 'GRR',
-    'nrr': 'NRR',
     'annualized-grr': 'GRR (Annual)',
     'annualized-nrr': 'NRR (Annual)',
     'logo-churn-rate': 'Logo Churn',
@@ -263,14 +247,12 @@ function getMetricLabel(metricId: string): string {
     'total-opex': 'Total OpEx',
     'ebitda': 'EBITDA',
     'cac-blended': 'CAC (Blended)',
-    'cac-paid-only': 'CAC (Paid)',
     'ltv': 'LTV',
     'ltv-cac-ratio': 'LTV:CAC Ratio',
     'magic-number': 'Magic Number',
     'quick-ratio': 'Quick Ratio',
     'burn-multiple': 'Burn Multiple',
     'cac-payback-period': 'CAC Payback',
-    'payback-period-sm': 'S&M Payback',
   };
 
   return labelMap[metricId] || metricId;

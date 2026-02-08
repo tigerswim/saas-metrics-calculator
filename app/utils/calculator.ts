@@ -59,7 +59,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
   const opportunitiesCreated = Math.round(sqlsGenerated * (sqlToOppConversion / 100));
   const dealsClosedWon = Math.round(opportunitiesCreated * (winRate / 100));
   const pipelineGenerated = opportunitiesCreated * avgDealSize;
-  const pipelineConversion = (dealsClosedWon / (mqlsGenerated || 1)) * 100;
   // Pipeline Velocity: (Opportunities × Deal Size × Win Rate) / Sales Cycle in days
   // Measures: expected revenue throughput per day
   const pipelineVelocity = (opportunitiesCreated * avgDealSize * 1000 * (winRate / 100)) / (salesCycle * 30);
@@ -69,12 +68,10 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
 
   // Marketing Efficiency Metrics
   const cacBlended = totalSalesMarketing / (newCustomersAdded || 1); // in $K
-  const cacPaidOnly = paidMarketingSpend / (newCustomersAdded || 1); // in $K
   const ltv = arpa * avgCustomerLifetime;
   const ltvCacRatio = ltv / (cacBlended * 1000); // Convert CAC from $K to $
   const grossMargin = 100 - cogsPercent;
   const cacPaybackPeriod = (cacBlended * 1000) / (arpa * (grossMargin / 100)); // Convert CAC from $K to $
-  const costPerLead = (totalMarketingSpend * 1000) / (inputs.leadsGenerated || 1); // Convert from $K to $
   const costPerMQL = (totalMarketingSpend * 1000) / (mqlsGenerated || 1); // Convert from $K to $
   const costPerSQL = (totalMarketingSpend * 1000) / (sqlsGenerated || 1); // Convert from $K to $
   const costPerOpp = (totalMarketingSpend * 1000) / (opportunitiesCreated || 1); // Convert from $K to $
@@ -89,7 +86,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
 
   // Sales Efficiency Metrics
   const magicNumber = netNewARR / totalSalesMarketing;
-  const paybackPeriodSM = cacBlended / (netNewARR / (newCustomersAdded || 1));
 
   // Financial Performance Metrics
   const grossProfit = mrr * (grossMargin / 100);
@@ -107,10 +103,7 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     netNewARR,
     endingARR: endingARR / 1000, // Convert back to $M
     mrr: mrr / 1000, // Convert to $M
-    arrGrowthRateMonthly,
     annualizedGrowthRate: annualizedGrowthRate * 100,
-    grr,
-    nrr,
     annualizedGRR,
     annualizedNRR,
     logoChurnRate,
@@ -119,14 +112,11 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     opportunitiesCreated,
     dealsClosedWon,
     pipelineGenerated,
-    pipelineConversion,
     pipelineVelocity,
     cacBlended,
-    cacPaidOnly,
     ltv,
     ltvCacRatio,
     cacPaybackPeriod,
-    costPerLead,
     costPerMQL,
     costPerSQL,
     costPerOpp,
@@ -137,7 +127,6 @@ export function calculateMetrics(inputs: Inputs): CalculatedMetrics {
     clickToLeadRate,
     leadToMQLRate,
     magicNumber,
-    paybackPeriodSM,
     grossProfit,
     grossMargin,
     totalOpEx,
