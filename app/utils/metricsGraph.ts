@@ -275,7 +275,7 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'ebitda': {
-    inputs: ['gross-profit'],
+    inputs: ['gross-profit', 'total-opex'],
     outputs: ['ebitda-margin', 'rule-of-40']
   },
 
