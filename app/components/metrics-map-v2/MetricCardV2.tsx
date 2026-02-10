@@ -27,6 +27,8 @@ interface MetricCardV2Props {
     value: string;
     status?: 'good' | 'warning' | 'bad' | 'neutral';
   }>;
+  useThemeColors?: boolean; // Use vertical-specific theme colors for good status
+  themeBorderClass?: string; // Theme-specific border class (e.g., 'border-l-insurance-primary')
 }
 
 export default function MetricCardV2({
@@ -45,11 +47,15 @@ export default function MetricCardV2({
   isPrimary = false,
   efficiencyMetric,
   efficiencyMetrics,
+  useThemeColors = false,
+  themeBorderClass = '',
 }: MetricCardV2Props) {
   // Use efficiencyMetrics if provided, otherwise wrap single efficiencyMetric
   const metricsToDisplay = efficiencyMetrics || (efficiencyMetric ? [efficiencyMetric] : []);
+
+  // Use theme colors for good status if enabled, otherwise default colors
   const statusColors = {
-    good: 'border-emerald-500',
+    good: useThemeColors && themeBorderClass ? themeBorderClass : 'border-emerald-500',
     warning: 'border-amber-500',
     bad: 'border-rose-500 shadow-[0_0_0_1px_rgba(244,63,94,0.15)] ring-1 ring-rose-100',
     neutral: 'border-slate-300',

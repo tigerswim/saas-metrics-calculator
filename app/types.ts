@@ -1,4 +1,9 @@
 // types.ts
+
+// Industry types
+export type Industry = 'insurance' | 'banking';
+export type MetricStatus = 'good' | 'warning' | 'bad' | 'neutral';
+
 export interface Inputs {
   beginningARR: number;
   totalCustomers: number;
@@ -99,6 +104,6 @@ export interface KeyMetric {
   name: string;
   value: string | number;
   target: string;
-  status: 'good' | 'warning' | 'bad';
+  status: MetricStatus;
   tooltip?: string;
 }

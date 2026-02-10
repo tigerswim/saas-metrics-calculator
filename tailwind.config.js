@@ -7,7 +7,28 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Space Grotesk', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       colors: {
+        // Earnix Brand Colors
+        earnix: {
+          orange: '#F44D2E',
+          'orange-dark': '#d93d1a',
+          teal: '#03505C',
+          'teal-light': '#0891b2', // cyan-600 for Insurance theme
+        },
+        // Industry Theme Colors
+        insurance: {
+          primary: '#0891b2', // Deep Teal (cyan-600)
+          light: '#e0f2fe', // cyan-50
+          accent: '#7e22ce', // purple-700 for status
+        },
+        banking: {
+          primary: '#F44D2E', // Earnix Orange
+          light: '#fef2f2', // red-50
+          accent: '#0891b2', // teal for status
+        },
         arr: {
           50: '#eff6ff',
           100: '#dbeafe',

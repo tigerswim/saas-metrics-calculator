@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --foreground: 15 23 42;
+  --foreground: 0 0 0; /* Black for body text */
   --background: 255 255 255;
-  --accent: 37 99 235; /* Blue-600 */
+  --accent: 244 77 46; /* Earnix Orange #F44D2E */
+  --accent-dark: 217 61 26; /* Darker orange for hover */
+  --headline: 3 80 92; /* Dark Teal #03505C for headlines */
   --muted: 100 116 139;
 }
 
@@ -116,7 +118,12 @@ input[type='number'] {
 /* Focus states */
 button:focus-visible,
 input:focus-visible {
-  @apply outline-none ring-2 ring-blue-600 ring-offset-2;
+  @apply outline-none ring-2 ring-earnix-orange ring-offset-2;
+}
+
+/* Earnix brand headline styling */
+.earnix-headline {
+  color: rgb(var(--headline));
 }
 
 /* Tooltip styling */

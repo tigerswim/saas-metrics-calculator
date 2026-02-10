@@ -2,6 +2,7 @@
 
 import { CalculatedMetrics, Inputs } from '../types';
 import { getMetricDefinition } from '../utils/metricDefinitions';
+import { useIndustry } from '../contexts/IndustryContext';
 
 interface GrowthTrajectoryProps {
   metrics: CalculatedMetrics;
@@ -9,6 +10,7 @@ interface GrowthTrajectoryProps {
 }
 
 export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryProps) {
+  const { getFieldLabel, getMetricLabel } = useIndustry();
   const formatCurrency = (value: number) => {
     if (Math.abs(value) >= 1000) {
       return `$${(value / 1000).toFixed(1)}M`;
@@ -18,23 +20,23 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
 
   // ARR Movement data
   const arrMovement = [
-    { label: 'Beginning ARR', value: inputs.beginningARR * 1000, type: 'base' },
-    { label: 'New Bookings', value: metrics.newBookings, type: 'add' },
-    { label: 'Expansion', value: inputs.expansionARR, type: 'add' },
-    { label: 'Churned', value: -inputs.churnedARR, type: 'subtract' },
-    { label: 'Ending ARR', value: metrics.endingARR * 1000, type: 'total' },
+    { label: getFieldLabel('beginningARR'), value: inputs.beginningARR * 1000, type: 'base' },
+    { label: getMetricLabel('newBookings'), value: metrics.newBookings, type: 'add' },
+    { label: getFieldLabel('expansionARR'), value: inputs.expansionARR, type: 'add' },
+    { label: getFieldLabel('churnedARR'), value: -inputs.churnedARR, type: 'subtract' },
+    { label: getMetricLabel('endingARR'), value: metrics.endingARR * 1000, type: 'total' },
   ];
 
   // Retention metrics
   const retentionMetrics = [
     {
-      label: 'Gross Revenue Retention',
+      label: getMetricLabel('annualizedGRR'),
       annual: `${metrics.annualizedGRR.toFixed(0)}%`,
       benchmark: '>90%',
       status: metrics.annualizedGRR >= 90 ? 'good' : metrics.annualizedGRR >= 80 ? 'warning' : 'bad'
     },
     {
-      label: 'Net Revenue Retention',
+      label: getMetricLabel('annualizedNRR'),
       annual: `${metrics.annualizedNRR.toFixed(0)}%`,
       benchmark: '>110%',
       status: metrics.annualizedNRR >= 110 ? 'good' : metrics.annualizedNRR >= 100 ? 'warning' : 'bad'
@@ -43,11 +45,11 @@ export default function GrowthTrajectory({ metrics, inputs }: GrowthTrajectoryPr
 
   // Customer metrics
   const customerMetrics = [
-    { label: 'Beginning Customers', value: inputs.totalCustomers.toLocaleString() },
-    { label: 'New Customers', value: `+${inputs.newCustomersAdded}` },
-    { label: 'Churned Customers', value: `-${inputs.customersChurned}` },
-    { label: 'Ending Customers', value: metrics.endingCustomerCount.toLocaleString() },
-    { label: 'Logo Churn Rate', value: `${metrics.logoChurnRate.toFixed(2)}%/mo`, benchmark: '<1.5%' },
+    { label: 'Beginning ' + getFieldLabel('totalCustomers'), value: inputs.totalCustomers.toLocaleString() },
+    { label: getFieldLabel('newCustomersAdded'), value: `+${inputs.newCustomersAdded}` },
+    { label: getFieldLabel('customersChurned'), value: `-${inputs.customersChurned}` },
+    { label: getMetricLabel('endingCustomerCount'), value: metrics.endingCustomerCount.toLocaleString() },
+    { label: getMetricLabel('logoChurnRate'), value: `${metrics.logoChurnRate.toFixed(2)}%/mo`, benchmark: '<1.5%' },
   ];
 
   return (

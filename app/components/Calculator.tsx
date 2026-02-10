@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Inputs, CalculatedMetrics } from '../types';
 import { calculateMetrics } from '../utils/calculator';
 import { inputTooltips } from '../utils/inputTooltips';
+import { useIndustry } from '../contexts/IndustryContext';
+import { useIndustryTheme } from '../hooks/useIndustryTheme';
 import InputPanel from './InputPanel';
 import ExecutiveBrief from './ExecutiveBrief';
 import WhatNeedsAttention from './WhatNeedsAttention';
@@ -22,6 +24,7 @@ import {
   ArrowPathIcon,
   Squares2X2Icon,
   RectangleGroupIcon,
+  ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 
 // Persona types for different stakeholder views
@@ -34,38 +37,41 @@ interface PersonaConfig {
   sections: string[];
 }
 
-const personaConfigs: Record<Persona, PersonaConfig> = {
-  all: {
-    label: 'All Metrics',
-    shortLabel: 'All',
-    description: 'Complete view of all SaaS metrics',
-    sections: ['brief', 'attention', 'invest', 'channels', 'pipeline', 'growth', 'economics', 'financial'],
-  },
-  ceo: {
-    label: 'CEO / Board',
-    shortLabel: 'CEO',
-    description: 'Strategic health and growth trajectory',
-    sections: ['brief', 'attention', 'growth', 'financial'],
-  },
-  cfo: {
-    label: 'CFO',
-    shortLabel: 'CFO',
-    description: 'Unit economics and financial performance',
-    sections: ['brief', 'attention', 'economics', 'financial'],
-  },
-  sales: {
-    label: 'VP Sales',
-    shortLabel: 'Sales',
-    description: 'Pipeline performance and sales efficiency',
-    sections: ['brief', 'pipeline', 'invest', 'growth'],
-  },
-  marketing: {
-    label: 'CMO',
-    shortLabel: 'Mktg',
-    description: 'Marketing efficiency and funnel metrics',
-    sections: ['brief', 'attention', 'channels', 'invest', 'pipeline', 'economics'],
-  },
-};
+// Note: personaConfigs will be updated dynamically based on industry
+function getPersonaConfigs(industryConfig: any): Record<Persona, PersonaConfig> {
+  return {
+    all: {
+      label: 'All Metrics',
+      shortLabel: 'All',
+      description: '',
+      sections: ['brief', 'attention', 'invest', 'channels', 'pipeline', 'growth', 'economics', 'financial'],
+    },
+    ceo: {
+      label: industryConfig.personaLabels.ceo,
+      shortLabel: 'CEO',
+      description: '',
+      sections: ['brief', 'attention', 'growth', 'financial'],
+    },
+    cfo: {
+      label: industryConfig.personaLabels.cfo,
+      shortLabel: 'CFO',
+      description: '',
+      sections: ['brief', 'attention', 'economics', 'financial'],
+    },
+    sales: {
+      label: 'CRO',
+      shortLabel: 'CRO',
+      description: '',
+      sections: ['brief', 'pipeline', 'invest', 'growth'],
+    },
+    marketing: {
+      label: 'CMO',
+      shortLabel: 'CMO',
+      description: '',
+      sections: ['brief', 'attention', 'channels', 'invest', 'pipeline', 'economics'],
+    },
+  };
+}
 
 const defaultInputs: Inputs = {
   beginningARR: 150,
@@ -110,15 +116,25 @@ const defaultInputs: Inputs = {
 type ViewMode = 'sections' | 'map';
 
 export default function Calculator() {
-  const [inputs, setInputs] = useState<Inputs>(defaultInputs);
-  const [metrics, setMetrics] = useState<CalculatedMetrics>(calculateMetrics(defaultInputs));
+  const { industry, setIndustry, config } = useIndustry();
+  const theme = useIndustryTheme();
+  const [inputs, setInputs] = useState<Inputs>(config.defaultInputs);
+  const [metrics, setMetrics] = useState<CalculatedMetrics>(calculateMetrics(config.defaultInputs));
   const [showInputs, setShowInputs] = useState(false);
   const [activePersona, setActivePersona] = useState<Persona>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('sections');
   const [mapVersion, setMapVersion] = useState<'v2' | 'v3'>('v3'); // Default to v3 (React Flow)
+  const [showIndustryDropdown, setShowIndustryDropdown] = useState(false);
 
+  const personaConfigs = getPersonaConfigs(config);
   const currentConfig = personaConfigs[activePersona];
   const showSection = (section: string) => currentConfig.sections.includes(section);
+
+  // Update inputs when industry changes
+  useEffect(() => {
+    setInputs(config.defaultInputs);
+    setMetrics(calculateMetrics(config.defaultInputs));
+  }, [industry, config.defaultInputs]);
 
   const handleInputChange = (field: keyof Inputs, value: number) => {
     const newInputs = { ...inputs, [field]: value };
@@ -127,8 +143,13 @@ export default function Calculator() {
   };
 
   const handleReset = () => {
-    setInputs(defaultInputs);
-    setMetrics(calculateMetrics(defaultInputs));
+    setInputs(config.defaultInputs);
+    setMetrics(calculateMetrics(config.defaultInputs));
+  };
+
+  const handleIndustryChange = (newIndustry: 'insurance' | 'banking') => {
+    setIndustry(newIndustry);
+    setShowIndustryDropdown(false);
   };
 
   return (
@@ -137,6 +158,41 @@ export default function Calculator() {
       <header className="border-b border-slate-200 sticky top-0 z-40 bg-slate-50">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between py-2 gap-4">
+            {/* Customer Vertical Selector */}
+            <div className="relative flex-shrink-0">
+              <button
+                onClick={() => setShowIndustryDropdown(!showIndustryDropdown)}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors border border-slate-300"
+              >
+                <span className="hidden sm:inline text-slate-500">Vertical:</span>
+                <span className="font-semibold">{config.displayName}</span>
+                <ChevronDownIcon className="w-3 h-3" />
+              </button>
+
+              {showIndustryDropdown && (
+                <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-slate-200 rounded shadow-lg z-50">
+                  <button
+                    onClick={() => handleIndustryChange('insurance')}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors ${
+                      industry === 'insurance' ? 'bg-slate-100 font-semibold' : ''
+                    }`}
+                  >
+                    <div className="font-medium">Insurance</div>
+                    <div className="text-xs text-slate-500">Selling to insurance carriers</div>
+                  </button>
+                  <button
+                    onClick={() => handleIndustryChange('banking')}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors ${
+                      industry === 'banking' ? 'bg-slate-100 font-semibold' : ''
+                    }`}
+                  >
+                    <div className="font-medium">Banking</div>
+                    <div className="text-xs text-slate-500">Selling to financial institutions</div>
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Persona Toggle */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <span className="text-xs text-slate-500 mr-2 hidden sm:inline">View:</span>
@@ -146,7 +202,7 @@ export default function Calculator() {
                   onClick={() => setActivePersona(persona)}
                   className={`px-3 py-1.5 text-xs font-medium rounded transition-all ${
                     activePersona === persona
-                      ? 'bg-blue-600 text-white shadow-sm'
+                      ? 'bg-earnix-orange text-white shadow-sm'
                       : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                   title={personaConfigs[persona].description}
@@ -157,11 +213,6 @@ export default function Calculator() {
               ))}
             </div>
 
-            {/* Description */}
-            <div className="text-xs text-slate-400 hidden md:block flex-1 text-center">
-              {currentConfig.description}
-            </div>
-
             {/* View Mode Toggle */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <span className="text-xs text-slate-500 mr-2 hidden sm:inline">Layout:</span>
@@ -169,7 +220,7 @@ export default function Calculator() {
                 onClick={() => setViewMode('sections')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
                   viewMode === 'sections'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Sections View"
@@ -181,7 +232,7 @@ export default function Calculator() {
                 onClick={() => setViewMode('map')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
                   viewMode === 'map'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Metrics Map View"
@@ -236,6 +287,23 @@ export default function Calculator() {
         </div>
       )}
 
+      {/* Hero Title Section */}
+      <div className="border-b border-slate-200 bg-white">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold earnix-headline">
+              Earnix SaaS Metrics Calculator
+            </h1>
+            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${theme.badgeBg} ${theme.badgeText} transition-all duration-300`}>
+              {config.displayName.toUpperCase()}
+            </span>
+          </div>
+          <p className="text-slate-600 mt-2">
+            {config.displayName} vertical • Enterprise SaaS metrics modeling
+          </p>
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
         {/* Executive Brief - Always shown */}
@@ -259,7 +327,7 @@ export default function Calculator() {
                 onClick={() => setMapVersion('v2')}
                 className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
                   mapVersion === 'v2'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
@@ -269,7 +337,7 @@ export default function Calculator() {
                 onClick={() => setMapVersion('v3')}
                 className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
                   mapVersion === 'v3'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
