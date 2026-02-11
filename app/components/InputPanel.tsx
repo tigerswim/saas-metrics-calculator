@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Inputs } from '../types';
-import { useIndustry } from '../contexts/IndustryContext';
 import { XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface InputPanelProps {
@@ -54,7 +53,7 @@ interface InputFieldProps {
 function InputField({ label, value, onChange, tooltip, suffix, step = 1, min = 0 }: InputFieldProps) {
   return (
     <div>
-      <label className="block text-sm sm:text-xs text-slate-700 sm:text-slate-500 mb-1.5 sm:mb-1 font-medium sm:font-normal">
+      <label className="block text-sm sm:text-xs text-slate-500 mb-1.5 sm:mb-1">
         {label}
       </label>
       <div className="relative">
@@ -64,10 +63,10 @@ function InputField({ label, value, onChange, tooltip, suffix, step = 1, min = 0
           onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
           step={step}
           min={min}
-          className="w-full px-3 sm:px-3 py-3 sm:py-2 bg-white border border-slate-300 sm:border-slate-200 text-base sm:text-sm tabular-nums text-slate-900 font-medium focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-colors rounded-md sm:rounded"
+          className="w-full px-4 py-3 sm:px-3 sm:py-2 bg-white border border-slate-200 text-base sm:text-sm tabular-nums text-slate-900 font-medium focus:ring-1 focus:ring-blue-600 focus:border-blue-600 outline-none transition-colors min-h-[48px] sm:min-h-0"
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm sm:text-xs text-slate-500 sm:text-slate-400 pointer-events-none">
+          <span className="absolute right-4 sm:right-3 top-1/2 -translate-y-1/2 text-sm sm:text-xs text-slate-400">
             {suffix}
           </span>
         )}
@@ -77,8 +76,6 @@ function InputField({ label, value, onChange, tooltip, suffix, step = 1, min = 0
 }
 
 export default function InputPanel({ inputs, onChange, onClose, tooltips }: InputPanelProps) {
-  const { getFieldLabel } = useIndustry();
-
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
@@ -100,14 +97,14 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
       <div className="flex-1 overflow-y-auto">
         <InputGroup title="Starting Position" defaultOpen={true}>
           <InputField
-            label={getFieldLabel('beginningARR')}
+            label="Beginning ARR"
             value={inputs.beginningARR}
             onChange={(v) => onChange('beginningARR', v)}
             suffix="$M"
             step={0.1}
           />
           <InputField
-            label={getFieldLabel('totalCustomers')}
+            label="Total Customers"
             value={inputs.totalCustomers}
             onChange={(v) => onChange('totalCustomers', v)}
           />
@@ -115,24 +112,24 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Monthly Movement" defaultOpen={true}>
           <InputField
-            label={getFieldLabel('expansionARR')}
+            label="Expansion ARR"
             value={inputs.expansionARR}
             onChange={(v) => onChange('expansionARR', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('churnedARR')}
+            label="Churned ARR"
             value={inputs.churnedARR}
             onChange={(v) => onChange('churnedARR', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('customersChurned')}
+            label="Customers Churned"
             value={inputs.customersChurned}
             onChange={(v) => onChange('customersChurned', v)}
           />
           <InputField
-            label={getFieldLabel('newCustomersAdded')}
+            label="New Customers Added"
             value={inputs.newCustomersAdded}
             onChange={(v) => onChange('newCustomersAdded', v)}
           />
@@ -140,44 +137,44 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Funnel" defaultOpen={true}>
           <InputField
-            label={getFieldLabel('leadsGenerated')}
+            label="Leads Generated"
             value={inputs.leadsGenerated}
             onChange={(v) => onChange('leadsGenerated', v)}
           />
           <InputField
-            label={getFieldLabel('mqlsGenerated')}
+            label="MQLs Generated"
             value={inputs.mqlsGenerated}
             onChange={(v) => onChange('mqlsGenerated', v)}
           />
           <InputField
-            label={getFieldLabel('mqlToSQLConversion')}
+            label="MQL to SQL Rate"
             value={inputs.mqlToSQLConversion}
             onChange={(v) => onChange('mqlToSQLConversion', v)}
             suffix="%"
             step={0.1}
           />
           <InputField
-            label={getFieldLabel('sqlToOppConversion')}
+            label="SQL to Opp Rate"
             value={inputs.sqlToOppConversion}
             onChange={(v) => onChange('sqlToOppConversion', v)}
             suffix="%"
             step={0.1}
           />
           <InputField
-            label={getFieldLabel('winRate')}
+            label="Win Rate"
             value={inputs.winRate}
             onChange={(v) => onChange('winRate', v)}
             suffix="%"
             step={0.1}
           />
           <InputField
-            label={getFieldLabel('avgDealSize')}
+            label="Avg Deal Size"
             value={inputs.avgDealSize}
             onChange={(v) => onChange('avgDealSize', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('salesCycle')}
+            label="Sales Cycle"
             value={inputs.salesCycle}
             onChange={(v) => onChange('salesCycle', v)}
             suffix="mo"
@@ -186,14 +183,12 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
         </InputGroup>
 
         <InputGroup title="Channel Mix" defaultOpen={false}>
-          <div className="text-xs text-slate-500 mb-3 -mt-1">Spend ($K) and leads by channel</div>
+          <div className="text-sm sm:text-xs text-slate-500 mb-4 sm:mb-3 -mt-1">Spend ($K) and leads by channel</div>
 
-          <div className="space-y-4">
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('paidSearchSpend').split(' Spend')[0]}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-5 sm:space-y-4">
+            <div className="border-b border-slate-100 pb-4 sm:pb-3">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">Paid Search (SEM)</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-2">
                 <InputField
                   label="Spend"
                   value={inputs.paidSearchSpend}
@@ -201,18 +196,16 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
                   suffix="$K"
                 />
                 <InputField
-                  label={getFieldLabel('paidSearchLeads').replace('Paid Search ', '')}
+                  label="Leads"
                   value={inputs.paidSearchLeads}
                   onChange={(v) => onChange('paidSearchLeads', v)}
                 />
               </div>
             </div>
 
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('paidSocialSpend').split(' Spend')[0]}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="border-b border-slate-100 pb-4 sm:pb-3">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">Paid Social (LinkedIn, Meta)</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-2">
                 <InputField
                   label="Spend"
                   value={inputs.paidSocialSpend}
@@ -220,18 +213,16 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
                   suffix="$K"
                 />
                 <InputField
-                  label={getFieldLabel('paidSocialLeads').replace('Paid Social ', '')}
+                  label="Leads"
                   value={inputs.paidSocialLeads}
                   onChange={(v) => onChange('paidSocialLeads', v)}
                 />
               </div>
             </div>
 
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('eventsSpend').split(' Spend')[0]}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="border-b border-slate-100 pb-4 sm:pb-3">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">Events & Webinars</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-2">
                 <InputField
                   label="Spend"
                   value={inputs.eventsSpend}
@@ -239,18 +230,16 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
                   suffix="$K"
                 />
                 <InputField
-                  label={getFieldLabel('eventsLeads').replace('Events ', '')}
+                  label="Leads"
                   value={inputs.eventsLeads}
                   onChange={(v) => onChange('eventsLeads', v)}
                 />
               </div>
             </div>
 
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('contentSpend').split(' Spend')[0]}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="border-b border-slate-100 pb-4 sm:pb-3">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">Content & SEO</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-2">
                 <InputField
                   label="Spend"
                   value={inputs.contentSpend}
@@ -258,18 +247,16 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
                   suffix="$K"
                 />
                 <InputField
-                  label={getFieldLabel('contentLeads').replace('Content ', '')}
+                  label="Leads"
                   value={inputs.contentLeads}
                   onChange={(v) => onChange('contentLeads', v)}
                 />
               </div>
             </div>
 
-            <div className="border-b border-slate-100 pb-3">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('partnershipsSpend').split(' Spend')[0]}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="border-b border-slate-100 pb-4 sm:pb-3">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">Partnerships & Referrals</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-2">
                 <InputField
                   label="Spend"
                   value={inputs.partnershipsSpend}
@@ -285,22 +272,20 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
             </div>
 
             <div className="pb-1">
-              <div className="text-xs font-medium text-slate-700 mb-2">
-                {getFieldLabel('abmSpend').replace(' Spend', '')}
-              </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="text-sm sm:text-xs font-medium text-slate-700 mb-3 sm:mb-2">ABM Program</div>
+              <div className="grid grid-cols-3 gap-3 sm:gap-2">
                 <InputField
-                  label={getFieldLabel('targetAccounts').replace('Target ', '')}
+                  label="Target Accts"
                   value={inputs.targetAccounts}
                   onChange={(v) => onChange('targetAccounts', v)}
                 />
                 <InputField
-                  label={getFieldLabel('engagedAccounts').replace('Engaged ', '')}
+                  label="Engaged"
                   value={inputs.engagedAccounts}
                   onChange={(v) => onChange('engagedAccounts', v)}
                 />
                 <InputField
-                  label="Spend"
+                  label="ABM Spend"
                   value={inputs.abmSpend}
                   onChange={(v) => onChange('abmSpend', v)}
                   suffix="$K"
@@ -312,13 +297,13 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Paid Media Detail" defaultOpen={false}>
           <InputField
-            label={getFieldLabel('paidImpressions')}
+            label="Paid Impressions"
             value={inputs.paidImpressions}
             onChange={(v) => onChange('paidImpressions', v)}
             suffix="K"
           />
           <InputField
-            label={getFieldLabel('paidClicks')}
+            label="Paid Clicks"
             value={inputs.paidClicks}
             onChange={(v) => onChange('paidClicks', v)}
           />
@@ -326,31 +311,31 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Operating Expenses" defaultOpen={false}>
           <InputField
-            label={getFieldLabel('totalSalesMarketing')}
+            label="Total S&M"
             value={inputs.totalSalesMarketing}
             onChange={(v) => onChange('totalSalesMarketing', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('marketingSpend')}
+            label="Marketing Spend"
             value={inputs.marketingSpend}
             onChange={(v) => onChange('marketingSpend', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('rdSpend')}
+            label="R&D"
             value={inputs.rdSpend}
             onChange={(v) => onChange('rdSpend', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('gaSpend')}
+            label="G&A"
             value={inputs.gaSpend}
             onChange={(v) => onChange('gaSpend', v)}
             suffix="$K"
           />
           <InputField
-            label={getFieldLabel('cogsPercent')}
+            label="COGS"
             value={inputs.cogsPercent}
             onChange={(v) => onChange('cogsPercent', v)}
             suffix="%"
@@ -360,7 +345,7 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
 
         <InputGroup title="Customer Value" defaultOpen={false}>
           <InputField
-            label={getFieldLabel('avgCustomerLifetime')}
+            label="Avg Customer Lifetime"
             value={inputs.avgCustomerLifetime}
             onChange={(v) => onChange('avgCustomerLifetime', v)}
             suffix="mo"

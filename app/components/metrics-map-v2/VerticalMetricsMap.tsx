@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { CalculatedMetrics, Inputs } from '../../types';
-import { useIndustry } from '../../contexts/IndustryContext';
-import { useIndustryTheme } from '../../hooks/useIndustryTheme';
 import {
   getTwoDegreesOfConnections,
   getMetricOpacity,
@@ -32,7 +30,6 @@ interface FocusState {
 }
 
 export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsMapProps) {
-  const theme = useIndustryTheme();
   const [focusState, setFocusState] = useState<FocusState>({
     selectedMetricId: null,
     primary: [],
