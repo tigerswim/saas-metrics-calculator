@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { CalculatedMetrics, Inputs } from '../../types';
+import { useIndustry } from '../../contexts/IndustryContext';
+import { useIndustryTheme } from '../../hooks/useIndustryTheme';
 import {
   getTwoDegreesOfConnections,
   getMetricOpacity,
@@ -30,6 +32,7 @@ interface FocusState {
 }
 
 export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsMapProps) {
+  const theme = useIndustryTheme();
   const [focusState, setFocusState] = useState<FocusState>({
     selectedMetricId: null,
     primary: [],
@@ -678,12 +681,12 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
   ];
 
   return (
-    <section className="mb-8">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold tracking-tight text-slate-900 mb-2">
+    <section className="mb-6 sm:mb-8">
+      <div className="mb-4 sm:mb-6">
+        <h2 className="text-base sm:text-lg font-semibold tracking-tight text-slate-900 mb-1 sm:mb-2">
           Metrics Map
         </h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-xs sm:text-sm text-slate-600">
           Click any metric to see relationships and connections
         </p>
       </div>
@@ -717,68 +720,110 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                 <>
                   {/* Acquisition: Vertical three-column layout */}
                   {layer.id === 'acquisition' && (
-                    <div className="space-y-6">
-                      {/* Main funnel: three-column grid - all cards same size */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start max-w-4xl mx-auto">
+                    <div className="space-y-4 sm:space-y-6">
+                      {/* Main funnel: single column on mobile, three-column on desktop */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-3 items-start max-w-4xl mx-auto">
 
-                        {/* Row 1: Impressions */}
+                        {/* Row 1: Impressions - Mobile: stack vertically, Desktop: 3-col */}
                         <div className="hidden md:block"></div>
-                        <MetricCardV2
-                          id="impressions"
-                          label="Impressions"
-                          value={inputs.paidImpressions.toLocaleString()}
-                          status={getCalculatedMetricStatus('impressions', metrics, inputs)}
-                          sparklineData={timeSeriesData.impressions}
-                          changePercent={calculateWoWChange(timeSeriesData.impressions) ?? undefined}
-                          className="md:justify-self-center"
-                          onClick={() => handleMetricClick('impressions')}
-                          isSelected={focusState.selectedMetricId === 'impressions'}
-                          opacity={getMetricOpacity('impressions', focusState)}
-                        />
-                        <MetricCardV2
-                          id="cpm"
-                          label="CPM"
-                          value={`$${metrics.cpm.toFixed(2)}`}
-                          status={getCalculatedMetricStatus('cpm', metrics, inputs)}
-                          className="md:justify-self-start"
-                          onClick={() => handleMetricClick('cpm')}
-                          isSelected={focusState.selectedMetricId === 'cpm'}
-                          opacity={getMetricOpacity('cpm', focusState)}
-                        />
+                        <div className="md:justify-self-center">
+                          <MetricCardV2
+                            id="impressions"
+                            label="Impressions"
+                            value={inputs.paidImpressions.toLocaleString()}
+                            status={getCalculatedMetricStatus('impressions', metrics, inputs)}
+                            sparklineData={timeSeriesData.impressions}
+                            changePercent={calculateWoWChange(timeSeriesData.impressions) ?? undefined}
+                            onClick={() => handleMetricClick('impressions')}
+                            isSelected={focusState.selectedMetricId === 'impressions'}
+                            opacity={getMetricOpacity('impressions', focusState)}
+                          />
+                          {/* Mobile: Show CPM below impressions */}
+                          <div className="md:hidden mt-2">
+                            <MetricCardV2
+                              id="cpm"
+                              label="CPM (Cost per 1K)"
+                              value={`$${metrics.cpm.toFixed(2)}`}
+                              status={getCalculatedMetricStatus('cpm', metrics, inputs)}
+                              onClick={() => handleMetricClick('cpm')}
+                              isSelected={focusState.selectedMetricId === 'cpm'}
+                              opacity={getMetricOpacity('cpm', focusState)}
+                            />
+                          </div>
+                        </div>
+                        {/* Desktop: CPM in right column */}
+                        <div className="hidden md:block md:justify-self-start">
+                          <MetricCardV2
+                            id="cpm"
+                            label="CPM"
+                            value={`$${metrics.cpm.toFixed(2)}`}
+                            status={getCalculatedMetricStatus('cpm', metrics, inputs)}
+                            onClick={() => handleMetricClick('cpm')}
+                            isSelected={focusState.selectedMetricId === 'cpm'}
+                            opacity={getMetricOpacity('cpm', focusState)}
+                          />
+                        </div>
 
                         {/* Row 2: Clicks */}
-                        <MetricCardV2
-                          id="ctr"
-                          label="CTR"
-                          value={`${metrics.ctr.toFixed(2)}%`}
-                          status={getCalculatedMetricStatus('ctr', metrics, inputs)}
-                          className="md:justify-self-end"
-                          onClick={() => handleMetricClick('ctr')}
-                          isSelected={focusState.selectedMetricId === 'ctr'}
-                          opacity={getMetricOpacity('ctr', focusState)}
-                        />
-                        <MetricCardV2
-                          id="clicks"
-                          label="Clicks"
-                          value={inputs.paidClicks.toLocaleString()}
-                          status={getCalculatedMetricStatus('clicks', metrics, inputs)}
-                          sparklineData={timeSeriesData.paidClicks}
-                          changePercent={calculateWoWChange(timeSeriesData.paidClicks) ?? undefined}
-                          className="md:justify-self-center"
-                          onClick={() => handleMetricClick('clicks')}
-                          isSelected={focusState.selectedMetricId === 'clicks'}
-                          opacity={getMetricOpacity('clicks', focusState)}
-                        />
-                        <MetricCardV2
-                          id="cpc"
-                          label="CPC"
-                          value={`$${metrics.cpc.toFixed(2)}`}
-                          status={getCalculatedMetricStatus('cpc', metrics, inputs)}
-                          className="md:justify-self-start"
-                          onClick={() => handleMetricClick('cpc')}
-                          isSelected={focusState.selectedMetricId === 'cpc'}
-                          opacity={getMetricOpacity('cpc', focusState)}
-                        />
+                        <div className="hidden md:block md:justify-self-end">
+                          <MetricCardV2
+                            id="ctr"
+                            label="CTR"
+                            value={`${metrics.ctr.toFixed(2)}%`}
+                            status={getCalculatedMetricStatus('ctr', metrics, inputs)}
+                            onClick={() => handleMetricClick('ctr')}
+                            isSelected={focusState.selectedMetricId === 'ctr'}
+                            opacity={getMetricOpacity('ctr', focusState)}
+                          />
+                        </div>
+                        <div className="md:justify-self-center">
+                          {/* Mobile: Show CTR above clicks */}
+                          <div className="md:hidden mb-2">
+                            <MetricCardV2
+                              id="ctr"
+                              label="CTR (Click-Through Rate)"
+                              value={`${metrics.ctr.toFixed(2)}%`}
+                              status={getCalculatedMetricStatus('ctr', metrics, inputs)}
+                              onClick={() => handleMetricClick('ctr')}
+                              isSelected={focusState.selectedMetricId === 'ctr'}
+                              opacity={getMetricOpacity('ctr', focusState)}
+                            />
+                          </div>
+                          <MetricCardV2
+                            id="clicks"
+                            label="Clicks"
+                            value={inputs.paidClicks.toLocaleString()}
+                            status={getCalculatedMetricStatus('clicks', metrics, inputs)}
+                            sparklineData={timeSeriesData.paidClicks}
+                            changePercent={calculateWoWChange(timeSeriesData.paidClicks) ?? undefined}
+                            onClick={() => handleMetricClick('clicks')}
+                            isSelected={focusState.selectedMetricId === 'clicks'}
+                            opacity={getMetricOpacity('clicks', focusState)}
+                          />
+                          {/* Mobile: Show CPC below clicks */}
+                          <div className="md:hidden mt-2">
+                            <MetricCardV2
+                              id="cpc"
+                              label="CPC (Cost per Click)"
+                              value={`$${metrics.cpc.toFixed(2)}`}
+                              status={getCalculatedMetricStatus('cpc', metrics, inputs)}
+                              onClick={() => handleMetricClick('cpc')}
+                              isSelected={focusState.selectedMetricId === 'cpc'}
+                              opacity={getMetricOpacity('cpc', focusState)}
+                            />
+                          </div>
+                        </div>
+                        <div className="hidden md:block md:justify-self-start">
+                          <MetricCardV2
+                            id="cpc"
+                            label="CPC"
+                            value={`$${metrics.cpc.toFixed(2)}`}
+                            status={getCalculatedMetricStatus('cpc', metrics, inputs)}
+                            onClick={() => handleMetricClick('cpc')}
+                            isSelected={focusState.selectedMetricId === 'cpc'}
+                            opacity={getMetricOpacity('cpc', focusState)}
+                          />
+                        </div>
 
                         {/* Row 3: Leads */}
                         <MetricCardV2
@@ -948,11 +993,11 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                   {/* Revenue: Three-column layout (New | Waterfall | Existing) */}
                   {layer.id === 'revenue' && (
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] gap-3 items-start max-w-6xl mx-auto">
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] gap-4 sm:gap-3 items-start max-w-6xl mx-auto">
                         {/* Left Column: New Customer Revenue */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">New</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">New</div>
                           {(layerMetrics[layer.id] as any).newRevenue.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -971,7 +1016,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                         {/* Center Column: ARR Waterfall */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">ARR Waterfall</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">ARR Waterfall</div>
                           {(layerMetrics[layer.id] as any).waterfall.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -990,7 +1035,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                         {/* Right Column: Existing Customer Performance */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Existing</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Existing</div>
                           {(layerMetrics[layer.id] as any).existing.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -1012,11 +1057,11 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                   {/* Business Outcomes: Three-column layout (KPI % | P&L | KPI Absolute) */}
                   {layer.id === 'outcomes' && (
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start max-w-6xl mx-auto">
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-3 items-start max-w-6xl mx-auto">
                         {/* Left Column: KPI Percentages */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">KPI %</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">KPI %</div>
                           {(layerMetrics[layer.id] as any).kpiPercent.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -1035,7 +1080,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                         {/* Center Column: P&L Performance */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">P&L</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">P&L</div>
                           {(layerMetrics[layer.id] as any).pnl.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -1054,7 +1099,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
 
                         {/* Right Column: KPI Absolute Measures */}
                         <div className="space-y-3">
-                          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Efficiency</div>
+                          <div className="text-xs sm:text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Efficiency</div>
                           {(layerMetrics[layer.id] as any).kpiAbsolute.map((metric: any) => (
                             <MetricCardV2
                               key={metric.id}
@@ -1077,14 +1122,18 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                   {/* Default horizontal row for Budget, Activities */}
                   {layer.id !== 'acquisition' && layer.id !== 'revenue' && layer.id !== 'outcomes' && (
                     <div className="relative">
+                      {/* Scroll hint indicators for mobile/tablet */}
+                      <div className="absolute left-0 top-0 bottom-4 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10 lg:hidden" />
+                      <div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10 lg:hidden" />
+
                       <div className={`
                         flex
-                        gap-4 lg:gap-6
+                        gap-3 sm:gap-4 lg:gap-6
                         overflow-x-auto lg:overflow-visible
                         pb-4 lg:pb-0
                         scrollbar-thin-horizontal
                         snap-x snap-mandatory lg:snap-none
-                        min-w-max lg:min-w-0
+                        -mx-1 px-1 sm:mx-0 sm:px-0
                       `}>
                         {layerMetricsList.map((metric) => {
                           const opacity = getMetricOpacity(metric.id, focusState);
@@ -1093,7 +1142,7 @@ export default function VerticalMetricsMap({ metrics, inputs }: VerticalMetricsM
                           return (
                             <div
                               key={metric.id}
-                              className="flex-shrink-0 snap-start w-[280px] sm:w-auto"
+                              className="flex-shrink-0 snap-start w-[260px] sm:w-[280px] lg:w-auto"
                             >
                               <MetricCardV2
                                 id={metric.id}

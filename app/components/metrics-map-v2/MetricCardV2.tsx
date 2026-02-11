@@ -27,6 +27,8 @@ interface MetricCardV2Props {
     value: string;
     status?: 'good' | 'warning' | 'bad' | 'neutral';
   }>;
+  useThemeColors?: boolean; // Use vertical-specific theme colors for good status
+  themeBorderClass?: string; // Theme-specific border class (e.g., 'border-l-insurance-primary')
 }
 
 export default function MetricCardV2({
@@ -45,11 +47,15 @@ export default function MetricCardV2({
   isPrimary = false,
   efficiencyMetric,
   efficiencyMetrics,
+  useThemeColors = false,
+  themeBorderClass = '',
 }: MetricCardV2Props) {
   // Use efficiencyMetrics if provided, otherwise wrap single efficiencyMetric
   const metricsToDisplay = efficiencyMetrics || (efficiencyMetric ? [efficiencyMetric] : []);
+
+  // Use theme colors for good status if enabled, otherwise default colors
   const statusColors = {
-    good: 'border-emerald-500',
+    good: useThemeColors && themeBorderClass ? themeBorderClass : 'border-emerald-500',
     warning: 'border-amber-500',
     bad: 'border-rose-500 shadow-[0_0_0_1px_rgba(244,63,94,0.15)] ring-1 ring-rose-100',
     neutral: 'border-slate-300',
@@ -119,11 +125,11 @@ export default function MetricCardV2({
       id={id}
       className={`
         relative rounded-lg shadow-sm border-l-[6px] z-10
-        w-full max-w-[180px] h-[88px]
+        w-full max-w-[180px] min-h-[88px] sm:h-[88px]
         ${statusBorderColor}
         ${statusBgColors[status]}
         ${isSelected ? 'ring-2 ring-offset-2 ring-blue-500' : ''}
-        ${onClick ? 'cursor-pointer' : ''}
+        ${onClick ? 'cursor-pointer active:scale-95' : ''}
         transition-all duration-200
         hover:shadow-md
         ${className}
@@ -142,10 +148,10 @@ export default function MetricCardV2({
       }}
       onClick={onClick}
     >
-      <div className="p-2 flex flex-col h-full">
+      <div className="p-3 sm:p-2 flex flex-col h-full min-h-[88px] sm:min-h-0">
         {/* Header - Label - Fixed height */}
-        <div className="h-6 flex items-start justify-between mb-1">
-          <h4 className="text-[11px] font-semibold text-slate-700 leading-tight">
+        <div className="min-h-[24px] sm:h-6 flex items-start justify-between mb-1.5 sm:mb-1">
+          <h4 className="text-xs sm:text-[11px] font-semibold text-slate-700 leading-tight">
             {label}
           </h4>
           {tooltip && (
@@ -160,8 +166,8 @@ export default function MetricCardV2({
         </div>
 
         {/* Value Display - Fixed height */}
-        <div className="h-6 flex items-center mb-1">
-          <div className="text-lg font-bold text-slate-900 tabular-nums leading-none">
+        <div className="min-h-[28px] sm:h-6 flex items-center mb-1.5 sm:mb-1">
+          <div className="text-xl sm:text-lg font-bold text-slate-900 tabular-nums leading-none">
             {value}
           </div>
         </div>

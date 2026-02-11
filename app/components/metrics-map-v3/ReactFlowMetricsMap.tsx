@@ -274,17 +274,17 @@ function ReactFlowMetricsMapInner({ metrics, inputs }: ReactFlowMetricsMapProps)
   }, [focusState.selectedMetricId, nodes]);
 
   return (
-    <section className="mb-8">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold tracking-tight text-slate-900 mb-2">
+    <section className="mb-6 sm:mb-8">
+      <div className="mb-4 sm:mb-6">
+        <h2 className="text-base sm:text-lg font-semibold tracking-tight text-slate-900 mb-1 sm:mb-2">
           Metrics Map (React Flow)
         </h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-xs sm:text-sm text-slate-600">
           Interactive node graph showing metric relationships and causal flows
         </p>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden" style={{ height: '800px' }}>
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden" style={{ height: 'min(800px, calc(100vh - 280px))' }}>
         {/* Controls Bar */}
         <ControlsBar
           viewMode={viewMode}
@@ -297,7 +297,7 @@ function ReactFlowMetricsMapInner({ metrics, inputs }: ReactFlowMetricsMapProps)
         />
 
         {/* React Flow Canvas */}
-        <div style={{ height: 'calc(100% - 100px)' }}>
+        <div className="h-[calc(100%-60px)] sm:h-[calc(100%-100px)]">
           <ReactFlow
             nodes={nodes}
             edges={edges}

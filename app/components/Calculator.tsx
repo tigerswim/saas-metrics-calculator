@@ -135,59 +135,59 @@ export default function Calculator() {
     <div className="min-h-screen bg-white">
       {/* Header Bar */}
       <header className="border-b border-slate-200 sticky top-0 z-40 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between py-2 gap-4">
-            {/* Persona Toggle */}
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="text-xs text-slate-500 mr-2 hidden sm:inline">View:</span>
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-3 gap-2 sm:gap-4">
+            {/* Persona Toggle - Hidden on mobile, use horizontal scroll on tablet */}
+            <div className="hidden sm:flex items-center gap-1 flex-shrink-0 overflow-x-auto max-w-[50vw] md:max-w-none">
+              <span className="text-xs text-slate-500 mr-2 hidden lg:inline">View:</span>
               {(Object.keys(personaConfigs) as Persona[]).map((persona) => (
                 <button
                   key={persona}
                   onClick={() => setActivePersona(persona)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded transition-all ${
+                  className={`px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-medium rounded transition-all whitespace-nowrap min-h-[44px] sm:min-h-0 flex items-center ${
                     activePersona === persona
                       ? 'bg-blue-600 text-white shadow-sm'
                       : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                   title={personaConfigs[persona].description}
                 >
-                  <span className="hidden sm:inline">{personaConfigs[persona].label}</span>
-                  <span className="sm:hidden">{personaConfigs[persona].shortLabel}</span>
+                  <span className="hidden md:inline">{personaConfigs[persona].label}</span>
+                  <span className="md:hidden">{personaConfigs[persona].shortLabel}</span>
                 </button>
               ))}
             </div>
 
             {/* Description */}
-            <div className="text-xs text-slate-400 hidden md:block flex-1 text-center">
+            <div className="text-xs text-slate-400 hidden lg:block flex-1 text-center">
               {currentConfig.description}
             </div>
 
             {/* View Mode Toggle */}
             <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="text-xs text-slate-500 mr-2 hidden sm:inline">Layout:</span>
+              <span className="text-xs text-slate-500 mr-2 hidden lg:inline">Layout:</span>
               <button
                 onClick={() => setViewMode('sections')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   viewMode === 'sections'
                     ? 'bg-blue-600 text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Sections View"
               >
-                <Squares2X2Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">Sections</span>
+                <Squares2X2Icon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Sections</span>
               </button>
               <button
                 onClick={() => setViewMode('map')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   viewMode === 'map'
                     ? 'bg-blue-600 text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Metrics Map View"
               >
-                <RectangleGroupIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Map</span>
+                <RectangleGroupIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Map</span>
               </button>
             </div>
 
@@ -195,23 +195,23 @@ export default function Calculator() {
             <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
                 title="Reset to defaults"
               >
-                <ArrowPathIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Reset</span>
+                <ArrowPathIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Reset</span>
               </button>
 
               <button
                 onClick={() => setShowInputs(!showInputs)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   showInputs
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                 }`}
               >
-                <Cog6ToothIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Configure</span>
+                <Cog6ToothIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Configure</span>
               </button>
             </div>
           </div>
@@ -222,10 +222,10 @@ export default function Calculator() {
       {showInputs && (
         <div className="fixed inset-0 z-50 flex">
           <div
-            className="absolute inset-0 bg-slate-900/10"
+            className="absolute inset-0 bg-slate-900/10 backdrop-blur-sm"
             onClick={() => setShowInputs(false)}
           />
-          <div className="relative ml-auto w-full max-w-sm bg-white border-l border-slate-200 shadow-xl overflow-y-auto">
+          <div className="relative ml-auto w-full max-w-full sm:max-w-md md:max-w-lg bg-white border-l border-slate-200 shadow-xl overflow-y-auto">
             <InputPanel
               inputs={inputs}
               onChange={handleInputChange}
@@ -236,8 +236,34 @@ export default function Calculator() {
         </div>
       )}
 
+      {/* Mobile Persona Selector (below header) */}
+      <div className="sm:hidden border-b border-slate-200 bg-white">
+        <div className="px-3 py-2">
+          <div className="text-xs text-slate-500 mb-2">View:</div>
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {(Object.keys(personaConfigs) as Persona[]).map((persona) => (
+              <button
+                key={persona}
+                onClick={() => setActivePersona(persona)}
+                className={`px-4 py-3 text-sm font-medium rounded whitespace-nowrap min-h-[44px] flex items-center flex-shrink-0 ${
+                  activePersona === persona
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 active:bg-slate-200'
+                }`}
+                title={personaConfigs[persona].description}
+              >
+                {personaConfigs[persona].label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            {currentConfig.description}
+          </p>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Executive Brief - Always shown */}
         {showSection('brief') && (
           <ExecutiveBrief metrics={metrics} inputs={inputs} />
