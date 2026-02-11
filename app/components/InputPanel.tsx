@@ -25,15 +25,15 @@ function InputGroup({ title, children, defaultOpen = true }: InputGroupProps) {
     <div className="border-b border-slate-200">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-6 py-3 hover:bg-slate-50 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-3 hover:bg-slate-50 active:bg-slate-100 transition-colors text-left min-h-[56px] sm:min-h-0"
       >
-        <span className="text-sm font-medium text-slate-900 uppercase tracking-wide">{title}</span>
+        <span className="text-base sm:text-sm font-semibold sm:font-medium text-slate-900 uppercase tracking-wide">{title}</span>
         <ChevronDownIcon
-          className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 sm:w-4 sm:h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       {isOpen && (
-        <div className="px-6 pb-4 space-y-3">
+        <div className="px-4 sm:px-6 pb-5 sm:pb-4 space-y-4 sm:space-y-3">
           {children}
         </div>
       )}
@@ -54,7 +54,7 @@ interface InputFieldProps {
 function InputField({ label, value, onChange, tooltip, suffix, step = 1, min = 0 }: InputFieldProps) {
   return (
     <div>
-      <label className="block text-xs text-slate-500 mb-1">
+      <label className="block text-sm sm:text-xs text-slate-700 sm:text-slate-500 mb-1.5 sm:mb-1 font-medium sm:font-normal">
         {label}
       </label>
       <div className="relative">
@@ -64,10 +64,10 @@ function InputField({ label, value, onChange, tooltip, suffix, step = 1, min = 0
           onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
           step={step}
           min={min}
-          className="w-full px-3 py-2 bg-white border border-slate-200 text-sm tabular-nums text-slate-900 font-medium focus:ring-1 focus:ring-earnix-orange focus:border-earnix-orange outline-none transition-colors"
+          className="w-full px-3 sm:px-3 py-3 sm:py-2 bg-white border border-slate-300 sm:border-slate-200 text-base sm:text-sm tabular-nums text-slate-900 font-medium focus:ring-2 focus:ring-earnix-orange focus:border-earnix-orange outline-none transition-colors rounded-md sm:rounded"
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm sm:text-xs text-slate-500 sm:text-slate-400 pointer-events-none">
             {suffix}
           </span>
         )}
@@ -82,16 +82,17 @@ export default function InputPanel({ inputs, onChange, onClose, tooltips }: Inpu
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-5 sm:py-4 border-b border-slate-200">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Configuration</h2>
-          <p className="text-xs text-slate-500">Adjust model parameters</p>
+          <h2 className="text-xl sm:text-lg font-semibold text-slate-900">Configuration</h2>
+          <p className="text-sm sm:text-xs text-slate-500 mt-0.5">Adjust model parameters</p>
         </div>
         <button
           onClick={onClose}
-          className="p-2 hover:bg-slate-100 transition-colors"
+          className="p-3 sm:p-2 hover:bg-slate-100 active:bg-slate-200 transition-colors rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Close configuration panel"
         >
-          <XMarkIcon className="w-5 h-5 text-slate-500" />
+          <XMarkIcon className="w-6 h-6 sm:w-5 sm:h-5 text-slate-500" />
         </button>
       </div>
 

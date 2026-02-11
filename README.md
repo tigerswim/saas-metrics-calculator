@@ -82,9 +82,10 @@ npm install
 
 ```bash
 npm run dev
+# Opens on http://localhost:3000 (or 3001 if 3000 is in use)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser (or http://localhost:3001 if port 3000 is in use).
 
 ### Build for Production
 

@@ -156,17 +156,17 @@ export default function Calculator() {
     <div className="min-h-screen bg-white">
       {/* Header Bar */}
       <header className="border-b border-slate-200 sticky top-0 z-40 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between py-2 gap-4">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-3 gap-2 sm:gap-4">
             {/* Customer Vertical Selector */}
             <div className="relative flex-shrink-0">
               <button
                 onClick={() => setShowIndustryDropdown(!showIndustryDropdown)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors border border-slate-300"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-2 sm:py-1.5 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors border border-slate-300 min-h-[44px] sm:min-h-0"
               >
-                <span className="hidden sm:inline text-slate-500">Vertical:</span>
+                <span className="hidden md:inline text-slate-500">Vertical:</span>
                 <span className="font-semibold">{config.displayName}</span>
-                <ChevronDownIcon className="w-3 h-3" />
+                <ChevronDownIcon className="w-4 h-4 sm:w-3 sm:h-3" />
               </button>
 
               {showIndustryDropdown && (
@@ -193,52 +193,52 @@ export default function Calculator() {
               )}
             </div>
 
-            {/* Persona Toggle */}
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="text-xs text-slate-500 mr-2 hidden sm:inline">View:</span>
+            {/* Persona Toggle - Hidden on mobile, use horizontal scroll on tablet */}
+            <div className="hidden sm:flex items-center gap-1 flex-shrink-0 overflow-x-auto max-w-[50vw] md:max-w-none">
+              <span className="text-xs text-slate-500 mr-2 hidden lg:inline">View:</span>
               {(Object.keys(personaConfigs) as Persona[]).map((persona) => (
                 <button
                   key={persona}
                   onClick={() => setActivePersona(persona)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded transition-all ${
+                  className={`px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-medium rounded transition-all whitespace-nowrap min-h-[44px] sm:min-h-0 flex items-center ${
                     activePersona === persona
                       ? 'bg-earnix-orange text-white shadow-sm'
                       : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                   title={personaConfigs[persona].description}
                 >
-                  <span className="hidden sm:inline">{personaConfigs[persona].label}</span>
-                  <span className="sm:hidden">{personaConfigs[persona].shortLabel}</span>
+                  <span className="hidden md:inline">{personaConfigs[persona].label}</span>
+                  <span className="md:hidden">{personaConfigs[persona].shortLabel}</span>
                 </button>
               ))}
             </div>
 
             {/* View Mode Toggle */}
             <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="text-xs text-slate-500 mr-2 hidden sm:inline">Layout:</span>
+              <span className="text-xs text-slate-500 mr-2 hidden lg:inline">Layout:</span>
               <button
                 onClick={() => setViewMode('sections')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   viewMode === 'sections'
                     ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Sections View"
               >
-                <Squares2X2Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">Sections</span>
+                <Squares2X2Icon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Sections</span>
               </button>
               <button
                 onClick={() => setViewMode('map')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   viewMode === 'map'
                     ? 'bg-earnix-orange text-white'
                     : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
                 title="Metrics Map View"
               >
-                <RectangleGroupIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Map</span>
+                <RectangleGroupIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Map</span>
               </button>
             </div>
 
@@ -246,23 +246,23 @@ export default function Calculator() {
             <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
                 title="Reset to defaults"
               >
-                <ArrowPathIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Reset</span>
+                <ArrowPathIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Reset</span>
               </button>
 
               <button
                 onClick={() => setShowInputs(!showInputs)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                className={`flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 min-w-[44px] min-h-[44px] sm:min-h-0 text-xs font-medium rounded transition-colors ${
                   showInputs
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                 }`}
               >
-                <Cog6ToothIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Configure</span>
+                <Cog6ToothIcon className="w-5 h-5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">Configure</span>
               </button>
             </div>
           </div>
@@ -273,10 +273,10 @@ export default function Calculator() {
       {showInputs && (
         <div className="fixed inset-0 z-50 flex">
           <div
-            className="absolute inset-0 bg-slate-900/10"
+            className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm"
             onClick={() => setShowInputs(false)}
           />
-          <div className="relative ml-auto w-full max-w-sm bg-white border-l border-slate-200 shadow-xl overflow-y-auto">
+          <div className="relative ml-auto w-full max-w-full sm:max-w-md md:max-w-lg bg-white border-l border-slate-200 shadow-xl overflow-y-auto">
             <InputPanel
               inputs={inputs}
               onChange={handleInputChange}
@@ -287,25 +287,45 @@ export default function Calculator() {
         </div>
       )}
 
+      {/* Mobile Persona Selector (only visible on mobile) */}
+      <div className="sm:hidden border-b border-slate-200 bg-slate-50 px-3 py-2 overflow-x-auto">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-slate-500 mr-1 whitespace-nowrap">View:</span>
+          {(Object.keys(personaConfigs) as Persona[]).map((persona) => (
+            <button
+              key={persona}
+              onClick={() => setActivePersona(persona)}
+              className={`px-3 py-2 text-xs font-medium rounded transition-all whitespace-nowrap min-h-[44px] flex items-center ${
+                activePersona === persona
+                  ? 'bg-earnix-orange text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+              }`}
+            >
+              {personaConfigs[persona].shortLabel}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Hero Title Section */}
       <div className="border-b border-slate-200 bg-white">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold earnix-headline">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold earnix-headline">
               Earnix SaaS Metrics Calculator
             </h1>
-            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${theme.badgeBg} ${theme.badgeText} transition-all duration-300`}>
+            <span className={`px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold rounded-full ${theme.badgeBg} ${theme.badgeText} transition-all duration-300`}>
               {config.displayName.toUpperCase()}
             </span>
           </div>
-          <p className="text-slate-600 mt-2">
+          <p className="text-sm sm:text-base text-slate-600 mt-2">
             {config.displayName} vertical • Enterprise SaaS metrics modeling
           </p>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Executive Brief - Always shown */}
         {showSection('brief') && (
           <ExecutiveBrief metrics={metrics} inputs={inputs} />

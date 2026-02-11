@@ -93,61 +93,61 @@ export default function ExecutiveBrief({ metrics, inputs }: ExecutiveBriefProps)
   };
 
   return (
-    <section className="mb-8">
+    <section className="mb-6 sm:mb-8">
       {/* Header */}
-      <div className="flex items-baseline justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
             Performance Brief
           </h1>
-          <p className="text-slate-500 mt-1">Monthly intelligence summary</p>
+          <p className="text-sm sm:text-base text-slate-500 mt-1">Monthly intelligence summary</p>
         </div>
-        <div className="text-right">
-          <div className="text-3xl font-semibold tracking-tight tabular-nums text-blue-600">
+        <div className="sm:text-right">
+          <div className="text-2xl sm:text-3xl font-semibold tracking-tight tabular-nums text-blue-600">
             {formatCurrency(metrics.endingARR)}
           </div>
-          <div className="text-sm text-slate-500">Ending ARR</div>
+          <div className="text-xs sm:text-sm text-slate-500">Ending ARR</div>
         </div>
       </div>
 
       {/* Key Numbers Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-3 py-4 border-y border-slate-200 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-4 sm:gap-y-3 py-4 sm:py-4 border-y border-slate-200 mb-4 sm:mb-6">
         <div>
-          <div className={`text-2xl font-semibold tracking-tight tabular-nums ${
+          <div className={`text-xl sm:text-2xl font-semibold tracking-tight tabular-nums ${
             metrics.netNewARR >= 0 ? 'text-emerald-600' : 'text-rose-600'
           }`}>
             {metrics.netNewARR >= 0 ? '+' : ''}{formatCurrency(metrics.netNewARR / 1000, 1)}
           </div>
-          <div className="text-sm text-slate-500">Net New ARR</div>
+          <div className="text-xs sm:text-sm text-slate-500 mt-1">Net New ARR</div>
         </div>
         <div>
-          <div className={`text-2xl font-semibold tracking-tight tabular-nums ${
+          <div className={`text-xl sm:text-2xl font-semibold tracking-tight tabular-nums ${
             metrics.annualizedGrowthRate >= 20 ? 'text-blue-600' : 'text-slate-900'
           }`}>
             {metrics.annualizedGrowthRate.toFixed(0)}%
           </div>
-          <div className="text-sm text-slate-500">Annual Growth</div>
+          <div className="text-xs sm:text-sm text-slate-500 mt-1">Annual Growth</div>
         </div>
         <div>
-          <div className={`text-2xl font-semibold tracking-tight tabular-nums ${
+          <div className={`text-xl sm:text-2xl font-semibold tracking-tight tabular-nums ${
             metrics.annualizedNRR >= 100 ? 'text-blue-600' : 'text-amber-600'
           }`}>
             {metrics.annualizedNRR.toFixed(0)}%
           </div>
-          <div className="text-sm text-slate-500">Net Retention</div>
+          <div className="text-xs sm:text-sm text-slate-500 mt-1">Net Retention</div>
         </div>
         <div>
-          <div className={`text-2xl font-semibold tracking-tight tabular-nums ${
+          <div className={`text-xl sm:text-2xl font-semibold tracking-tight tabular-nums ${
             metrics.ruleOf40 >= 40 ? 'text-blue-600' : 'text-slate-900'
           }`}>
             {metrics.ruleOf40.toFixed(0)}%
           </div>
-          <div className="text-sm text-slate-500">Rule of 40</div>
+          <div className="text-xs sm:text-sm text-slate-500 mt-1">Rule of 40</div>
         </div>
       </div>
 
       {/* Narrative */}
-      <div className="space-y-3 mb-6">
+      <div className="space-y-3 mb-4 sm:mb-6">
         {narratives.map((narrative, index) => (
           <p key={index} className="text-slate-700 leading-relaxed">
             {narrative}

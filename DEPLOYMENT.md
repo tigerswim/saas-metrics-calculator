@@ -17,7 +17,7 @@
    npm run dev
    ```
 
-4. Open http://localhost:3000 in your browser
+4. Open http://localhost:3000 in your browser (or http://localhost:3001 if port 3000 is in use)
 
 ## Project Structure
 
