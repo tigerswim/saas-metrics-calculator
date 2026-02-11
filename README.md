@@ -2,6 +2,15 @@
 
 An executive intelligence tool for B2B SaaS metrics modeling. Built with Next.js, TypeScript, and Tailwind CSS.
 
+## 🌐 Deployments
+
+This repository maintains **two separate production deployments**:
+
+- **Generic SaaS Calculator** (main branch): https://saas-metrics-calculator.netlify.app
+- **Earnix Branded** (earnix-branded branch): https://earnix-metrics-calculator.netlify.app
+
+**📖 Important**: See [BRANCH-STRATEGY.md](./BRANCH-STRATEGY.md) for details on branch differences and development workflow.
+
 ## Features
 
 - **Executive Brief**: Auto-generated narrative summary with key insights

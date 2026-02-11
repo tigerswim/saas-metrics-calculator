@@ -6,13 +6,64 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **SaaS Metrics Calculator** - an interactive web application for modeling SaaS business metrics. Users input their business parameters and see ~50 calculated metrics update in real-time, including ARR growth, retention rates, CAC/LTV ratios, and other critical KPIs.
 
+## ⚠️ CRITICAL: Branch Strategy
+
+This repository has **TWO SEPARATE DEPLOYMENTS** with different branches:
+
+### Main Branch (Generic SaaS Calculator)
+- **Branch**: `main`
+- **URL**: https://saas-metrics-calculator.netlify.app
+- **Purpose**: Generic SaaS metrics calculator for all industries
+- **Branding**: Blue theme (#3b82f6), no industry customization
+- **Key Files**: Standard labels, no IndustryContext or theme hooks
+- **When to use**: Default branch for general improvements and features
+
+### Earnix-Branded Branch (Insurance/Banking Specialized)
+- **Branch**: `earnix-branded`
+- **URL**: https://earnix-metrics-calculator.netlify.app
+- **Purpose**: Customized for Earnix (insurance/banking vertical)
+- **Branding**: Orange theme (earnix-orange), industry selector, specialized terminology
+- **Key Files**:
+  - `app/contexts/IndustryContext.tsx` (industry-specific labels)
+  - `app/hooks/useIndustryTheme.ts` (theme customization)
+  - Components use `getFieldLabel()` for dynamic labels
+- **When to use**: Only for Earnix-specific features or customizations
+
+### IMPORTANT RULES:
+
+1. **Default to main branch** unless explicitly working on Earnix features
+2. **NEVER merge earnix-branded into main** - they must remain separate
+3. **When adding features:**
+   - Add to `main` first (generic implementation)
+   - Then port to `earnix-branded` if needed (add Earnix customizations)
+4. **When fixing bugs:**
+   - Fix in BOTH branches if the code exists in both
+   - Test both deployments separately
+5. **IndustryContext/useIndustryTheme:**
+   - **ONLY exist on earnix-branded branch**
+   - **DO NOT import these on main branch**
+   - If you see these imports on main, it's a bug that will break the build
+6. **Mobile improvements:**
+   - Applied to BOTH branches (February 2026)
+   - Use blue-600 on main, earnix-orange on earnix-branded
+
+### Quick Check Before Working:
+```bash
+# Always verify current branch
+git branch --show-current
+
+# To switch branches:
+git checkout main              # For generic SaaS calculator
+git checkout earnix-branded    # For Earnix customization
+```
+
 ## Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **State**: React hooks (useState)
-- **Deployment**: Netlify/Vercel
+- **Deployment**: Netlify (auto-deploys both branches to separate sites)
 
 ## Development Commands
 
@@ -522,3 +573,9 @@ app/
 - Responsive design works on mobile/tablet/desktop
 - All calculations update instantly (no debouncing/throttling)
 - **Dependencies**: @xyflow/react (React Flow), dagre (graph layout), framer-motion (animations)
+
+## Additional Documentation
+
+- **[BRANCH-STRATEGY.md](./BRANCH-STRATEGY.md)** - Detailed guide on managing two separate deployments (main vs earnix-branded)
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Netlify deployment configuration
+- **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes (earnix-branded branch only)
