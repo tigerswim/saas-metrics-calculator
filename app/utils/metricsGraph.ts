@@ -23,7 +23,7 @@ export const metricsRelationships: MetricsGraph = {
 
   'marketing-spend': {
     inputs: ['sales-marketing-spend'],
-    outputs: ['paid-search', 'paid-social', 'events', 'content', 'partnerships', 'abm', 'cost-per-mql', 'cost-per-sql'],
+    outputs: ['paid-search', 'paid-social', 'events', 'content', 'partnerships', 'abm', 'cost-per-mql', 'cost-per-sql', 'cost-per-opp', 'cost-per-won'],
   },
 
   'sales-spend': {
@@ -39,6 +39,11 @@ export const metricsRelationships: MetricsGraph = {
   'ga-spend': {
     inputs: [],
     outputs: ['total-opex'],
+  },
+
+  'total-opex': {
+    inputs: ['rd-spend', 'ga-spend'],
+    outputs: ['ebitda']
   },
 
   // ============================================================
@@ -84,8 +89,8 @@ export const metricsRelationships: MetricsGraph = {
   // ============================================================
 
   'impressions': {
-    inputs: ['marketing-spend'],
-    outputs: ['clicks', 'cpm']
+    inputs: ['paid-search', 'paid-social'],
+    outputs: ['clicks', 'cpm', 'ctr']
   },
 
   'clicks': {
@@ -94,12 +99,12 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'cpm': {
-    inputs: ['impressions', 'marketing-spend'],
+    inputs: ['impressions'],
     outputs: []
   },
 
   'cpc': {
-    inputs: ['clicks', 'marketing-spend'],
+    inputs: ['clicks'],
     outputs: []
   },
 
@@ -109,7 +114,7 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'leads': {
-    inputs: ['clicks', 'marketing-spend'],
+    inputs: ['clicks', 'events', 'content', 'partnerships', 'abm'],
     outputs: ['mqls']
   },
 
@@ -159,7 +164,7 @@ export const metricsRelationships: MetricsGraph = {
 
   'new-bookings': {
     inputs: ['deals-won', 'new-customers-added'],
-    outputs: ['net-new-arr', 'arpa']
+    outputs: ['net-new-arr', 'quick-ratio']
   },
 
   'new-customers-added': {
@@ -179,12 +184,12 @@ export const metricsRelationships: MetricsGraph = {
 
   'net-new-arr': {
     inputs: ['new-bookings', 'expansion-arr', 'churned-arr'],
-    outputs: ['ending-arr', 'magic-number', 'arr-growth-rate']
+    outputs: ['ending-arr', 'magic-number', 'arr-growth-rate', 'burn-multiple']
   },
 
   'ending-arr': {
     inputs: ['net-new-arr'],
-    outputs: ['mrr', 'arr-growth-rate', 'rule-of-40', 'arpa']
+    outputs: ['mrr', 'arr-growth-rate', 'arpa']
   },
 
   'mrr': {
@@ -224,7 +229,7 @@ export const metricsRelationships: MetricsGraph = {
   // Unit Economics
   'arpa': {
     inputs: ['ending-arr', 'ending-customer-count'],
-    outputs: ['ltv']
+    outputs: ['ltv', 'cac-payback-period']
   },
 
   'cac-blended': {
@@ -243,7 +248,7 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'cac-payback-period': {
-    inputs: ['cac-blended', 'arpa'],
+    inputs: ['cac-blended', 'arpa', 'gross-margin'],
     outputs: []
   },
 
@@ -270,7 +275,7 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'ebitda': {
-    inputs: ['gross-profit'],
+    inputs: ['gross-profit', 'total-opex'],
     outputs: ['ebitda-margin', 'rule-of-40']
   },
 
@@ -280,7 +285,7 @@ export const metricsRelationships: MetricsGraph = {
   },
 
   'rule-of-40': {
-    inputs: ['arr-growth-rate', 'ebitda-margin'],
+    inputs: ['arr-growth-rate', 'ebitda-margin', 'ebitda'],
     outputs: []
   },
 
