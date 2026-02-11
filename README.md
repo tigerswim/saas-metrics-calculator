@@ -48,6 +48,15 @@ Standard SaaS terminology throughout, but defaults and benchmarks adapt to refle
 - **Vertical-tuned benchmarks** for performance targets (good/warning/bad ranges)
 - **Operational differences** (Insurance: higher R&D for product complexity; Banking: more partnership-driven lead gen)
 
+## 🌐 Deployments
+
+This repository maintains **two separate production deployments**:
+
+- **Generic SaaS Calculator** (main branch): https://saas-metrics-calculator.netlify.app
+- **Earnix Branded** (earnix-branded branch): https://earnix-metrics-calculator.netlify.app
+
+**📖 Important**: See [BRANCH-STRATEGY.md](./BRANCH-STRATEGY.md) for details on branch differences and development workflow.
+
 ## Features
 
 - **Customer Vertical Selector**: Header dropdown to switch between Insurance and Banking customer segments
