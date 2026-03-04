@@ -528,6 +528,14 @@ app/
 └── globals.css                     # Tailwind base styles
 ```
 
+## Recent Updates (March 2026)
+
+### Recalibrated Industry Defaults for Illustrative Realism (Mar 4, 2026)
+- **Insurance vertical**: Updated `industryConfig.ts` with more realistic illustrative defaults — $117M illustrative ARR, 117 customers, $1M avg ACV, 3 new logos/month, 35% win rate, 7.5-month sales cycle, 500 target accounts, S&M ~28% of ARR, R&D ~30% of ARR
+- **Banking vertical**: Updated with illustrative defaults modeled as an emerging/aggressive-growth market — $13M illustrative ARR, 13 customers, $500K avg ACV, 2 new logos/month, 28% win rate, 6-month sales cycle, 300 target accounts, higher COGS (25%), heavier S&M investment (38% ARR)
+- **Note**: These are illustrative defaults for demonstration purposes only, not actual company financials
+- **File changed**: `app/config/industryConfig.ts`
+
 ## Recent Updates (February 2026)
 
 ### Removed 7 Superfluous Metrics (Feb 7, 2026)

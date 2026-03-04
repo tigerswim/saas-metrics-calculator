@@ -180,43 +180,43 @@ export const insuranceConfig: IndustryConfig = {
   },
 
   defaultInputs: {
-    beginningARR: 180, // Insurance customers buy bigger contracts
-    totalCustomers: 85, // Fewer but larger enterprise customers
-    expansionARR: 2200, // Strong upsell/cross-sell
-    churnedARR: 650,
-    customersChurned: 3, // Low logo churn (sticky enterprise)
-    newCustomersAdded: 4, // Fewer new logos but high ACV
-    leadsGenerated: 420,
-    mqlsGenerated: 105,
-    mqlToSQLConversion: 48, // Higher qualification rates (enterprise focus)
-    sqlToOppConversion: 72,
-    winRate: 38, // Higher close rates (consultative selling)
-    avgDealSize: 850, // Large enterprise deals ($850K)
-    salesCycle: 8.5, // Longer sales cycles (compliance, procurement)
+    beginningARR: 117, // $117M ARR (90% of $130M total company ARR)
+    totalCustomers: 117, // 117 insurance accounts (90% of 130 total)
+    expansionARR: 1800, // ~$21.6M/yr expansion (balanced new logo + expansion growth)
+    churnedARR: 900, // ~$10.8M/yr churn → GRR ~90.8%
+    customersChurned: 1, // ~1% monthly logo churn (very sticky enterprise)
+    newCustomersAdded: 3, // ~3 new logos/month at ~$1M ACV
+    leadsGenerated: 320, // Narrow ICP universe (insurance carriers)
+    mqlsGenerated: 80,
+    mqlToSQLConversion: 45, // Strong qualification (enterprise focus)
+    sqlToOppConversion: 65,
+    winRate: 35, // Strong win rate (differentiated product)
+    avgDealSize: 1000, // $1M avg ACV ($750K–$1.5M range)
+    salesCycle: 7.5, // 6–9 month sales cycle (compliance, procurement)
     // Channel mix
-    paidSearchSpend: 85,
-    paidSearchLeads: 95,
-    paidSocialSpend: 120,
-    paidSocialLeads: 88,
-    eventsSpend: 180, // Heavy event presence (insurance conferences)
-    eventsLeads: 142,
-    contentSpend: 75,
-    contentLeads: 95,
-    partnershipsSpend: 45, // System integrator partnerships
-    partnershipsLeads: 0,
+    paidSearchSpend: 75,
+    paidSearchLeads: 60,
+    paidSocialSpend: 95,
+    paidSocialLeads: 55,
+    eventsSpend: 220, // Heavy event presence (insurance conferences)
+    eventsLeads: 110,
+    contentSpend: 85,
+    contentLeads: 75,
+    partnershipsSpend: 55, // System integrator partnerships
+    partnershipsLeads: 20,
     // ABM
-    targetAccounts: 150, // Highly targeted (top insurance carriers)
-    engagedAccounts: 68,
-    abmSpend: 220, // Heavy ABM investment
+    targetAccounts: 500, // ~400–600 ICP accounts (tier-1 + large regional carriers)
+    engagedAccounts: 145, // ~29% engagement rate
+    abmSpend: 280, // Heavy ABM investment (narrow, high-value market)
     // Paid media
-    paidImpressions: 18000, // Lower volume, targeted
-    paidClicks: 2400,
-    totalSalesMarketing: 1850,
-    marketingSpend: 505,
-    rdSpend: 5200, // High R&D for insurance product complexity
-    gaSpend: 2950,
-    cogsPercent: 22, // Higher service costs (implementation, support)
-    avgCustomerLifetime: 48, // Very sticky (4 years average)
+    paidImpressions: 12000, // Low volume, highly targeted
+    paidClicks: 1600,
+    totalSalesMarketing: 3025, // ~$36M/yr = ~28% of ARR
+    marketingSpend: 530, // Sum of channel spend
+    rdSpend: 3250, // ~$39M/yr = ~30% of ARR
+    gaSpend: 1950, // ~$23M/yr = ~18% of ARR
+    cogsPercent: 22, // Higher service costs (complex implementations)
+    avgCustomerLifetime: 60, // 5 years — very sticky enterprise (regulatory switching costs)
   },
 
   personaLabels: {
@@ -310,43 +310,43 @@ export const bankingConfig: IndustryConfig = {
   },
 
   defaultInputs: {
-    beginningARR: 145, // Banking customers moderate deal sizes
-    totalCustomers: 120, // More customers than Insurance (mid-market + enterprise mix)
-    expansionARR: 1650, // Good expansion but less than Insurance
-    churnedARR: 720,
-    customersChurned: 5, // Moderate churn (regulatory switching costs help retention)
-    newCustomersAdded: 7, // More new logos (broader market)
-    leadsGenerated: 680,
-    mqlsGenerated: 165,
-    mqlToSQLConversion: 42, // Good qualification
-    sqlToOppConversion: 68,
-    winRate: 32, // Moderate win rates (competitive market)
-    avgDealSize: 380, // Mid-market focus ($380K average)
-    salesCycle: 6.5, // Moderate sales cycles (faster than Insurance)
+    beginningARR: 13, // $13M ARR (10% of $130M total company ARR)
+    totalCustomers: 13, // 13 banking accounts (10% of 130 total)
+    expansionARR: 250, // ~$3M/yr expansion (early-stage, less upsell history)
+    churnedARR: 100, // ~$1.2M/yr churn → GRR ~90.8%
+    customersChurned: 0, // <1 logo/month (small base, high retention focus)
+    newCustomersAdded: 2, // ~2 new logos/month (aggressive growth, emerging market)
+    leadsGenerated: 480, // More leads (broader outreach, building awareness)
+    mqlsGenerated: 110,
+    mqlToSQLConversion: 38, // Lower qualification (still building ICP definition)
+    sqlToOppConversion: 60,
+    winRate: 28, // Lower win rate (newer market, less proven)
+    avgDealSize: 500, // $500K ACV ($400K–$600K range, mid-market banks)
+    salesCycle: 6.0, // Slightly faster (less regulatory complexity than insurance)
     // Channel mix
-    paidSearchSpend: 125,
-    paidSearchLeads: 155,
-    paidSocialSpend: 145,
-    paidSocialLeads: 118,
-    eventsSpend: 95, // Moderate event presence
-    eventsLeads: 85,
-    contentSpend: 65,
-    contentLeads: 142,
-    partnershipsSpend: 28, // Technology partnerships (core banking vendors)
-    partnershipsLeads: 180,
+    paidSearchSpend: 90,
+    paidSearchLeads: 120,
+    paidSocialSpend: 110,
+    paidSocialLeads: 95,
+    eventsSpend: 120, // Strong events (building brand in banking)
+    eventsLeads: 145,
+    contentSpend: 70,
+    contentLeads: 120,
+    partnershipsSpend: 40, // Core banking vendor partnerships (Temenos, Finastra)
+    partnershipsLeads: 0,
     // ABM
-    targetAccounts: 220, // Broader target list (regional + national banks)
-    engagedAccounts: 85,
-    abmSpend: 165,
+    targetAccounts: 300, // Broader TAM (regional + national banks)
+    engagedAccounts: 75, // 25% engagement rate (early-stage market dev)
+    abmSpend: 180,
     // Paid media
-    paidImpressions: 24000,
-    paidClicks: 3200,
-    totalSalesMarketing: 1550,
-    marketingSpend: 523,
-    rdSpend: 4600, // Moderate R&D (less complex than Insurance)
-    gaSpend: 2650,
-    cogsPercent: 18, // Moderate service costs
-    avgCustomerLifetime: 36, // Good retention (3 years average)
+    paidImpressions: 18000,
+    paidClicks: 2400,
+    totalSalesMarketing: 420, // ~$5M/yr = ~38% of ARR (investing ahead of growth)
+    marketingSpend: 430, // Sum of channel spend
+    rdSpend: 390, // ~$4.7M/yr = ~36% of ARR (heavy investment phase)
+    gaSpend: 195, // ~$2.3M/yr = ~18% of ARR
+    cogsPercent: 25, // Higher COGS (early-stage, less efficient delivery)
+    avgCustomerLifetime: 36, // 3 years (less proven than insurance, building track record)
   },
 
   personaLabels: {
